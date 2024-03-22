@@ -1,6 +1,7 @@
 package se2.group3.backend;
 
 import lombok.Getter;
+import se2.group3.backend.dto.Player;
 
 @Getter
 public class Session {
