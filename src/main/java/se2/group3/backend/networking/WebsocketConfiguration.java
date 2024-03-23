@@ -1,4 +1,4 @@
-package se2.group3.backend;
+package se2.group3.backend.networking;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

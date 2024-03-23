@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import se2.group3.backend.networking.WebsocketConfiguration;
 
 @SpringBootTest
 public class WebsocketConfigurationTests {
