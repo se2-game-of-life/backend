@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"se2.group3.backend", "se2.group3.backend.networking"})
 public class BackendApplication {
 
     public static void main(String[] args) {

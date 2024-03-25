@@ -1,4 +1,4 @@
-package se2.group3.backend.networking;
+package se2.group3.backend.networking.lobby;
 
 import lombok.Getter;
 import se2.group3.backend.dto.Player;

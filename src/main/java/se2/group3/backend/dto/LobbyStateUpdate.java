@@ -1,7 +1,7 @@
 package se2.group3.backend.dto;
 
 import lombok.Getter;
-import se2.group3.backend.networking.Lobby;
+import se2.group3.backend.networking.lobby.Lobby;
 
 @Getter
 public class LobbyStateUpdate {

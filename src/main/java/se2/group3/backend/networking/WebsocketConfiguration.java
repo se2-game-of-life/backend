@@ -12,12 +12,13 @@ public class WebsocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/gameoflife").withSockJS();   // .withSocketJS is for fallback to http, but won't be used
+        registry.addEndpoint("/gameoflife")
+                .setAllowedOrigins("*");
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/server");
+        registry.setApplicationDestinationPrefixes("/app");
         registry.enableSimpleBroker("/topic");
     }
 }
