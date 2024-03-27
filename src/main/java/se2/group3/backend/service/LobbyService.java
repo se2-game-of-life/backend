@@ -1,7 +1,8 @@
-package se2.group3.backend.networking.lobby;
+package se2.group3.backend.service;
 
 import org.springframework.stereotype.Service;
-import se2.group3.backend.dto.Player;
+import se2.group3.backend.model.Player;
+import se2.group3.backend.model.Lobby;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;

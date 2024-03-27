@@ -1,4 +1,4 @@
-package se2.group3.backend.dto;
+package se2.group3.backend.model;
 
 import lombok.Getter;
 

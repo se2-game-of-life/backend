@@ -1,4 +1,4 @@
-package se2.group3.backend.networking.lobby;
+package se2.group3.backend.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,9 @@ import org.springframework.stereotype.Controller;
 import se2.group3.backend.dto.*;
 import se2.group3.backend.dto.SessionExtractionResult;
 import se2.group3.backend.exceptions.SessionOperationException;
+import se2.group3.backend.model.Lobby;
+import se2.group3.backend.model.Player;
+import se2.group3.backend.service.LobbyService;
 import se2.group3.backend.util.SessionUtil;
 
 @Slf4j
@@ -23,11 +26,6 @@ public class LobbyController {
     public LobbyController(LobbyService lobbyService, SimpMessagingTemplate template) {
         this.lobbyService = lobbyService;
         this.template = template;
-    }
-
-    @MessageMapping("/test")
-    public void test() {
-        template.convertAndSend("/test", "Return String!!");
     }
 
     @MessageMapping("/lobby/create")
