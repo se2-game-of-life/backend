@@ -4,13 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import se2.group3.backend.dto.*;
-
-import java.util.Map;
+import se2.group3.backend.dto.SessionExtractionResult;
+import se2.group3.backend.exceptions.SessionOperationException;
+import se2.group3.backend.util.SessionUtil;
 
 @Slf4j
 @Controller
@@ -25,88 +25,86 @@ public class LobbyController {
         this.template = template;
     }
 
+    @MessageMapping("/test")
+    public void test() {
+        template.convertAndSend("/test", "Return String!!");
+    }
+
     @MessageMapping("/lobby/create")
     public void createLobby(SimpMessageHeaderAccessor headerAccessor) {
-        Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
-        String sessionID = headerAccessor.getSessionId();
-        if(sessionID == null) {
-            log.error("Session ID missing!");
-            return;
-        }
-        if(sessionAttributes == null) {
-            log.error("Session attributes missing!");
+        SessionExtractionResult session;
+        try {
+            session = SessionUtil.extractSessionDetails(headerAccessor);
+        } catch (SessionOperationException e) {
+            log.error(e.getMessage());
             return;
         }
 
-        //todo: do checks on the cast and make sure
-        Lobby lobby = lobbyService.createLobby((Player) sessionAttributes.get("player"));
+        Object player = session.sessionAttributes().get("player");
+        if(!(player instanceof Player)) {
+            //todo: type wrong or null -> send error and make user create a player in the session first
+            return;
+        }
+
+        Lobby lobby = lobbyService.createLobby((Player) player);
+        this.template.convertAndSendToUser(session.sessionID(), "/topic/lobbies", lobby.getId());
     }
 
     @MessageMapping("/lobby/join")
     public void joinLobby(@Payload JoinLobbyRequest request, SimpMessageHeaderAccessor headerAccessor) {
-        Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
-        String sessionID = headerAccessor.getSessionId();
-        if(sessionID == null) {
-            log.error("Session ID missing!");
-            return;
-        }
-        if(sessionAttributes == null) {
-            log.error("Session attributes missing!");
+        SessionExtractionResult session;
+        try {
+            session = SessionUtil.extractSessionDetails(headerAccessor);
+        } catch (SessionOperationException e) {
+            log.error(e.getMessage());
             return;
         }
 
-        if(sessionAttributes.get("lobbyID") != null) {
+
+
+        if(session.sessionAttributes().get("lobbyID") != null) {
             log.info("Cant join new lobby, whilst still in a different lobby!");
-            this.template.convertAndSendToUser(sessionID, "/errors", new ErrorResponse("Already in a lobby!"));
+            this.template.convertAndSendToUser(session.sessionID(), "/errors", new ErrorResponse("Already in a lobby!"));
             return;
         }
 
         //todo: do checks on the cast and make sure
         try {
-            Lobby lobby = lobbyService.joinLobby(request.getLobbyID(), (Player) sessionAttributes.get("player"));
-            sessionAttributes.put("lobbyID", lobby.getId());
+            Lobby lobby = lobbyService.joinLobby(request.getLobbyID(), (Player) session.sessionAttributes().get("player"));
+            session.sessionAttributes().put("lobbyID", lobby.getId());
             this.template.convertAndSend("/client/lobbies/" + request.getLobbyID(), new LobbyStateUpdate(lobby));
         } catch (Exception e) {
             log.error("Error adding player to lobby!");
-            this.template.convertAndSendToUser(sessionID, "/errors", new ErrorResponse(e.getMessage()));
+            this.template.convertAndSendToUser(session.sessionID(), "/errors", new ErrorResponse(e.getMessage()));
         }
     }
 
     @MessageMapping("/lobby/leave")
-    public void leaveLobby(SimpMessageHeaderAccessor headerAccessor) {
-        Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
-        String sessionID = headerAccessor.getSessionId();
-        if(sessionID == null) {
-            log.error("Session ID missing!");
-            return;
-        }
-        if(sessionAttributes == null) {
-            log.error("Session attributes missing!");
-            return;
-        }
+    public void leaveLobby(SimpMessageHeaderAccessor headerAccessor) throws SessionOperationException {
+        SessionExtractionResult session = SessionUtil.extractSessionDetails(headerAccessor);
 
         Long lobbyID;
         Player player;
         try {
-            lobbyID = (Long) sessionAttributes.get("lobbyID");
-            player = (Player) sessionAttributes.get("player");
+            lobbyID = (Long) session.sessionAttributes().get("lobbyID");
+            player = (Player) session.sessionAttributes().get("player");
         } catch (ClassCastException e) {
             log.error("Session attribute is not convertable to correct type!");
-            this.template.convertAndSendToUser(sessionID, "/errors", new ErrorResponse("Session attributes have the wrong type!"));
+            this.template.convertAndSendToUser(session.sessionID(), "/errors", new ErrorResponse("Session attributes have the wrong type!"));
             return;
         }
 
         if(lobbyID == null || player == null) {
             log.info("Attempting to remove player from a lobby, whilst player is not associated with any lobby!");
-            this.template.convertAndSendToUser(sessionID, "/errors", new ErrorResponse("Unable to leave a lobby, because player is not in a lobby!"));
+            this.template.convertAndSendToUser(session.sessionID(), "/errors", new ErrorResponse("Unable to leave a lobby, because player is not in a lobby!"));
             return;
         }
 
-        sessionAttributes.remove("lobbyID");
+        session.sessionAttributes().remove("lobbyID");
 
         if(!lobbyService.leaveLobby(lobbyID, player)) {
             log.error("Trying to leave non-existing Lobby!");
-            this.template.convertAndSendToUser(sessionID, "/errors", new ErrorResponse("Unable to leave a lobby, because player is not in a lobby!"));
+            this.template.convertAndSendToUser(session.sessionID(), "/errors", new ErrorResponse("Unable to leave a lobby, because player is not in a lobby!"));
             return;
         }
 
