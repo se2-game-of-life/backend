@@ -32,5 +32,26 @@ public class SessionUtil {
         return sessionAttributes.put(key, value);
     }
 
+    public static Long getLobbyID(SimpMessageHeaderAccessor headerAccessor) throws SessionOperationException {
+        Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
+
+        if(sessionAttributes == null) {
+            throw new SessionOperationException("SessionAttributes could not be extracted from session header!");
+        }
+
+        Object lobbyID = sessionAttributes.get("lobbyID");
+        if(!(lobbyID == null || lobbyID instanceof Long)) {
+            throw new SessionOperationException("Session attribute 'lobbyID' is not of type Long!");
+        }
+        return (Long) lobbyID;
+    }
+
+    public static String getSessionID(SimpMessageHeaderAccessor headerAccessor) throws SessionOperationException {
+        String sessionID = headerAccessor.getSessionId();
+        if(sessionID == null) {
+            throw new SessionOperationException("SessionID could not be extracted from session header!");
+        }
+        return sessionID;
+    }
 }
 
