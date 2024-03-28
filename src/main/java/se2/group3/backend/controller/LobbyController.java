@@ -28,25 +28,26 @@ public class LobbyController {
         this.template = template;
     }
 
+    /**
+     * Handel lobby create request,
+     * which takes a PlayerDTO as a Payload to create a new Lobby using the {@link LobbyService}.
+     * @param host The PlayerDTO which is required by createLobby() from {@link LobbyService}
+     * @param headerAccessor The headerAccessor, which contains the sessionID.
+     */
     @MessageMapping("/lobby/create")
-    public void createLobby(SimpMessageHeaderAccessor headerAccessor) {
-        SessionExtractionResult session;
+    public void createLobby(@Payload PlayerDTO host, SimpMessageHeaderAccessor headerAccessor) {
+        String sessionID;
         try {
-            session = SessionUtil.extractSessionDetails(headerAccessor);
+            sessionID = SessionUtil.extractSessionDetails(headerAccessor).sessionID();
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
             return;
         }
 
-        Object player = session.sessionAttributes().get("player");
-        if(!(player instanceof Player)) {
-            //todo: type wrong or null -> send error and make user create a player in the session first
-            return;
-        }
-
-        Lobby lobby = lobbyService.createLobby((Player) player);
-        this.template.convertAndSendToUser(session.sessionID(), "/topic/lobbies", lobby.getId());
+        LobbyDTO lobby = lobbyService.createLobby(host);
+        this.template.convertAndSendToUser(sessionID, "/topic/lobbies", lobby);
     }
+
 
     @MessageMapping("/lobby/join")
     public void joinLobby(@Payload JoinLobbyRequest request, SimpMessageHeaderAccessor headerAccessor) {

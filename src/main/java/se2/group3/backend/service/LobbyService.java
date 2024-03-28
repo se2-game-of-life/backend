@@ -1,24 +1,42 @@
 package se2.group3.backend.service;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
+import se2.group3.backend.dto.LobbyDTO;
+import se2.group3.backend.dto.PlayerDTO;
+import se2.group3.backend.dto.SessionExtractionResult;
+import se2.group3.backend.dto.mapper.LobbyMapper;
+import se2.group3.backend.dto.mapper.PlayerMapper;
+import se2.group3.backend.exceptions.SessionOperationException;
 import se2.group3.backend.model.Player;
 import se2.group3.backend.model.Lobby;
+import se2.group3.backend.util.SessionUtil;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Slf4j
 @Service
 public class LobbyService {
 
     private final AtomicLong idGenerator = new AtomicLong();
     private final ConcurrentHashMap<Long, Lobby> lobbyMap = new ConcurrentHashMap<>();
 
-    public Lobby createLobby(Player host) {
+    /**
+     * Creates a new {@link Lobby} with the specified {@link PlayerDTO} as a host and a unique id.
+     * The information on the newly created {@link Lobby} is then returned in the form of a {@link LobbyDTO}
+     * @param player The PlayerDTO which contains information on the hosting player.
+     * @return LobbyDTO A LobbyDTO containing all information related to the new lobby.
+     */
+    public LobbyDTO createLobby(PlayerDTO player) {
+        Player host = PlayerMapper.toPlayerModel(player);
         long lobbyID = idGenerator.getAndIncrement();
         Lobby newLobby = new Lobby(lobbyID, host);
         lobbyMap.put(lobbyID, newLobby);
-        return newLobby;
+        new Thread(newLobby).start();
+        return LobbyMapper.toLobbyDTO(newLobby);
     }
 
     public Lobby joinLobby(long lobbyID, Player player) throws Exception {
