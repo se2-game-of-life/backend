@@ -28,6 +28,16 @@ public class LobbyController {
         this.template = template;
     }
 
+    /**
+     * Handles incoming create lobby requests, which are evaluated in the {@link LobbyService}.
+     * Takes in a headerAccessor to get access to the session information.
+     * If the sessionID can't be extracted from the headerAccessor,
+     * logs an error and terminates as no connection to the client can be made.
+     * Otherwise, returns a {@link LobbyDTO} of the new lobby state to "/lobbies/"
+     * or an error message to "/errors", which are both only directed to the requester.
+     * @param host A {@link PlayerDTO} which has the information on the player creating the new lobby.
+     * @param headerAccessor The header accessor which contains session information.
+     */
     @MessageMapping("/lobby/create")
     public void createLobby(@Payload PlayerDTO host, SimpMessageHeaderAccessor headerAccessor) {
         String sessionID;
@@ -46,6 +56,16 @@ public class LobbyController {
         this.template.convertAndSendToUser(sessionID, "/lobbies", lobby);
     }
 
+    /**
+     * Handles incoming join lobby requests, which are evaluated in the {@link LobbyService}.
+     * Takes in a headerAccessor to get access to the session information.
+     * If the sessionID can't be extracted from the headerAccessor,
+     * logs an error and terminates as no connection to the client can be made.
+     * Otherwise, returns a {@link LobbyDTO} of the new lobby state to "/lobbies/{lobbyID}"
+     * or an error message to "/errors" for the user trying to join.
+     * @param request A {@link JoinLobbyRequest} DTO which has the information on the player and the lobbyID.
+     * @param headerAccessor The header accessor which contains session information.
+     */
     @MessageMapping("/lobby/join")
     public void joinLobby(@Payload JoinLobbyRequest request, SimpMessageHeaderAccessor headerAccessor) {
         String sessionID;
@@ -64,6 +84,15 @@ public class LobbyController {
         this.template.convertAndSend("/lobbies/" + request.lobbyID(), lobby);
     }
 
+    /**
+     * Handles incoming leave lobby requests, which are evaluated in the {@link LobbyService}.
+     * Takes in a headerAccessor to get access to the session information.
+     * If the sessionID can't be extracted from the headerAccessor,
+     * logs an error and terminates as no connection to the client can be made.
+     * Otherwise, returns a {@link LobbyDTO} of the new lobby state to "/lobbies/{lobbyID}"
+     * or an error message to "/errors" for the user trying to leave.
+     * @param headerAccessor The header accessor which contains session information.
+     */
     @MessageMapping("/lobby/leave")
     public void leaveLobby(SimpMessageHeaderAccessor headerAccessor) {
         String sessionID;

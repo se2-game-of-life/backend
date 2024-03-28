@@ -24,14 +24,15 @@ public class LobbyService {
     private final ConcurrentHashMap<Long, Lobby> lobbyMap = new ConcurrentHashMap<>();
 
     /**
-     * Creates a new {@link Lobby} with the specified {@link PlayerDTO} as a host and a unique id.
-     * The information on the newly created {@link Lobby} is then returned in the form of a {@link LobbyDTO}
-     * Should the player already be in a lobby
-     * (which is determined based on the content of the session attribute "lobbyID"),
-     * the session attribute has a different type or the session attributes are not accessible,
-     * the method will return 'null'.
-     * @param player The PlayerDTO which contains information on the hosting player.
-     * @return LobbyDTO A LobbyDTO containing all information related to the new lobby or null.
+     * Creates a new lobby with the host player as a member.
+     * This method takes a host and the headerAccessor to verify that the player is not connected to another lobby.
+     * A new lobby is then created, added to the lobby list, started (as lobbies are running on separate threads)
+     * and returned to the user in a LobbyDTO.
+     * @param player The host player, who creates the lobby.
+     * @param headerAccessor Stores information about the lobby the player is connected to.
+     * @return A {@link LobbyDTO} containing the state of the lobby.
+     * @throws IllegalStateException if the player is already in another lobby.
+     * @throws SessionOperationException if the lobbyID from the headerAccessor cant be extracted.
      */
     public LobbyDTO createLobby(PlayerDTO player, SimpMessageHeaderAccessor headerAccessor) {
         Long sessionLobbyID;
@@ -54,7 +55,22 @@ public class LobbyService {
         return LobbyMapper.toLobbyDTO(newLobby);
     }
 
-    public Lobby joinLobby(long lobbyID, Player player) throws Exception {
+    /**
+     * Business Logic for join lobby requests, which are handled in the {@link LobbyController}.
+     * It takes a lobbyID for the lobby the user wants to join, the player data of the user and the header accessor
+     * of the connection, as the lobby information of the player is stored there, under 'lobbyID'.
+     * If the player is already in another lobby (indicated by the presence of another lobbyID in the header),
+     * the method will throw an IllegalStateException.
+     * It will also throw an IllegalStateException if the lobby is full or the lobby doesn't exist.
+     * If the lobbyID can't be saved in the session attributes, the method will throw a SessionOperationException.
+     * @param lobbyID The lobbyID of the lobby the player wants to join into.
+     * @param playerDTO The DTO contains the data of the player that wants to join.
+     * @param headerAccessor Stores information about the lobby the player is connected to.
+     * @return A {@link LobbyDTO} containing the data of the lobby.
+     * @throws IllegalStateException If the lobby is full, the player is already in another lobby or the lobby doesn't exist.
+     * @throws SessionOperationException If writing or reading the lobbyID from the headerAccessor fails.
+     */
+    public LobbyDTO joinLobby(long lobbyID, PlayerDTO playerDTO, SimpMessageHeaderAccessor headerAccessor) throws IllegalStateException, SessionOperationException {
         Lobby lobby = lobbyMap.get(lobbyID);
         if(lobby == null || lobby.isFull()) {
             return null;
@@ -83,6 +99,17 @@ public class LobbyService {
         return LobbyMapper.toLobbyDTO(lobby);
     }
 
+    /**
+     * Business Logic for the lobby leave requests, which is called from the {@link LobbyController}.
+     * Takes in a headerAccessor, which is needed to get information on the current lobby of the player (if he has one).
+     * In case the player is not in a lobby at the time of the request or the lobby the player is in doesn't exist anymore,
+     * the method throws an IllegalArgumentException.
+     * If the interaction with the header accessor fails, a SessionOperationException is thrown.
+     * @param headerAccessor which is needed to get lobbyID and sessionID.
+     * @return A {@link LobbyDTO} which represents the new state of the lobby after the player leaves.
+     * @throws IllegalStateException If the player is not in a lobby or the lobby which the player is in doesn't exist.
+     * @throws SessionOperationException If the operations to get information from the session header fail.
+     */
     public LobbyDTO leaveLobby(SimpMessageHeaderAccessor headerAccessor) throws IllegalStateException, SessionOperationException {
         String sessionID = SessionUtil.getSessionID(headerAccessor);
         Long lobbyID = SessionUtil.getLobbyID(headerAccessor);
