@@ -27,10 +27,26 @@ public class LobbyService {
     /**
      * Creates a new {@link Lobby} with the specified {@link PlayerDTO} as a host and a unique id.
      * The information on the newly created {@link Lobby} is then returned in the form of a {@link LobbyDTO}
+     * Should the player already be in a lobby
+     * (which is determined based on the content of the session attribute "lobbyID"),
+     * the session attribute has a different type or the session attributes are not accessible,
+     * the method will return 'null'.
      * @param player The PlayerDTO which contains information on the hosting player.
-     * @return LobbyDTO A LobbyDTO containing all information related to the new lobby.
+     * @return LobbyDTO A LobbyDTO containing all information related to the new lobby or null.
      */
-    public LobbyDTO createLobby(PlayerDTO player) {
+    public LobbyDTO createLobby(PlayerDTO player, SimpMessageHeaderAccessor headerAccessor) {
+        Long sessionLobbyID;
+        try {
+            sessionLobbyID = SessionUtil.getLobbyID(headerAccessor);
+        } catch (SessionOperationException e) {
+            log.error(e.getMessage());
+            return null;
+        }
+
+        if(sessionLobbyID != null) {
+            return null;
+        }
+
         Player host = PlayerMapper.toPlayerModel(player);
         long lobbyID = idGenerator.getAndIncrement();
         Lobby newLobby = new Lobby(lobbyID, host);

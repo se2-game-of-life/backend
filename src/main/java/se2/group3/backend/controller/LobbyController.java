@@ -38,13 +38,16 @@ public class LobbyController {
     public void createLobby(@Payload PlayerDTO host, SimpMessageHeaderAccessor headerAccessor) {
         String sessionID;
         try {
-            sessionID = SessionUtil.extractSessionDetails(headerAccessor).sessionID();
+            sessionID = SessionUtil.getSessionID(headerAccessor);
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
             return;
         }
+        LobbyDTO lobby = lobbyService.createLobby(host, headerAccessor);
 
-        LobbyDTO lobby = lobbyService.createLobby(host);
+        if(lobby == null) {
+            this.template.convertAndSendToUser(sessionID, "/topic/errors", new ErrorResponse("Player is already in a lobby or the getting the lobbyID from the session attributes failed!"));
+        }
         this.template.convertAndSendToUser(sessionID, "/topic/lobbies", lobby);
     }
 
