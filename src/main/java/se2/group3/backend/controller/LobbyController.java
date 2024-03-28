@@ -8,10 +8,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import se2.group3.backend.dto.*;
-import se2.group3.backend.dto.SessionExtractionResult;
 import se2.group3.backend.exceptions.SessionOperationException;
-import se2.group3.backend.model.Lobby;
-import se2.group3.backend.model.Player;
 import se2.group3.backend.service.LobbyService;
 import se2.group3.backend.util.SessionUtil;
 
@@ -47,13 +44,15 @@ public class LobbyController {
             log.error(e.getMessage());
             return;
         }
-        LobbyDTO lobby = lobbyService.createLobby(host, headerAccessor);
 
-        if(lobby == null) {
-            this.template.convertAndSendToUser(sessionID, "/errors", new ErrorResponse("Player is already in a lobby or the getting the lobbyID from the session attributes failed!"));
-            return;
+        try {
+            LobbyDTO lobby = lobbyService.createLobby(host, headerAccessor);
+            this.template.convertAndSendToUser(sessionID, "/lobbies", lobby);
+        } catch (IllegalStateException e) {
+            this.template.convertAndSendToUser(sessionID, "/errors", new ErrorResponse(e.getMessage()));
+        } catch (SessionOperationException e) {
+            log.error(e.getMessage());
         }
-        this.template.convertAndSendToUser(sessionID, "/lobbies", lobby);
     }
 
     /**
@@ -76,12 +75,14 @@ public class LobbyController {
             return;
         }
 
-        LobbyDTO lobby = lobbyService.joinLobby(request.lobbyID(), request.player(), headerAccessor);
-        if(lobby == null) {
-            this.template.convertAndSendToUser(sessionID, "/errors", new ErrorResponse("Player could not join lobby!"));
-            return;
+        try {
+            LobbyDTO lobby = lobbyService.joinLobby(request.lobbyID(), request.player(), headerAccessor);
+            this.template.convertAndSend("/lobbies/" + lobby.lobbyID(), lobby);
+        } catch (IllegalStateException e){
+            this.template.convertAndSendToUser(sessionID, "/errors", e.getMessage());
+        } catch (SessionOperationException e) {
+            log.error(e.getMessage());
         }
-        this.template.convertAndSend("/lobbies/" + request.lobbyID(), lobby);
     }
 
     /**

@@ -3,6 +3,7 @@ package se2.group3.backend.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
+import se2.group3.backend.controller.LobbyController;
 import se2.group3.backend.dto.LobbyDTO;
 import se2.group3.backend.dto.PlayerDTO;
 import se2.group3.backend.dto.mapper.LobbyMapper;
@@ -34,18 +35,9 @@ public class LobbyService {
      * @throws IllegalStateException if the player is already in another lobby.
      * @throws SessionOperationException if the lobbyID from the headerAccessor cant be extracted.
      */
-    public LobbyDTO createLobby(PlayerDTO player, SimpMessageHeaderAccessor headerAccessor) {
-        Long sessionLobbyID;
-        try {
-            sessionLobbyID = SessionUtil.getLobbyID(headerAccessor);
-        } catch (SessionOperationException e) {
-            log.error(e.getMessage());
-            return null;
-        }
-
-        if(sessionLobbyID != null) {
-            return null;
-        }
+    public LobbyDTO createLobby(PlayerDTO player, SimpMessageHeaderAccessor headerAccessor) throws IllegalStateException, SessionOperationException {
+        Long sessionLobbyID = SessionUtil.getLobbyID(headerAccessor);
+        if(sessionLobbyID != null) throw new IllegalStateException("This player is already in another Lobby!");
 
         Player host = PlayerMapper.toPlayerModel(player);
         long lobbyID = idGenerator.getAndIncrement();
@@ -72,28 +64,13 @@ public class LobbyService {
      */
     public LobbyDTO joinLobby(long lobbyID, PlayerDTO playerDTO, SimpMessageHeaderAccessor headerAccessor) throws IllegalStateException, SessionOperationException {
         Lobby lobby = lobbyMap.get(lobbyID);
-        if(lobby == null || lobby.isFull()) {
-            return null;
-        }
+        if(lobby == null) throw new IllegalStateException("The lobby doesn't exist!");
+        if(lobby.isFull()) throw new IllegalStateException("The lobby is full!");
 
-        Long sessionLobbyID;
-        try {
-            sessionLobbyID = SessionUtil.getLobbyID(headerAccessor);
-        } catch (SessionOperationException e) {
-            log.error(e.getMessage());
-            return null;
-        }
-        if(sessionLobbyID != null) {
-            return null;
-        }
+        Long sessionLobbyID = SessionUtil.getLobbyID(headerAccessor);
+        if(sessionLobbyID != null) throw new IllegalStateException("This player is already in another Lobby!");
 
-        try {
-            SessionUtil.putSessionAttribute(headerAccessor, "lobbyID", lobbyID);
-        } catch (SessionOperationException e) {
-            log.error(e.getMessage());
-            return null;
-        }
-
+        SessionUtil.putSessionAttribute(headerAccessor, "lobbyID", lobbyID);
         Player player = PlayerMapper.toPlayerModel(playerDTO);
         lobby.addPlayer(player);
         return LobbyMapper.toLobbyDTO(lobby);
