@@ -5,7 +5,6 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
 import se2.group3.backend.dto.LobbyDTO;
 import se2.group3.backend.dto.PlayerDTO;
-import se2.group3.backend.dto.SessionExtractionResult;
 import se2.group3.backend.dto.mapper.LobbyMapper;
 import se2.group3.backend.dto.mapper.PlayerMapper;
 import se2.group3.backend.exceptions.SessionOperationException;
@@ -57,24 +56,47 @@ public class LobbyService {
 
     public Lobby joinLobby(long lobbyID, Player player) throws Exception {
         Lobby lobby = lobbyMap.get(lobbyID);
-
-        if(lobby == null) {
-            throw new Exception("Lobby could not be found!");
+        if(lobby == null || lobby.isFull()) {
+            return null;
         }
 
-        //todo: need to finish the player add stuff and also change the way the lobby controller handles this
-//        lobby.addPlayer(player);
+        Long sessionLobbyID;
+        try {
+            sessionLobbyID = SessionUtil.getLobbyID(headerAccessor);
+        } catch (SessionOperationException e) {
+            log.error(e.getMessage());
+            return null;
+        }
+        if(sessionLobbyID != null) {
+            return null;
+        }
 
-        return lobby;
+        try {
+            SessionUtil.putSessionAttribute(headerAccessor, "lobbyID", lobbyID);
+        } catch (SessionOperationException e) {
+            log.error(e.getMessage());
+            return null;
+        }
+
+        Player player = PlayerMapper.toPlayerModel(playerDTO);
+        lobby.addPlayer(player);
+        return LobbyMapper.toLobbyDTO(lobby);
     }
 
-    public boolean leaveLobby(long lobbyID, Player player) {
+    public LobbyDTO leaveLobby(SimpMessageHeaderAccessor headerAccessor) throws IllegalStateException, SessionOperationException {
+        String sessionID = SessionUtil.getSessionID(headerAccessor);
+        Long lobbyID = SessionUtil.getLobbyID(headerAccessor);
+
+        if(lobbyID == null) {
+            throw new IllegalStateException("Attempting to leave lobby, when player is not part of any lobby!");
+        }
         Lobby lobby = lobbyMap.get(lobbyID);
         if(lobby == null) {
-            return false;
+            throw new IllegalStateException("Lobby associated with session connection does not exist!");
         }
-        lobby.removePlayer(player); //this might need error handling later
-        return true;
+
+        lobby.removePlayer(sessionID);
+        return LobbyMapper.toLobbyDTO(lobby);
     }
 
     public Lobby getLobby(long lobbyID) {
