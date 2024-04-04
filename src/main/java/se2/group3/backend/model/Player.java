@@ -1,6 +1,5 @@
 package se2.group3.backend.model;
 
-
 public class Player {
 
     private String playerName;
@@ -20,7 +19,7 @@ public class Player {
         this.investmentLevel = 0; 
     }
 
-    // Method to choose coollage path
+    // Method to choose collage path
     public void chooseCollagePath() {
         if(! isCollegePath){
             this.isCollegePath = true;

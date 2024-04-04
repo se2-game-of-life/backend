@@ -1,6 +1,5 @@
 package se2.group3.backend.model;
 
-
 public abstract class Card {
     private String name;
     private String description;
