@@ -36,5 +36,16 @@ public class CareerCard extends Card {
         // Implement action specific to career cards
     }
 
+    // Override the toString() method to print the contents of the CareerCard
+    @Override
+    public String toString() {
+        return "CareerCard{" +
+                "name='" + getName() + '\'' +
+                ", salary=" + salary +
+                ", bonus=" + bonus +
+                ", needsDiploma=" + needsDiploma +
+                '}';
+    }
+
 }
 
