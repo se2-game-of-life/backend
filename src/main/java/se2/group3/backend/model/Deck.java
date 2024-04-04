@@ -7,10 +7,10 @@ import java.util.List;
 public class Deck<T> {
     private List<T> cards;
 
-    // Constructor to initialize an empty deck
     public Deck() {
-        cards = new ArrayList<>();
+        this.cards = new ArrayList<>();
     }
+    public Deck(List<T> initialCards) { this.cards = initialCards; }
 
     // Method to add a card to the deck
     public void addCard(T card) {
