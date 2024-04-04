@@ -22,8 +22,10 @@ public class Player {
 
     // Method to choose coollage path
     public void chooseCollagePath() {
-        this.isCollegePath = true;
-        this.money -= 100000;
+        if(! isCollegePath){
+            this.isCollegePath = true;
+            this.money -= 100000;
+        }
     }
 
     // Method to handle investment
@@ -66,4 +68,7 @@ public class Player {
         this.money = money;
     }
     
+    public boolean isCollegePath() {
+        return isCollegePath;
+    }
 }
