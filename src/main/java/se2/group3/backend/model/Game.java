@@ -3,35 +3,44 @@ package se2.group3.backend.model;
 import se2.group3.backend.model.cards.ActionCard;
 import se2.group3.backend.model.cards.CareerCard;
 import se2.group3.backend.model.cards.HouseCard;
+import se2.group3.backend.repo.CareerCardRepository;
 
 import java.util.List;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
 public class Game {
     private List<Player> players;
     private Board board;
     private Deck<ActionCard> actionCardDeck;
     private Deck<CareerCard> careerCardDeck;
+    private final CareerCardRepository careerCardRepository;
     private Deck<HouseCard> houseCardDeck;
     private int currentPlayerIndex;
     private Random spinnedNumber;
 
 
-    public Game() {
-        initializeDecks();
+    @Autowired
+    public Game(CareerCardRepository careerCardRepository) {
+        this.careerCardRepository = careerCardRepository;
         currentPlayerIndex = 0; // Start with the first player
         spinnedNumber = new Random();
     }
 
-    private void initializeDecks() {
+    public void initializeDecks() {
         actionCardDeck = new Deck<>();
         // TODO: Add action cards to the deck
-        // actionCardDeck.addCard(new ActionCard("Action name ", "Description of action " ));
-
         actionCardDeck.shuffle();
 
-        careerCardDeck = new Deck<>();
-        // TODO: Add career cards to the deck
+        List<CareerCard> careerCards = careerCardRepository.findAll();
+        // Print the contents of the career card deck
+        for (CareerCard card : careerCards) {
+            System.out.println(card);
+        }
+        careerCardDeck = new Deck<>(careerCards);
         careerCardDeck.shuffle();
 
         houseCardDeck = new Deck<>();
