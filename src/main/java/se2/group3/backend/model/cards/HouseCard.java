@@ -4,8 +4,8 @@ import se2.group3.backend.model.Card;
 import se2.group3.backend.model.Player;
 
 public class HouseCard extends Card {
-    public HouseCard(String name, String description) {
-        super(name, description);
+    public HouseCard(String name) {
+        super(name);
     }
 
     @Override

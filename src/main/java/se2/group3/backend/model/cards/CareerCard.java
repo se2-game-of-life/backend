@@ -8,8 +8,8 @@ public class CareerCard extends Card {
     private int bonus;
     private boolean needsDiploma;
 
-    public CareerCard(String name, String description, int salary, int bonus, boolean needsDiploma) {
-        super(name, description);
+    public CareerCard(String name, int salary, int bonus, boolean needsDiploma) {
+        super(name);
         this.salary = salary;
         this.bonus = bonus;
         this.needsDiploma = needsDiploma;
