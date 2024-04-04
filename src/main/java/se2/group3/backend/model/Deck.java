@@ -24,6 +24,7 @@ public class Deck<T> {
 
     public T drawCard() {
         T drawnCard = cards.remove(0); // Remove and return the top card
+        //TODO: some cards will actually be removed from deck (House if bought, Career if chosen)
         cards.add(drawnCard); // Add the drawn card to the bottom of the deck
         return drawnCard;
     }
