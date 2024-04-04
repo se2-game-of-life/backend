@@ -21,5 +21,28 @@ public class Player {
     }
 
     //TODO: Getter and setter methods
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
+    public int getCurrentCellPosition() {
+        return currentCellPosition;
+    }
+
+    public void setCurrentCellPosition(int currentCellPosition) {
+        this.currentCellPosition = currentCellPosition;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
     
 }
