@@ -90,6 +90,9 @@ public class Player {
     public int getNumberOfPegs() {
         return numberOfPegs;
     }
+    public CareerCard getcareerCard() {
+        return careerCard;
+    }
     public boolean isCollegePath() {
         return isCollegePath;
     }
