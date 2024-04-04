@@ -14,6 +14,7 @@ public class Player {
     private boolean isCollegePath; // Indicates if the player chose the college path
     private int investmentNumber; // The chosen investment number
     private int investmentLevel; // The current level of investment
+    private int numberOfPegs;
 
     // Constructor
     public Player(String playerName) {
@@ -22,7 +23,8 @@ public class Player {
         this.money = 250000; // Starting money
         this.isCollegePath = false; 
         this.investmentNumber =0;
-        this.investmentLevel = 0; 
+        this.investmentLevel = 0;
+        this.numberOfPegs = 1;
     }
 
     // Method to choose collage path
@@ -31,6 +33,10 @@ public class Player {
             this.isCollegePath = true;
             this.money -= 100000;
         }
+    }
+
+    public void increaseNumberOfPegs() {
+        this.numberOfPegs += 1;
     }
 
     // Method to handle investment
@@ -81,7 +87,9 @@ public class Player {
     public void setMoney(int money) {
         this.money = money;
     }
-    
+    public int getNumberOfPegs() {
+        return numberOfPegs;
+    }
     public boolean isCollegePath() {
         return isCollegePath;
     }
