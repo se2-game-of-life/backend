@@ -2,7 +2,9 @@ package se2.group3.backend.model.cards;
 
 import se2.group3.backend.model.Card;
 import se2.group3.backend.model.Player;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document(collection = "CareerCards")
 public class CareerCard extends Card {
     private int salary;
     private int bonus;
