@@ -1,6 +1,5 @@
 package se2.group3.backend.model;
 
-import java.util.List;
 
 public abstract class Cell {
     protected int position;
