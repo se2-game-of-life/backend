@@ -5,14 +5,38 @@ import se2.group3.backend.model.Player;
 
 public class ActionCard extends Card {
     private String description;
-    public ActionCard(String name, String description) {
+    private boolean affectOnePlayer;
+    private boolean affectAllPlayers;
+    private boolean affectBank;
+    private int moneyAmount;
+
+    public ActionCard(String name, String description, boolean affectOnePlayer, boolean affectAllPlayers, boolean affectBank, int moneyAmount) {
         super(name);
         this.description = description;
-        //TODO: extend ActionCard attributes as needed
+        this.affectOnePlayer = affectOnePlayer;
+        this.affectAllPlayers = affectAllPlayers;
+        this.affectBank = affectBank;
+        this.moneyAmount = moneyAmount;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    public boolean isAffectOnePlayer() {
+        return affectOnePlayer;
+    }
+
+    public boolean isAffectAllPlayers() {
+        return affectAllPlayers;
+    }
+
+    public boolean isAffectBank() {
+        return affectBank;
+    }
+
+    public int getMoneyAmount() {
+        return moneyAmount;
     }
 
     @Override
