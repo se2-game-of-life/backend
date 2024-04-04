@@ -23,10 +23,17 @@ public class Deck<T> {
     }
 
     public T drawCard() {
+        if (cards.isEmpty()) {
+            // Handle empty deck scenario (throw an exception, return null, etc.)
+            // For now, let's assume it returns null
+            return null;
+        }
         T drawnCard = cards.remove(0); // Remove and return the top card
-        //TODO: some cards will actually be removed from deck (House if bought, Career if chosen)
-        cards.add(drawnCard); // Add the drawn card to the bottom of the deck
         return drawnCard;
+    }
+
+    public void returnCardToBottom(T card) {
+        cards.add(card); // Add the card to the bottom of the deck
     }
 
 }
