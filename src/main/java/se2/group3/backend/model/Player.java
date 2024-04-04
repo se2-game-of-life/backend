@@ -20,7 +20,28 @@ public class Player {
         this.investmentLevel = 0; 
     }
 
-    //TODO: Getter and setter methods
+    // Method to choose coollage path
+    public void chooseCollagePath() {
+        this.isCollegePath = true;
+        this.money -= 100000;
+    }
+
+    // Method to handle investment
+    public void invest(int investmentNumber) {
+        this.money -= 50000;          // Pay 50K to the bank      
+        this.investmentNumber = investmentNumber; // Set the investment number
+    }
+
+    // Method to collect investment payout
+    public void collectInvestmentPayout(int spinResult) {
+        if (spinResult == investmentNumber) {
+            this.money += (investmentLevel + 1) * 10; // Payment based on investment level
+            investmentLevel++; // Increase investment level
+        }
+    }
+
+
+    // Getter and setter methods
     public String getPlayerName() {
         return playerName;
     }
