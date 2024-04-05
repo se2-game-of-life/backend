@@ -1,5 +1,6 @@
 package se2.group3.backend.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -10,7 +11,10 @@ import org.springframework.stereotype.Controller;
 import se2.group3.backend.dto.*;
 import se2.group3.backend.exceptions.SessionOperationException;
 import se2.group3.backend.service.LobbyService;
+import se2.group3.backend.util.SerializationUtil;
 import se2.group3.backend.util.SessionUtil;
+
+import java.util.Objects;
 
 @Slf4j
 @Controller
@@ -47,8 +51,8 @@ public class LobbyController {
 
         try {
             LobbyDTO lobby = lobbyService.createLobby(host, headerAccessor);
-            this.template.convertAndSendToUser(sessionID, "/lobbies", lobby);
-        } catch (IllegalStateException e) {
+            this.template.convertAndSendToUser(sessionID, "/lobbies", SerializationUtil.jsonStringFromClass(lobby));
+        } catch (IllegalStateException | JsonProcessingException e) {
             this.template.convertAndSendToUser(sessionID, "/errors", new ErrorResponse(e.getMessage()));
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
@@ -77,8 +81,8 @@ public class LobbyController {
 
         try {
             LobbyDTO lobby = lobbyService.joinLobby(request.lobbyID(), request.player(), headerAccessor);
-            this.template.convertAndSend("/lobbies/" + lobby.lobbyID(), lobby);
-        } catch (IllegalStateException e){
+            this.template.convertAndSend("/lobbies/" + lobby.lobbyID(), SerializationUtil.jsonStringFromClass(lobby));
+        } catch (IllegalStateException | JsonProcessingException e){
             this.template.convertAndSendToUser(sessionID, "/errors", e.getMessage());
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
@@ -106,8 +110,8 @@ public class LobbyController {
 
         try {
             LobbyDTO lobby = lobbyService.leaveLobby(headerAccessor);
-            this.template.convertAndSend("/lobbies/" + lobby.lobbyID(), lobby);
-        } catch (IllegalStateException e){
+            this.template.convertAndSend("/lobbies/" + lobby.lobbyID(), SerializationUtil.jsonStringFromClass(lobby));
+        } catch (IllegalStateException | JsonProcessingException e){
             this.template.convertAndSendToUser(sessionID, "/errors", e.getMessage());
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
