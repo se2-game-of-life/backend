@@ -1,23 +1,23 @@
 package se2.group3.backend.model;
 
+import org.springframework.data.annotation.Id;
+
+import java.util.List;
+
 public abstract class Cell {
+    @Id
+    protected String id;
     protected int position;
-    protected Cell nextCell;
+    protected List<Integer> nextCells;
 
-    public Cell(int position) {
+    public Cell(int position, List<Integer> nextCells) {
         this.position = position;
+        this.nextCells = nextCells;
     }
 
-    public Cell(int position, Cell nextCell) {
-        this.position = position;
-        this.nextCell = nextCell;
-    }
 
-    public void setNextCell(Cell nextCell) {
-        this.nextCell = nextCell;
-    }
-
-    public abstract void performAction(Player player);
+    public  void performAction(Player player){};
+    public  <T extends Card> void performAction(Player player, Deck<T> cardDeck){};
 
     // Shared method for drawing a card and performing its action
     protected <T extends Card> void drawAndPerformCardAction(Player player, Deck<T> cardDeck) {
