@@ -14,8 +14,6 @@ import se2.group3.backend.service.LobbyService;
 import se2.group3.backend.util.SerializationUtil;
 import se2.group3.backend.util.SessionUtil;
 
-import java.util.Objects;
-
 @Slf4j
 @Controller
 public class LobbyController {
@@ -35,7 +33,7 @@ public class LobbyController {
      * If the sessionID can't be extracted from the headerAccessor,
      * logs an error and terminates as no connection to the client can be made.
      * Otherwise, returns a {@link LobbyDTO} of the new lobby state to "/lobbies/"
-     * or an error message to "/errors", which are both only directed to the requester.
+     * or an error message (which might include an error due to serialization) to "/errors", which are both only directed to the requester.
      * @param host A {@link PlayerDTO} which has the information on the player creating the new lobby.
      * @param headerAccessor The header accessor which contains session information.
      */
@@ -65,7 +63,7 @@ public class LobbyController {
      * If the sessionID can't be extracted from the headerAccessor,
      * logs an error and terminates as no connection to the client can be made.
      * Otherwise, returns a {@link LobbyDTO} of the new lobby state to "/lobbies/{lobbyID}"
-     * or an error message to "/errors" for the user trying to join.
+     * or an error message (which might include an error due to serialization) to "/errors" for the user trying to join.
      * @param request A {@link JoinLobbyRequest} DTO which has the information on the player and the lobbyID.
      * @param headerAccessor The header accessor which contains session information.
      */
@@ -95,7 +93,7 @@ public class LobbyController {
      * If the sessionID can't be extracted from the headerAccessor,
      * logs an error and terminates as no connection to the client can be made.
      * Otherwise, returns a {@link LobbyDTO} of the new lobby state to "/lobbies/{lobbyID}"
-     * or an error message to "/errors" for the user trying to leave.
+     * or an error message (which might include an error due to serialization) to "/errors" for the user trying to leave.
      * @param headerAccessor The header accessor which contains session information.
      */
     @MessageMapping("/lobby/leave")
