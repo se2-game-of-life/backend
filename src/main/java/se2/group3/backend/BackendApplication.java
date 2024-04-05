@@ -17,6 +17,7 @@ public class BackendApplication {
 
         // Initialize decks
         game.initializeDecks();
+        game.initializeBoard();
     }
 
 }

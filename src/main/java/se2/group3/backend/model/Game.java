@@ -12,6 +12,7 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import se2.group3.backend.service.CellService;
 
 @Component
 public class Game {
@@ -19,44 +20,54 @@ public class Game {
     private Board board;
     private Deck<ActionCard> actionCardDeck;
     private Deck<CareerCard> careerCardDeck;
+    private Deck<HouseCard> houseCardDeck;
+
     private final CareerCardRepository careerCardRepository;
     private final ActionCardRepository actionCardRepository;
     private final HouseCardRepository houseCardRepository;
-    private Deck<HouseCard> houseCardDeck;
+
+    private final CellService cellService;
+
     private int currentPlayerIndex;
     private Random spinnedNumber;
 
 
     @Autowired
-    public Game(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository) {
+    public Game(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellService cellService) {
         this.careerCardRepository = careerCardRepository;
         this.actionCardRepository = actionCardRepository;
         this.houseCardRepository = houseCardRepository;
+        this.cellService = cellService;
         currentPlayerIndex = 0; // Start with the first player
         spinnedNumber = new Random();
     }
 
     public void initializeDecks() {
         List<ActionCard> actionCards = actionCardRepository.findAll();
+        /*
         for (ActionCard card : actionCards) {
             System.out.println(card);
-        }
+        }*/
         actionCardDeck = new Deck<>(actionCards);
         actionCardDeck.shuffle();
 
         List<CareerCard> careerCards = careerCardRepository.findAll();
-        for (CareerCard card : careerCards) {
-            System.out.println(card);
-        }
         careerCardDeck = new Deck<>(careerCards);
         careerCardDeck.shuffle();
+
         List<HouseCard> houseCards = houseCardRepository.findAll();
-        for (HouseCard card : houseCards) {
-            System.out.println(card);
-        }
-        houseCardDeck = new Deck<>();
+        houseCardDeck = new Deck<>(houseCards);
         houseCardDeck.shuffle();
     }
+
+    public void initializeBoard(){
+        List<Cell> cells = cellService.getAllCells();
+        /*
+            for (Cell cell : cells) {
+                System.out.println("Cell Position: " + cell.getPosition()+ " ,Cell Class: " + cell.getClass().getSimpleName());
+            }
+         */
+        }
 
 
     public void startGame() {
