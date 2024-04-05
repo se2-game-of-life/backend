@@ -62,11 +62,8 @@ public class Game {
 
     public void initializeBoard(){
         List<Cell> cells = cellService.getAllCells();
-        /*
-            for (Cell cell : cells) {
-                System.out.println("Cell Position: " + cell.getPosition()+ " ,Cell Class: " + cell.getClass().getSimpleName());
-            }
-         */
+        board = new Board(cells);
+        System.out.println(board);
         }
 
 

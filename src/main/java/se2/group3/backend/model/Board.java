@@ -10,6 +10,10 @@ public class Board {
         cells = new ArrayList<>();
     }
 
+    public Board(List<Cell> boardCells) {
+        cells = new ArrayList<>(boardCells);
+    }
+
     // Add a cell to the board
     public void addCell(Cell cell) {
         cells.add(cell);
@@ -22,5 +26,16 @@ public class Board {
         currentPlayer.setCurrentCellPosition(newPosition);
         Cell currentCell = cells.get(newPosition);
         currentCell.performAction(currentPlayer);
+    }
+
+    // Override toString() method to print the contents of the board
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Board Contents:\n");
+        for (int i = 0; i < cells.size(); i++) {
+            stringBuilder.append("Cell ").append(i).append(": ").append(cells.get(i)).append("\n");
+        }
+        return stringBuilder.toString();
     }
 }
