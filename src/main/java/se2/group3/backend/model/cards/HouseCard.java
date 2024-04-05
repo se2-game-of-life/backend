@@ -36,6 +36,7 @@ public class HouseCard extends Card {
     @Override
     public String toString() {
         return "HouseCard{" +
+                "id='" + getId() + '\'' +
                 "name='" + getName() + '\'' +
                 '}';
     }

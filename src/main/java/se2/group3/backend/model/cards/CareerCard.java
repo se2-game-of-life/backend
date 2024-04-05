@@ -40,6 +40,7 @@ public class CareerCard extends Card {
     @Override
     public String toString() {
         return "CareerCard{" +
+                "id='" + getId() + '\'' +
                 "name='" + getName() + '\'' +
                 ", salary=" + salary +
                 ", bonus=" + bonus +
