@@ -2,7 +2,9 @@ package se2.group3.backend.model.cards;
 
 import se2.group3.backend.model.Card;
 import se2.group3.backend.model.Player;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document(collection = "ActionCards")
 public class ActionCard extends Card {
     private String description;
     private boolean affectOnePlayer;
@@ -42,5 +44,12 @@ public class ActionCard extends Card {
     @Override
     public void performAction(Player player) {
         // Implement action specific to action cards
+    }
+
+    @Override
+    public String toString() {
+        return "ActionCard{" +
+                "name='" + getName() + '\'' +
+                '}';
     }
 }

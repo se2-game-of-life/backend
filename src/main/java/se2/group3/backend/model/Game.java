@@ -3,7 +3,9 @@ package se2.group3.backend.model;
 import se2.group3.backend.model.cards.ActionCard;
 import se2.group3.backend.model.cards.CareerCard;
 import se2.group3.backend.model.cards.HouseCard;
+import se2.group3.backend.repo.ActionCardRepository;
 import se2.group3.backend.repo.CareerCardRepository;
+import se2.group3.backend.repo.HouseCardRepository;
 
 import java.util.List;
 import java.util.Random;
@@ -18,33 +20,41 @@ public class Game {
     private Deck<ActionCard> actionCardDeck;
     private Deck<CareerCard> careerCardDeck;
     private final CareerCardRepository careerCardRepository;
+    private final ActionCardRepository actionCardRepository;
+    private final HouseCardRepository houseCardRepository;
     private Deck<HouseCard> houseCardDeck;
     private int currentPlayerIndex;
     private Random spinnedNumber;
 
 
     @Autowired
-    public Game(CareerCardRepository careerCardRepository) {
+    public Game(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository) {
         this.careerCardRepository = careerCardRepository;
+        this.actionCardRepository = actionCardRepository;
+        this.houseCardRepository = houseCardRepository;
         currentPlayerIndex = 0; // Start with the first player
         spinnedNumber = new Random();
     }
 
     public void initializeDecks() {
-        actionCardDeck = new Deck<>();
-        // TODO: Add action cards to the deck
+        List<ActionCard> actionCards = actionCardRepository.findAll();
+        for (ActionCard card : actionCards) {
+            System.out.println(card);
+        }
+        actionCardDeck = new Deck<>(actionCards);
         actionCardDeck.shuffle();
 
         List<CareerCard> careerCards = careerCardRepository.findAll();
-        // Print the contents of the career card deck
         for (CareerCard card : careerCards) {
             System.out.println(card);
         }
         careerCardDeck = new Deck<>(careerCards);
         careerCardDeck.shuffle();
-
+        List<HouseCard> houseCards = houseCardRepository.findAll();
+        for (HouseCard card : houseCards) {
+            System.out.println(card);
+        }
         houseCardDeck = new Deck<>();
-        // TODO: Add house cards to the deck
         houseCardDeck.shuffle();
     }
 
