@@ -21,6 +21,8 @@ public class LobbyController {
     private final LobbyService lobbyService;
     private final SimpMessagingTemplate template;
 
+    private final String error_path = "/errors";
+
     @Autowired
     public LobbyController(LobbyService lobbyService, SimpMessagingTemplate template) {
         this.lobbyService = lobbyService;
@@ -51,7 +53,7 @@ public class LobbyController {
             LobbyDTO lobby = lobbyService.createLobby(host, headerAccessor);
             this.template.convertAndSendToUser(sessionID, "/lobbies", SerializationUtil.jsonStringFromClass(lobby));
         } catch (IllegalStateException | JsonProcessingException e) {
-            this.template.convertAndSendToUser(sessionID, "/errors", new ErrorResponse(e.getMessage()));
+            this.template.convertAndSendToUser(sessionID, error_path, new ErrorResponse(e.getMessage()));
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
         }
@@ -81,7 +83,7 @@ public class LobbyController {
             LobbyDTO lobby = lobbyService.joinLobby(request.lobbyID(), request.player(), headerAccessor);
             this.template.convertAndSend("/lobbies/" + lobby.lobbyID(), SerializationUtil.jsonStringFromClass(lobby));
         } catch (IllegalStateException | JsonProcessingException e){
-            this.template.convertAndSendToUser(sessionID, "/errors", e.getMessage());
+            this.template.convertAndSendToUser(sessionID, error_path, e.getMessage());
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
         }
@@ -110,7 +112,7 @@ public class LobbyController {
             LobbyDTO lobby = lobbyService.leaveLobby(headerAccessor);
             this.template.convertAndSend("/lobbies/" + lobby.lobbyID(), SerializationUtil.jsonStringFromClass(lobby));
         } catch (IllegalStateException | JsonProcessingException e){
-            this.template.convertAndSendToUser(sessionID, "/errors", e.getMessage());
+            this.template.convertAndSendToUser(sessionID, error_path, e.getMessage());
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
         }
