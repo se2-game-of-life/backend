@@ -5,18 +5,23 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import se2.group3.backend.dto.LobbyDTO;
 import se2.group3.backend.dto.PlayerDTO;
 import se2.group3.backend.exceptions.SessionOperationException;
+import se2.group3.backend.model.Lobby;
+import se2.group3.backend.model.Player;
+import se2.group3.backend.util.SessionUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static se2.group3.backend.util.SessionUtil.getLobbyID;
 
 @ExtendWith(MockitoExtension.class)
 class LobbyServiceTests {
@@ -215,6 +220,14 @@ class LobbyServiceTests {
     @Test
     void leaveLobbyNotFound() {
         SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
+
+        Map<String, Object> headerMap = new HashMap<>();
+        headerMap.put("lobbyID", 12L);
+        Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(headerMap);
+        Mockito.when(headerAccessor.getSessionId()).thenReturn("ABC1");
+
+        Exception ex = assertThrows(IllegalStateException.class, () -> lobbyService.leaveLobby(headerAccessor));
+        assertEquals("Lobby associated with session connection does not exist!", ex.getMessage());
     }
 
 }
