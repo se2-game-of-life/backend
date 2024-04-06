@@ -9,6 +9,10 @@ import java.util.Map;
 @Slf4j
 public class SessionUtil {
 
+    private SessionUtil() {
+        throw new UnsupportedOperationException("This class cannot be instantiated!");
+    }
+
     public static void putSessionAttribute(SimpMessageHeaderAccessor headerAccessor, String key, Object value) throws SessionOperationException {
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
         if(sessionAttributes == null) {

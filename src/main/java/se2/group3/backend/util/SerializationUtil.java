@@ -6,7 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SerializationUtil {
-    static ObjectMapper objectMapper;
+    private static ObjectMapper objectMapper;
+
+    private SerializationUtil() {
+        throw new UnsupportedOperationException("This class cannot be instantiated!");
+    }
 
     public static String jsonStringFromClass(Object object) throws JsonProcessingException {
             return objectMapper.writeValueAsString(object);
