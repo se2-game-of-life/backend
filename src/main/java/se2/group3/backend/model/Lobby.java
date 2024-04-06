@@ -8,10 +8,10 @@ public class Lobby implements Runnable {
     private boolean running;
 
     private final long id;
-    private final Short MAX_PLAYERS = 4;
+    private final static Short maximumPlayerCount = 4;
     private Short currentPlayerCount = 0;
     private final Player host;
-    private final Player[] players = new Player[MAX_PLAYERS];
+    private final Player[] players = new Player[maximumPlayerCount];
 
     public Lobby(long lobbyID, Player host) {
         this.id = lobbyID;
@@ -25,6 +25,7 @@ public class Lobby implements Runnable {
         running = true;
         while (running) {
             //add game logic
+            running = false;
         }
     }
 
@@ -42,7 +43,7 @@ public class Lobby implements Runnable {
     }
 
     public boolean isFull() {
-        return currentPlayerCount >= MAX_PLAYERS;
+        return currentPlayerCount >= maximumPlayerCount;
     }
 
     public void closeLobby() {
