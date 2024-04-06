@@ -31,8 +31,9 @@ class LobbyServiceTests {
         PlayerDTO playerDTO = Mockito.mock(PlayerDTO.class);
         SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
 
+        Map<String, Object> header = new HashMap<>();
         Mockito.when(playerDTO.playerName()).thenReturn("Player 1");
-        Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(Map.of());
+        Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(header);
 
         try {
             LobbyDTO lobby = lobbyService.createLobby(playerDTO, headerAccessor);
@@ -48,8 +49,9 @@ class LobbyServiceTests {
     void createLobbyWhileInLobby() {
         PlayerDTO host = Mockito.mock(PlayerDTO.class);
         SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
-
-        Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(Map.of("lobbyID", 12L));
+        Map<String, Object> header = new HashMap<>();
+        header.put("lobbyID", 12L);
+        Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(header);
         try {
             lobbyService.createLobby(host, headerAccessor);
         } catch (IllegalStateException e) {
@@ -66,7 +68,7 @@ class LobbyServiceTests {
         PlayerDTO player = Mockito.mock(PlayerDTO.class);
         SimpMessageHeaderAccessor headerAccessorPlayer = Mockito.mock(SimpMessageHeaderAccessor.class);
 
-        Mockito.when(headerAccessorHost.getSessionAttributes()).thenReturn(Map.of());
+        Mockito.when(headerAccessorHost.getSessionAttributes()).thenReturn(new HashMap<>());
         Mockito.when(host.playerName()).thenReturn("Player 1");
         Mockito.when(headerAccessorPlayer.getSessionAttributes()).thenReturn(new HashMap<>());
         Mockito.when(player.playerName()).thenReturn("Player 2");
@@ -98,7 +100,7 @@ class LobbyServiceTests {
         SimpMessageHeaderAccessor headerAccessorPlayer2 = Mockito.mock(SimpMessageHeaderAccessor.class);
         SimpMessageHeaderAccessor headerAccessorPlayer3 = Mockito.mock(SimpMessageHeaderAccessor.class);
 
-        Mockito.when(headerAccessorHost.getSessionAttributes()).thenReturn(Map.of());
+        Mockito.when(headerAccessorHost.getSessionAttributes()).thenReturn(new HashMap<>());
         Mockito.when(host.playerName()).thenReturn("Host");
         Mockito.when(headerAccessorPlayer1.getSessionAttributes()).thenReturn(new HashMap<>());
         Mockito.when(headerAccessorPlayer2.getSessionAttributes()).thenReturn(new HashMap<>());
