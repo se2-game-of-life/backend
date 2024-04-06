@@ -95,7 +95,7 @@ public class LobbyService {
         if(lobbyID == null) {
             throw new IllegalStateException("Attempting to leave lobby, when player is not part of any lobby!");
         }
-        Lobby lobby = lobbyMap.get(lobbyID);
+        Lobby lobby = getLobby(lobbyID);
         if(lobby == null) {
             throw new IllegalStateException("Lobby associated with session connection does not exist!");
         }

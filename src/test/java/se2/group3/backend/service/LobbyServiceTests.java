@@ -15,6 +15,9 @@ import se2.group3.backend.exceptions.SessionOperationException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 @ExtendWith(MockitoExtension.class)
 class LobbyServiceTests {
 
@@ -200,6 +203,13 @@ class LobbyServiceTests {
     @Test
     void leaveLobbyWhileNotInLobby() {
         SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
+
+        Map<String, Object> headerMap = new HashMap<>();
+        Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(headerMap);
+        Mockito.when(headerAccessor.getSessionId()).thenReturn("ABC123");
+
+        Exception ex = assertThrows(IllegalStateException.class, () -> lobbyService.leaveLobby(headerAccessor));
+        assertEquals("Attempting to leave lobby, when player is not part of any lobby!", ex.getMessage());
     }
 
     @Test
