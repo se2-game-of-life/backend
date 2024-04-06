@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SerializationUtil {
-    private static ObjectMapper objectMapper;
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private SerializationUtil() {
         throw new UnsupportedOperationException("This class cannot be instantiated!");
