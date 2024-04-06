@@ -42,6 +42,7 @@ public class LobbyService {
         Player host = PlayerMapper.toPlayerModel(player);
         long lobbyID = idGenerator.getAndIncrement();
         Lobby newLobby = new Lobby(lobbyID, host);
+        SessionUtil.putSessionAttribute(headerAccessor, "lobbyID", newLobby.getId());
         lobbyMap.put(lobbyID, newLobby);
         new Thread(newLobby).start();
         return LobbyMapper.toLobbyDTO(newLobby);
