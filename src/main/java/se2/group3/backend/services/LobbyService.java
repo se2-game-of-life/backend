@@ -1,16 +1,16 @@
-package se2.group3.backend.service;
+package se2.group3.backend.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
 import se2.group3.backend.controller.LobbyController;
+import se2.group3.backend.domain.player.Player;
 import se2.group3.backend.dto.LobbyDTO;
 import se2.group3.backend.dto.PlayerDTO;
 import se2.group3.backend.dto.mapper.LobbyMapper;
 import se2.group3.backend.dto.mapper.PlayerMapper;
 import se2.group3.backend.exceptions.SessionOperationException;
-import se2.group3.backend.model.Player;
-import se2.group3.backend.model.Lobby;
+import se2.group3.backend.domain.lobby.Lobby;
 import se2.group3.backend.util.SessionUtil;
 
 import java.util.Collection;

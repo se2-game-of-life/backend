@@ -1,6 +1,7 @@
-package se2.group3.backend.model;
+package se2.group3.backend.domain.lobby;
 
 import lombok.Getter;
+import se2.group3.backend.domain.player.Player;
 
 @Getter
 public class Lobby implements Runnable {

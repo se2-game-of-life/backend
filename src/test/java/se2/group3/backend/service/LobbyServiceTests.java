@@ -11,6 +11,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import se2.group3.backend.dto.LobbyDTO;
 import se2.group3.backend.dto.PlayerDTO;
 import se2.group3.backend.exceptions.SessionOperationException;
+import se2.group3.backend.services.LobbyService;
 
 import java.util.HashMap;
 import java.util.Map;

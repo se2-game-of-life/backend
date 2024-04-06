@@ -10,7 +10,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import se2.group3.backend.dto.*;
 import se2.group3.backend.exceptions.SessionOperationException;
-import se2.group3.backend.service.LobbyService;
+import se2.group3.backend.services.LobbyService;
 import se2.group3.backend.util.SerializationUtil;
 import se2.group3.backend.util.SessionUtil;
 

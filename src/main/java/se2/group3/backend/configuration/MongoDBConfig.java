@@ -1,4 +1,4 @@
-package se2.group3.backend;
+package se2.group3.backend.configuration;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;

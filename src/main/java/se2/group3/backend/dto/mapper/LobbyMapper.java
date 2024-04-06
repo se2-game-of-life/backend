@@ -1,7 +1,7 @@
 package se2.group3.backend.dto.mapper;
 
 import se2.group3.backend.dto.LobbyDTO;
-import se2.group3.backend.model.Lobby;
+import se2.group3.backend.domain.lobby.Lobby;
 
 public class LobbyMapper {
     private LobbyMapper() {
