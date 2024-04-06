@@ -1,4 +1,7 @@
-package se2.group3.backend.model;
+package se2.group3.backend.domain.game;
+
+import se2.group3.backend.domain.cells.Cell;
+import se2.group3.backend.domain.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;

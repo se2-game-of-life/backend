@@ -1,7 +1,6 @@
-package se2.group3.backend.model.cards;
+package se2.group3.backend.domain.cards;
 
-import se2.group3.backend.model.Card;
-import se2.group3.backend.model.Player;
+import se2.group3.backend.domain.player.Player;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "HouseCards")

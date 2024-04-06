@@ -1,7 +1,4 @@
-package se2.group3.backend.model.cells;
-
-import se2.group3.backend.model.Cell;
-import se2.group3.backend.model.Player;
+package se2.group3.backend.domain.cells;
 
 import java.util.List;
 

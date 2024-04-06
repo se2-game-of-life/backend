@@ -1,10 +1,8 @@
-package se2.group3.backend.model.cells;
+package se2.group3.backend.domain.cells;
 
 
-import se2.group3.backend.model.Cell;
-import se2.group3.backend.model.Deck;
-import se2.group3.backend.model.Player;
-import se2.group3.backend.model.cards.CareerCard;
+import se2.group3.backend.domain.game.Deck;
+import se2.group3.backend.domain.player.Player;
 
 import java.util.List;
 

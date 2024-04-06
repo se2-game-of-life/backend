@@ -1,6 +1,6 @@
-package se2.group3.backend.model;
+package se2.group3.backend.domain.player;
 
-import se2.group3.backend.model.cards.CareerCard;
+import se2.group3.backend.domain.cards.CareerCard;
 
 import java.util.List;
 

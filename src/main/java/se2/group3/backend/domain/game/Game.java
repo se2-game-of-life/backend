@@ -1,18 +1,20 @@
-package se2.group3.backend.model;
+package se2.group3.backend.domain.game;
 
-import se2.group3.backend.model.cards.ActionCard;
-import se2.group3.backend.model.cards.CareerCard;
-import se2.group3.backend.model.cards.HouseCard;
-import se2.group3.backend.repo.ActionCardRepository;
-import se2.group3.backend.repo.CareerCardRepository;
-import se2.group3.backend.repo.HouseCardRepository;
+import se2.group3.backend.domain.cards.ActionCard;
+import se2.group3.backend.domain.cards.CareerCard;
+import se2.group3.backend.domain.cards.HouseCard;
+import se2.group3.backend.domain.cells.Cell;
+import se2.group3.backend.domain.player.Player;
+import se2.group3.backend.repositories.ActionCardRepository;
+import se2.group3.backend.repositories.CareerCardRepository;
+import se2.group3.backend.repositories.HouseCardRepository;
 
 import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import se2.group3.backend.service.CellService;
+import se2.group3.backend.services.CellService;
 
 @Component
 public class Game {

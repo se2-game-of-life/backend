@@ -1,4 +1,4 @@
-package se2.group3.backend.model;
+package se2.group3.backend.domain.game;
 
 public class Bank {
     private int totalMoney; // Total money in the bank

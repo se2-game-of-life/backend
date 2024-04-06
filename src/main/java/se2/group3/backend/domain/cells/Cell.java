@@ -1,7 +1,10 @@
-package se2.group3.backend.model;
+package se2.group3.backend.domain.cells;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import se2.group3.backend.domain.game.Deck;
+import se2.group3.backend.domain.player.Player;
+import se2.group3.backend.domain.cards.Card;
 
 import java.util.List;
 @Document(collection = "Cells")

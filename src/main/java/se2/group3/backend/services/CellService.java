@@ -1,10 +1,10 @@
-package se2.group3.backend.service;
+package se2.group3.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se2.group3.backend.model.Cell;
-import se2.group3.backend.model.cells.*;
-import se2.group3.backend.repo.CellRepository;
+import se2.group3.backend.domain.cells.Cell;
+import se2.group3.backend.domain.cells.*;
+import se2.group3.backend.repositories.CellRepository;
 
 import java.util.ArrayList;
 import java.util.List;

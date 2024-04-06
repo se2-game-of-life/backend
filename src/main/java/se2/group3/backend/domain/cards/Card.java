@@ -1,5 +1,6 @@
-package se2.group3.backend.model;
+package se2.group3.backend.domain.cards;
 import org.springframework.data.annotation.Id;
+import se2.group3.backend.domain.player.Player;
 
 
 public abstract class Card {
