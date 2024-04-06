@@ -16,8 +16,7 @@ import se2.group3.backend.services.LobbyService;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class LobbyServiceTests {
@@ -216,6 +215,14 @@ class LobbyServiceTests {
     @Test
     void leaveLobbyNotFound() {
         SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
+
+        Map<String, Object> headerMap = new HashMap<>();
+        headerMap.put("lobbyID", 12L);
+        Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(headerMap);
+        Mockito.when(headerAccessor.getSessionId()).thenReturn("ABC1");
+
+        Exception ex = assertThrows(IllegalStateException.class, () -> lobbyService.leaveLobby(headerAccessor));
+        assertEquals("Lobby associated with session connection does not exist!", ex.getMessage());
     }
 
 }
