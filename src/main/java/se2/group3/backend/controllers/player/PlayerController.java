@@ -1,10 +1,7 @@
 package se2.group3.backend.controllers.player;
 
-import ch.qos.logback.classic.Logger;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Controller;
@@ -23,11 +20,11 @@ import java.util.List;
 @Controller("/player")
 public class PlayerController {
 
-    private final PlayerService service;
+    private final PlayerService playerService;
 
     @Autowired
-    public PlayerController(@Qualifier("playerService") PlayerService service) {
-        this.service = service;
+    public PlayerController(PlayerService playerService) {
+        this.playerService = playerService;
     }
 
     /**
@@ -37,7 +34,7 @@ public class PlayerController {
     @MessageMapping("/start-game")
     public void startGameActions(@Payload PlayerMoveRequest moveRequest) {
         PlayerDTO dto = moveRequest.getPlayerDTO();
-        service.chooseCollagePath(dto);
+        playerService.chooseCollagePath(dto);
         //todo: all actions a player does when the game starts
     }
 
@@ -51,7 +48,7 @@ public class PlayerController {
         List<Cell> cells = moveRequest.getCells();
         for(Cell cell : cells) {
             if(cell instanceof StopCell) {
-                service.checkCellAndPerformAction(dto, cell);
+                playerService.checkCellAndPerformAction(dto, cell);
                 break;
             }
             //perform normal action
@@ -64,7 +61,7 @@ public class PlayerController {
      */
     @MessageMapping("/spin")
     public void spin(@Payload PlayerMoveRequest moveRequest) {
-        service.spin(moveRequest.getPlayerDTO());
+        playerService.spin(moveRequest.getPlayerDTO());
     }
 
     /**
@@ -76,7 +73,7 @@ public class PlayerController {
         PlayerDTO dto = moveRequest.getPlayerDTO();
         boolean pathChange = moveRequest.isPathChange();
         dto.setCollegePath(pathChange);
-        service.chooseCollagePath(dto);
+        playerService.chooseCollagePath(dto);
     }
 
     /**
@@ -88,7 +85,7 @@ public class PlayerController {
         PlayerDTO dto = moveRequest.getPlayerDTO();
         boolean pathChange = moveRequest.isPathChange();
         dto.setMarriedPath(pathChange);
-        service.chooseMarryPath(dto);
+        playerService.chooseMarryPath(dto);
     }
 
     /**
@@ -100,7 +97,7 @@ public class PlayerController {
         PlayerDTO dto = moveRequest.getPlayerDTO();
         boolean pathChange = moveRequest.isPathChange();
         dto.setGrowFamiliePath(pathChange);
-        service.chooseGrowFamilyPath(dto);
+        playerService.chooseGrowFamilyPath(dto);
     }
 
     /**
@@ -112,7 +109,7 @@ public class PlayerController {
         PlayerDTO dto = moveRequest.getPlayerDTO();
         boolean pathChange = moveRequest.isPathChange();
         dto.setHasMidlifeCrisis(pathChange);
-        service.midLifeCrisisPath(dto);
+        playerService.midLifeCrisisPath(dto);
     }
 
     /**
@@ -124,6 +121,6 @@ public class PlayerController {
         PlayerDTO dto = moveRequest.getPlayerDTO();
         boolean pathChange = moveRequest.isPathChange();
         dto.setRetireEarlyPath(pathChange);
-        service.chooseRetireEarlyPath(dto);
+        playerService.chooseRetireEarlyPath(dto);
     }
 }
