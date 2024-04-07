@@ -13,6 +13,10 @@ public class SerializationUtil {
     }
 
     public static String jsonStringFromClass(Object object) throws JsonProcessingException {
-            return objectMapper.writeValueAsString(object);
+        return objectMapper.writeValueAsString(object);
+    }
+
+    public static <T> Object toObject(String message, Class<T> messageType) throws JsonProcessingException {
+        return objectMapper.readValue(message, messageType);
     }
 }
