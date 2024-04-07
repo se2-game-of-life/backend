@@ -179,9 +179,9 @@ class LobbyServiceTests {
         SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
 
         Map<String, Object> headerMap = new HashMap<>();
+        headerMap.put("uuid", "1234");
         Mockito.when(playerDTO.getPlayerName()).thenReturn("Player 1");
         Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(headerMap);
-        Mockito.when(headerAccessor.getSessionId()).thenReturn("ABC123");
 
         try {
             LobbyDTO lobby = lobbyService.createLobby(playerDTO, headerAccessor);
@@ -205,8 +205,8 @@ class LobbyServiceTests {
         SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
 
         Map<String, Object> headerMap = new HashMap<>();
+        headerMap.put("uuid", "1234");
         Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(headerMap);
-        Mockito.when(headerAccessor.getSessionId()).thenReturn("ABC123");
 
         Exception ex = assertThrows(IllegalStateException.class, () -> lobbyService.leaveLobby(headerAccessor));
         assertEquals("Attempting to leave lobby, when player is not part of any lobby!", ex.getMessage());
@@ -218,8 +218,8 @@ class LobbyServiceTests {
 
         Map<String, Object> headerMap = new HashMap<>();
         headerMap.put("lobbyID", 12L);
+        headerMap.put("uuid", "1234");
         Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(headerMap);
-        Mockito.when(headerAccessor.getSessionId()).thenReturn("ABC1");
 
         Exception ex = assertThrows(IllegalStateException.class, () -> lobbyService.leaveLobby(headerAccessor));
         assertEquals("Lobby associated with session connection does not exist!", ex.getMessage());
