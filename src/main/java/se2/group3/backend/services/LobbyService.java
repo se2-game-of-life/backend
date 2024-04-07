@@ -13,7 +13,6 @@ import se2.group3.backend.exceptions.SessionOperationException;
 import se2.group3.backend.domain.lobby.Lobby;
 import se2.group3.backend.util.SessionUtil;
 
-import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -89,7 +88,7 @@ public class LobbyService {
      * @throws SessionOperationException If the operations to get information from the session header fail.
      */
     public LobbyDTO leaveLobby(SimpMessageHeaderAccessor headerAccessor) throws IllegalStateException, SessionOperationException {
-        String sessionID = SessionUtil.getSessionID(headerAccessor);
+        String uuid = SessionUtil.getUUID(headerAccessor);
         Long lobbyID = SessionUtil.getLobbyID(headerAccessor);
 
         if(lobbyID == null) {
@@ -100,15 +99,11 @@ public class LobbyService {
             throw new IllegalStateException("Lobby associated with session connection does not exist!");
         }
 
-        lobby.removePlayer(sessionID);
+        lobby.removePlayer(uuid);
         return LobbyMapper.toLobbyDTO(lobby);
     }
 
     public Lobby getLobby(long lobbyID) {
         return lobbyMap.get(lobbyID);
-    }
-
-    public Collection<Lobby> getAll() {
-        return lobbyMap.values();
     }
 }

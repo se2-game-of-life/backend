@@ -32,28 +32,28 @@ public class LobbyController {
     /**
      * Handles incoming create lobby requests, which are evaluated in the {@link LobbyService}.
      * Takes in a headerAccessor to get access to the session information.
-     * If the sessionID can't be extracted from the headerAccessor,
+     * If the uuid can't be extracted from the headerAccessor,
      * logs an error and terminates as no connection to the client can be made.
      * Otherwise, returns a {@link LobbyDTO} of the new lobby state to "/lobbies/"
      * or an error message (which might include an error due to serialization) to "/errors", which are both only directed to the requester.
-     * @param host A {@link PlayerDTO} which has the information on the player creating the new lobby.
+     * @param playerDTO A String which has the information on the player creating the new lobby.
      * @param headerAccessor The header accessor which contains session information.
      */
     @MessageMapping("/lobby/create")
-    public void createLobby(@Payload PlayerDTO host, SimpMessageHeaderAccessor headerAccessor) {
-        String sessionID;
+    public void createLobby(@Payload String playerDTO, SimpMessageHeaderAccessor headerAccessor) {
+        String uuid;
         try {
-            sessionID = SessionUtil.getSessionID(headerAccessor);
+            uuid = SessionUtil.getUUID(headerAccessor);
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
             return;
         }
 
         try {
-            LobbyDTO lobby = lobbyService.createLobby(host, headerAccessor);
-            this.template.convertAndSendToUser(sessionID, "/lobbies", SerializationUtil.jsonStringFromClass(lobby));
-        } catch (IllegalStateException | JsonProcessingException e) {
-            this.template.convertAndSendToUser(sessionID, error_path, new ErrorResponse(e.getMessage()));
+            LobbyDTO lobby = lobbyService.createLobby((PlayerDTO) SerializationUtil.toObject(playerDTO, PlayerDTO.class), headerAccessor);
+            this.template.convertAndSendToUser(uuid, "/topic/lobbies", SerializationUtil.jsonStringFromClass(lobby));
+        } catch (IllegalStateException | JsonProcessingException | ClassCastException e) {
+            this.template.convertAndSendToUser(uuid, error_path, new ErrorResponse(e.getMessage()));
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
         }
@@ -62,28 +62,29 @@ public class LobbyController {
     /**
      * Handles incoming join lobby requests, which are evaluated in the {@link LobbyService}.
      * Takes in a headerAccessor to get access to the session information.
-     * If the sessionID can't be extracted from the headerAccessor,
+     * If the uuid can't be extracted from the headerAccessor,
      * logs an error and terminates as no connection to the client can be made.
      * Otherwise, returns a {@link LobbyDTO} of the new lobby state to "/lobbies/{lobbyID}"
      * or an error message (which might include an error due to serialization) to "/errors" for the user trying to join.
-     * @param request A {@link JoinLobbyRequest} DTO which has the information on the player and the lobbyID.
+     * @param joinLobbyRequest A String which has the information on the player and the lobbyID.
      * @param headerAccessor The header accessor which contains session information.
      */
     @MessageMapping("/lobby/join")
-    public void joinLobby(@Payload JoinLobbyRequest request, SimpMessageHeaderAccessor headerAccessor) {
-        String sessionID;
+    public void joinLobby(@Payload String joinLobbyRequest, SimpMessageHeaderAccessor headerAccessor) {
+        String uuid;
         try {
-            sessionID = SessionUtil.getSessionID(headerAccessor);
+            uuid = SessionUtil.getUUID(headerAccessor);
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
             return;
         }
 
         try {
-            LobbyDTO lobby = lobbyService.joinLobby(request.lobbyID(), request.player(), headerAccessor);
-            this.template.convertAndSend("/lobbies/" + lobby.lobbyID(), SerializationUtil.jsonStringFromClass(lobby));
-        } catch (IllegalStateException | JsonProcessingException e){
-            this.template.convertAndSendToUser(sessionID, error_path, e.getMessage());
+            JoinLobbyRequest request = (JoinLobbyRequest) SerializationUtil.toObject(joinLobbyRequest, JoinLobbyRequest.class);
+            LobbyDTO lobby = lobbyService.joinLobby(request.getLobbyID(), request.getPlayer(), headerAccessor);
+            this.template.convertAndSend("/topic/lobbies/" + lobby.getLobbyID(), SerializationUtil.jsonStringFromClass(lobby));
+        } catch (IllegalStateException | JsonProcessingException | ClassCastException e){
+            this.template.convertAndSendToUser(uuid, error_path, e.getMessage());
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
         }
@@ -92,7 +93,7 @@ public class LobbyController {
     /**
      * Handles incoming leave lobby requests, which are evaluated in the {@link LobbyService}.
      * Takes in a headerAccessor to get access to the session information.
-     * If the sessionID can't be extracted from the headerAccessor,
+     * If the uuid can't be extracted from the headerAccessor,
      * logs an error and terminates as no connection to the client can be made.
      * Otherwise, returns a {@link LobbyDTO} of the new lobby state to "/lobbies/{lobbyID}"
      * or an error message (which might include an error due to serialization) to "/errors" for the user trying to leave.
@@ -100,9 +101,9 @@ public class LobbyController {
      */
     @MessageMapping("/lobby/leave")
     public void leaveLobby(SimpMessageHeaderAccessor headerAccessor) {
-        String sessionID;
+        String uuid;
         try {
-            sessionID = SessionUtil.getSessionID(headerAccessor);
+            uuid = SessionUtil.getUUID(headerAccessor);
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
             return;
@@ -110,9 +111,9 @@ public class LobbyController {
 
         try {
             LobbyDTO lobby = lobbyService.leaveLobby(headerAccessor);
-            this.template.convertAndSend("/lobbies/" + lobby.lobbyID(), SerializationUtil.jsonStringFromClass(lobby));
+            this.template.convertAndSend("/topic/lobbies/" + lobby.getLobbyID(), SerializationUtil.jsonStringFromClass(lobby));
         } catch (IllegalStateException | JsonProcessingException e){
-            this.template.convertAndSendToUser(sessionID, error_path, e.getMessage());
+            this.template.convertAndSendToUser(uuid, error_path, e.getMessage());
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
         }
