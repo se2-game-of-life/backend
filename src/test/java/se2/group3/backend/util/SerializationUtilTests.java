@@ -11,8 +11,6 @@ import se2.group3.backend.dto.PlayerDTO;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith(MockitoExtension.class)
 class SerializationUtilTests {
 
