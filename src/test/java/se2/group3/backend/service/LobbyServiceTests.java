@@ -35,14 +35,14 @@ class LobbyServiceTests {
         SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
 
         Map<String, Object> header = new HashMap<>();
-        Mockito.when(playerDTO.playerName()).thenReturn("Player 1");
+        Mockito.when(playerDTO.getPlayerName()).thenReturn("Player 1");
         Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(header);
 
         try {
             LobbyDTO lobby = lobbyService.createLobby(playerDTO, headerAccessor);
             Assertions.assertNotNull(lobby);
-            Assertions.assertEquals(0, lobby.lobbyID());
-            Assertions.assertEquals("Player 1", lobby.host().getPlayerName());
+            Assertions.assertEquals(0, lobby.getLobbyID());
+            Assertions.assertEquals("Player 1", lobby.getHost().getPlayerName());
         } catch (SessionOperationException e) {
             Assertions.fail(e);
         }
@@ -72,9 +72,9 @@ class LobbyServiceTests {
         SimpMessageHeaderAccessor headerAccessorPlayer = Mockito.mock(SimpMessageHeaderAccessor.class);
 
         Mockito.when(headerAccessorHost.getSessionAttributes()).thenReturn(new HashMap<>());
-        Mockito.when(host.playerName()).thenReturn("Player 1");
+        Mockito.when(host.getPlayerName()).thenReturn("Player 1");
         Mockito.when(headerAccessorPlayer.getSessionAttributes()).thenReturn(new HashMap<>());
-        Mockito.when(player.playerName()).thenReturn("Player 2");
+        Mockito.when(player.getPlayerName()).thenReturn("Player 2");
 
         try {
             lobbyService.createLobby(host, headerAccessorHost);
@@ -85,8 +85,8 @@ class LobbyServiceTests {
         try {
             LobbyDTO lobby = lobbyService.joinLobby(0L, player, headerAccessorPlayer);
             Assertions.assertNotNull(lobby);
-            Assertions.assertEquals(0, lobby.lobbyID());
-            Assertions.assertEquals("Player 1", lobby.host().getPlayerName());
+            Assertions.assertEquals(0, lobby.getLobbyID());
+            Assertions.assertEquals("Player 1", lobby.getHost().getPlayerName());
         } catch (Exception e) {
             Assertions.fail(e);
         }
@@ -104,7 +104,7 @@ class LobbyServiceTests {
         SimpMessageHeaderAccessor headerAccessorPlayer3 = Mockito.mock(SimpMessageHeaderAccessor.class);
 
         Mockito.when(headerAccessorHost.getSessionAttributes()).thenReturn(new HashMap<>());
-        Mockito.when(host.playerName()).thenReturn("Host");
+        Mockito.when(host.getPlayerName()).thenReturn("Host");
         Mockito.when(headerAccessorPlayer1.getSessionAttributes()).thenReturn(new HashMap<>());
         Mockito.when(headerAccessorPlayer2.getSessionAttributes()).thenReturn(new HashMap<>());
         Mockito.when(headerAccessorPlayer3.getSessionAttributes()).thenReturn(new HashMap<>());
@@ -118,16 +118,16 @@ class LobbyServiceTests {
         try {
             LobbyDTO lobby = lobbyService.joinLobby(0L, player1, headerAccessorPlayer1);
             Assertions.assertNotNull(lobby);
-            Assertions.assertEquals(0, lobby.lobbyID());
-            Assertions.assertEquals("Host", lobby.host().getPlayerName());
+            Assertions.assertEquals(0, lobby.getLobbyID());
+            Assertions.assertEquals("Host", lobby.getHost().getPlayerName());
         } catch (Exception e) {
             Assertions.fail(e);
         }
         try {
             LobbyDTO lobby = lobbyService.joinLobby(0L, player2, headerAccessorPlayer2);
             Assertions.assertNotNull(lobby);
-            Assertions.assertEquals(0, lobby.lobbyID());
-            Assertions.assertEquals("Host", lobby.host().getPlayerName());
+            Assertions.assertEquals(0, lobby.getLobbyID());
+            Assertions.assertEquals("Host", lobby.getHost().getPlayerName());
         } catch (Exception e) {
             Assertions.fail(e);
         }
@@ -179,22 +179,22 @@ class LobbyServiceTests {
         SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
 
         Map<String, Object> headerMap = new HashMap<>();
-        Mockito.when(playerDTO.playerName()).thenReturn("Player 1");
+        Mockito.when(playerDTO.getPlayerName()).thenReturn("Player 1");
         Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(headerMap);
         Mockito.when(headerAccessor.getSessionId()).thenReturn("ABC123");
 
         try {
             LobbyDTO lobby = lobbyService.createLobby(playerDTO, headerAccessor);
             Assertions.assertNotNull(lobby);
-            Assertions.assertEquals(0, lobby.lobbyID());
-            Assertions.assertEquals("Player 1", lobby.host().getPlayerName());
+            Assertions.assertEquals(0, lobby.getLobbyID());
+            Assertions.assertEquals("Player 1", lobby.getHost().getPlayerName());
         } catch (SessionOperationException e) {
             Assertions.fail(e);
         }
 
         try {
             LobbyDTO lobbyDTO = lobbyService.leaveLobby(headerAccessor);
-            Assertions.assertEquals(0, lobbyDTO.lobbyID());
+            Assertions.assertEquals(0, lobbyDTO.getLobbyID());
         } catch (Exception e) {
             Assertions.fail(e);
         }
