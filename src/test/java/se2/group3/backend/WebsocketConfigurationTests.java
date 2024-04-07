@@ -7,13 +7,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import se2.group3.backend.configuration.WebsocketConfiguration;
 
 @SpringBootTest
-public class WebsocketConfigurationTests {
+class WebsocketConfigurationTests {
 
     @Autowired
     private WebsocketConfiguration websocketConfiguration;
 
     @Test
-    public void contextLoads() {
+    void contextLoads() {
         Assertions.assertNotNull(websocketConfiguration);
     }
 }

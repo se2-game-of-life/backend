@@ -209,7 +209,7 @@ class LobbyServiceTests {
         Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(headerMap);
 
         Exception ex = assertThrows(IllegalStateException.class, () -> lobbyService.leaveLobby(headerAccessor));
-        assertEquals("Attempting to leave lobby, when player is not part of any lobby!", ex.getMessage());
+        Assertions.assertEquals("Attempting to leave lobby, when player is not part of any lobby!", ex.getMessage());
     }
 
     @Test
@@ -222,7 +222,7 @@ class LobbyServiceTests {
         Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(headerMap);
 
         Exception ex = assertThrows(IllegalStateException.class, () -> lobbyService.leaveLobby(headerAccessor));
-        assertEquals("Lobby associated with session connection does not exist!", ex.getMessage());
+        Assertions.assertEquals("Lobby associated with session connection does not exist!", ex.getMessage());
     }
 
 }

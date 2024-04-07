@@ -21,7 +21,7 @@ public class LobbyController {
     private final LobbyService lobbyService;
     private final SimpMessagingTemplate template;
 
-    private final String error_path = "/errors";
+    private static final String ERROR_PATH = "/errors";
 
     @Autowired
     public LobbyController(LobbyService lobbyService, SimpMessagingTemplate template) {
@@ -53,7 +53,7 @@ public class LobbyController {
             LobbyDTO lobby = lobbyService.createLobby((PlayerDTO) SerializationUtil.toObject(playerDTO, PlayerDTO.class), headerAccessor);
             this.template.convertAndSendToUser(uuid, "/topic/lobbies", SerializationUtil.jsonStringFromClass(lobby));
         } catch (IllegalStateException | JsonProcessingException | ClassCastException e) {
-            this.template.convertAndSendToUser(uuid, error_path, new ErrorResponse(e.getMessage()));
+            this.template.convertAndSendToUser(uuid, ERROR_PATH, new ErrorResponse(e.getMessage()));
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
         }
@@ -84,7 +84,7 @@ public class LobbyController {
             LobbyDTO lobby = lobbyService.joinLobby(request.getLobbyID(), request.getPlayer(), headerAccessor);
             this.template.convertAndSend("/topic/lobbies/" + lobby.getLobbyID(), SerializationUtil.jsonStringFromClass(lobby));
         } catch (IllegalStateException | JsonProcessingException | ClassCastException e){
-            this.template.convertAndSendToUser(uuid, error_path, e.getMessage());
+            this.template.convertAndSendToUser(uuid, ERROR_PATH, e.getMessage());
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
         }
@@ -113,7 +113,7 @@ public class LobbyController {
             LobbyDTO lobby = lobbyService.leaveLobby(headerAccessor);
             this.template.convertAndSend("/topic/lobbies/" + lobby.getLobbyID(), SerializationUtil.jsonStringFromClass(lobby));
         } catch (IllegalStateException | JsonProcessingException e){
-            this.template.convertAndSendToUser(uuid, error_path, e.getMessage());
+            this.template.convertAndSendToUser(uuid, ERROR_PATH, e.getMessage());
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
         }
