@@ -8,6 +8,7 @@ public class PlayerMapper {
         throw new UnsupportedOperationException("This class cannot be instantiated!");
     }
     public static Player toPlayerModel(PlayerDTO host) {
-        return new Player(host.playerName());
+        return new Player(host.getPlayerName());
     }
+    public static PlayerDTO toPlayerDTO(Player player) {return new PlayerDTO(player.getPlayerName());}
 }

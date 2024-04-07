@@ -8,6 +8,6 @@ public class LobbyMapper {
         throw new UnsupportedOperationException("This class cannot be instantiated!");
     }
     public static LobbyDTO toLobbyDTO(Lobby newLobby) {
-        return new LobbyDTO(newLobby.getId(), newLobby.getHost());
+        return new LobbyDTO(newLobby.getId(), PlayerMapper.toPlayerDTO(newLobby.getHost()));
     }
 }
