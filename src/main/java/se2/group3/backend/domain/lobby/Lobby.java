@@ -9,10 +9,10 @@ public class Lobby implements Runnable {
     private boolean running;
 
     private final long id;
-    private final static Short maximumPlayerCount = 4;
+    private static final Short MAXIMUM_PLAYER_COUNT = 4;
     private Short currentPlayerCount = 0;
     private final Player host;
-    private final Player[] players = new Player[maximumPlayerCount];
+    private final Player[] players = new Player[MAXIMUM_PLAYER_COUNT];
 
     public Lobby(long lobbyID, Player host) {
         this.id = lobbyID;
@@ -36,7 +36,7 @@ public class Lobby implements Runnable {
         return true;
     }
 
-    public void removePlayer(String playerID) {
+    public void removePlayer(String uuid) {
         // if the number of players <= 0 the session should be closed,
         // remove player logic
         // if player is host, move host to another player at random
@@ -44,7 +44,7 @@ public class Lobby implements Runnable {
     }
 
     public boolean isFull() {
-        return currentPlayerCount >= maximumPlayerCount;
+        return currentPlayerCount >= MAXIMUM_PLAYER_COUNT;
     }
 
     public void closeLobby() {
