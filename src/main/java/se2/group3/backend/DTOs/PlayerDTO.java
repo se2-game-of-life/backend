@@ -1,5 +1,6 @@
 package se2.group3.backend.DTOs;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import se2.group3.backend.domain.cards.CareerCard;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
+@JsonSerialize
 public class PlayerDTO {
 
 
