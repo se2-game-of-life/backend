@@ -1,6 +1,7 @@
 package se2.group3.backend.services.player;
 
 import org.springframework.stereotype.Service;
+import se2.group3.backend.DTOs.PlayerDTO;
 import se2.group3.backend.domain.cards.CareerCard;
 import se2.group3.backend.domain.cells.Cell;
 
@@ -8,27 +9,27 @@ import se2.group3.backend.domain.cells.Cell;
 public interface PlayerService {
 
     //different Path Options
-    void chooseCollagePath(String playerID);
+    void chooseCollagePath(PlayerDTO dto);
 
-    void chooseMarryPath(String playerID);
+    void chooseMarryPath(PlayerDTO dto);
 
-    void chooseGrowFamilyPath(String playerID);
+    void chooseGrowFamilyPath(PlayerDTO dto);
 
-    void midLifeCrisisPath(String playerID);
+    void midLifeCrisisPath(PlayerDTO dto);
 
-    void chooseRetireEarlyPath(String playerID);
+    void chooseRetireEarlyPath(PlayerDTO dto);
+
+    void increaseNumberOfPegs(PlayerDTO dto, Integer amount);
+
+    void invest(PlayerDTO dto, Integer investmentNumber);
+
+    void collectInvestmentPayout(PlayerDTO dto, Integer spinResult);
+
+    void setOrUpdateCareer(PlayerDTO dto, CareerCard careerCards);
 
 
-    void increaseNumberOfPegs(String playerID, Integer amount);
+    void getPayOut(PlayerDTO dto, Cell passedCell);
 
-    void invest(String playerID, Integer investmentNumber);
-
-    void collectInvestmentPayout(String playerID, Integer spinResult);
-
-    void setOrUpdateCareer(String playerID, CareerCard careerCards);
-
-    void getPayOut(String playerID, Cell passedCell);
-
-    void spin(String playerID);
+    void spin(PlayerDTO dto);
 
 }

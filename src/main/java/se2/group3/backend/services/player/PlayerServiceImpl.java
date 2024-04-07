@@ -2,6 +2,7 @@ package se2.group3.backend.services.player;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se2.group3.backend.DTOs.PlayerDTO;
 import se2.group3.backend.domain.cards.CareerCard;
 import se2.group3.backend.domain.cells.Cell;
 import se2.group3.backend.domain.cells.PaydayCell;
@@ -25,77 +26,86 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void chooseCollagePath(String playerID) {
-        if (repository.findById(playerID).isPresent()) {
-            Player player = repository.findById(playerID).get();
-            if (player.getMoney() > INVESTMENTCOST) {
-                player.setMoney(player.getMoney() - INVESTMENTCOST);
-                player.setCollegePath(true);
-                repository.save(player);
-            }
-        }
-
-    }
-
-    @Override
-    public void chooseMarryPath(String playerID) {
-        if (repository.findById(playerID).isPresent()) {
-            Player player = repository.findById(playerID).get();
-            if (player.getMoney() > INVESTMENTCOST) {
-                player.setMoney(player.getMoney() - INVESTMENTCOST);
-                player.setMarriedPath(true);
-                repository.save(player);
+    public void chooseCollagePath(PlayerDTO dto) {
+        if(dto.isCollegePath()) {
+            if (repository.findById(dto.getPlayerID()).isPresent()) {
+                Player player = repository.findById(dto.getPlayerID()).get();
+                if (player.getMoney() > INVESTMENTCOST) {
+                    player.setMoney(player.getMoney() - INVESTMENTCOST);
+                    player.setCollegePath(true);
+                    repository.save(player);
+                }
             }
         }
     }
 
     @Override
-    public void chooseGrowFamilyPath(String playerID) {
-        if (repository.findById(playerID).isPresent()) {
-            Player player = repository.findById(playerID).get();
-            if (player.getMoney() > INVESTMENTCOST) {
-                player.setMoney(player.getMoney() - INVESTMENTCOST);
-                player.setGrowFamiliePath(true);
-                repository.save(player);
+    public void chooseMarryPath(PlayerDTO dto) {
+        if(dto.isMarriedPath()) {
+            if (repository.findById(dto.getPlayerID()).isPresent()) {
+                Player player = repository.findById(dto.getPlayerID()).get();
+                if (player.getMoney() > INVESTMENTCOST) {
+                    player.setMoney(player.getMoney() - INVESTMENTCOST);
+                    player.setMarriedPath(true);
+                    repository.save(player);
+                }
             }
         }
     }
 
     @Override
-    public void midLifeCrisisPath(String playerID) {
-        if (repository.findById(playerID).isPresent()) {
-            Player player = repository.findById(playerID).get();
-            player.setHasMidlifeCrisis(true);
-            repository.save(player);
+    public void chooseGrowFamilyPath(PlayerDTO dto) {
+        if(dto.isGrowFamiliePath()) {
+            if (repository.findById(dto.getPlayerID()).isPresent()) {
+                Player player = repository.findById(dto.getPlayerID()).get();
+                if (player.getMoney() > INVESTMENTCOST && dto.isGrowFamiliePath()) {
+                    player.setMoney(player.getMoney() - INVESTMENTCOST);
+                    player.setGrowFamiliePath(true);
+                    repository.save(player);
+                }
+            }
 
         }
     }
 
     @Override
-    public void chooseRetireEarlyPath(String playerID) {
-        if (repository.findById(playerID).isPresent()) {
-            Player player = repository.findById(playerID).get();
-            if (player.getMoney() > INVESTMENTCOST) {
-                player.setMoney(player.getMoney() - INVESTMENTCOST);
-                player.setRetireEarlyPath(true);
+    public void midLifeCrisisPath(PlayerDTO dto) {
+        if(dto.isHasMidlifeCrisis()) {
+            if (repository.findById(dto.getPlayerID()).isPresent()) {
+                Player player = repository.findById(dto.getPlayerID()).get();
+                player.setHasMidlifeCrisis(true);
                 repository.save(player);
             }
         }
     }
 
     @Override
-    public void increaseNumberOfPegs(String playerID, Integer amount) {
-        if (repository.findById(playerID).isPresent()) {
-            Player player = repository.findById(playerID).get();
+    public void chooseRetireEarlyPath(PlayerDTO dto) {
+        if(dto.isRetireEarlyPath()) {
+            if (repository.findById(dto.getPlayerID()).isPresent()) {
+                Player player = repository.findById(dto.getPlayerID()).get();
+                if (player.getMoney() > INVESTMENTCOST) {
+                    player.setMoney(player.getMoney() - INVESTMENTCOST);
+                    player.setRetireEarlyPath(true);
+                    repository.save(player);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void increaseNumberOfPegs(PlayerDTO dto, Integer amount) {
+        if (repository.findById(dto.getPlayerID()).isPresent()) {
+            Player player = repository.findById(dto.getPlayerID()).get();
             player.setNumberOfPegs(player.getNumberOfPegs() + amount);
             repository.save(player);
         }
     }
 
     @Override
-    public void invest(String playerID, Integer investmentNumber) {
-        if (repository.findById(playerID).isPresent()) {
-            Player player = repository.findById(playerID).get();
+    public void invest(PlayerDTO dto, Integer investmentNumber) {
+        if (repository.findById(dto.getPlayerID()).isPresent()) {
+            Player player = repository.findById(dto.getPlayerID()).get();
 
             player.setMoney(player.getMoney() - INVESTMENTCOST);
             player.setInvestmentNumber(investmentNumber);
@@ -105,9 +115,9 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void collectInvestmentPayout(String playerID, Integer spinResult) {
-        if (repository.findById(playerID).isPresent()) {
-            Player player = repository.findById(playerID).get();
+    public void collectInvestmentPayout(PlayerDTO dto, Integer spinResult) {
+        if (repository.findById(dto.getPlayerID()).isPresent()) {
+            Player player = repository.findById(dto.getPlayerID()).get();
 
             if (player.getInvestmentNumber() == spinResult) {
                 player.setMoney(player.getInvestmentLevel() * INVESTMENTMULTIPLIER);
@@ -118,9 +128,9 @@ public class PlayerServiceImpl implements PlayerService {
         }
     }
     @Override
-    public void setOrUpdateCareer(String playerID, CareerCard careerCard) {
-        if (repository.findById(playerID).isPresent()) {
-            Player player = repository.findById(playerID).get();
+    public void setOrUpdateCareer(PlayerDTO dto, CareerCard careerCard) {
+        if (repository.findById(dto.getPlayerID()).isPresent()) {
+            Player player = repository.findById(dto.getPlayerID()).get();
 
             player.setCareerCard(careerCard);
             repository.save(player);
@@ -128,10 +138,10 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void getPayOut(String playerID, Cell passedCell) {
+    public void getPayOut(PlayerDTO dto, Cell passedCell) {
         if (passedCell instanceof PaydayCell) {
-            if (repository.findById(playerID).isPresent()) {
-                Player player = repository.findById(playerID).get();
+            if (repository.findById(dto.getPlayerID()).isPresent()) {
+                Player player = repository.findById(dto.getPlayerID()).get();
                 player.setMoney(player.getMoney() + player.getCareerCard().getSalary());
 
                 repository.save(player);
@@ -140,10 +150,10 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void spin(String playerID) {
+    public void spin(PlayerDTO dto) {
         Random spinResult = new Random();
-        if(repository.findById(playerID).isPresent()) {
-            Player player = repository.findById(playerID).get();
+        if(repository.findById(dto.getPlayerID()).isPresent()) {
+            Player player = repository.findById(dto.getPlayerID()).get();
             player.setCurrentCellPosition(player.getCurrentCellPosition() + spinResult.nextInt(10));
         }
     }
