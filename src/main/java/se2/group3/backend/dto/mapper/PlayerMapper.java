@@ -10,5 +10,7 @@ public class PlayerMapper {
     public static Player toPlayerModel(PlayerDTO host) {
         return new Player(host.getPlayerName());
     }
-    public static PlayerDTO toPlayerDTO(Player player) {return new PlayerDTO(player.getPlayerName());}
+    public static PlayerDTO toPlayerDTO(Player player) {
+        return new PlayerDTO(player.getPlayerName());
+    }
 }
