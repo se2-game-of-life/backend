@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import se2.group3.backend.DTOs.PlayerDTO;
 import se2.group3.backend.domain.cards.CareerCard;
 import se2.group3.backend.domain.cells.PaydayCell;
@@ -17,7 +18,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.Optional;
-
+@SpringBootTest
 class PlayerServiceImplTest {
 
     @Mock

@@ -15,6 +15,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     private final Integer INVESTMENTCOST = 500000;
 
+
     private final Integer INVESTMENTMULTIPLIER = 10000;
 
     private final PlayerRepository repository;
