@@ -15,7 +15,7 @@ public class InvestCell extends Cell {
     public void performAction(Player player) {
         // Implement logic for investment
         int investmentNumber = 0; // TODO: determine the investment number
-        player.invest(investmentNumber);
+       // player.invest(investmentNumber);
     }
 }
 
