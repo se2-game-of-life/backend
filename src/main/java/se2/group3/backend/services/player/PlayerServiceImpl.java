@@ -4,8 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se2.group3.backend.DTOs.PlayerDTO;
 import se2.group3.backend.domain.cards.CareerCard;
-import se2.group3.backend.domain.cells.Cell;
-import se2.group3.backend.domain.cells.PaydayCell;
+import se2.group3.backend.domain.cells.*;
 import se2.group3.backend.domain.player.Player;
 import se2.group3.backend.repositories.player.PlayerRepository;
 
@@ -94,10 +93,10 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void increaseNumberOfPegs(PlayerDTO dto, Integer amount) {
+    public void increaseNumberOfPegs(PlayerDTO dto) {
         if (repository.findById(dto.getPlayerID()).isPresent()) {
             Player player = repository.findById(dto.getPlayerID()).get();
-            player.setNumberOfPegs(player.getNumberOfPegs() + amount);
+            player.setNumberOfPegs(player.getNumberOfPegs() + 1);
             repository.save(player);
         }
     }
@@ -157,5 +156,50 @@ public class PlayerServiceImpl implements PlayerService {
             player.setCurrentCellPosition(player.getCurrentCellPosition() + spinResult.nextInt(10));
         }
     }
+
+    @Override
+    public void checkCellAndPerformAction(PlayerDTO dto, Cell cell) {
+        if(repository.findById(dto.getPlayerID()).isPresent()) {
+            Player player = repository.findById(dto.getPlayerID()).get();
+            //todo: implement the logic when a player steps on a cell
+            if(cell instanceof ActionCell) {
+
+            }
+            if(cell instanceof AddPegCell) {
+
+            }
+            if(cell instanceof CareerCell) {
+
+            }
+            if(cell instanceof FinalRetirementCell) {
+
+            }
+            if(cell instanceof HouseCell) {
+
+            }
+            if(cell instanceof InvestCell) {
+
+            }
+            if(cell instanceof PaydayCell) {
+
+            }
+        }
+    }
+
+    @Override
+    public void checkStopCellAndPerformAction(PlayerDTO dto, StopCell stopCell) {
+        if(repository.findById(dto.getPlayerID()).isPresent()) {
+            Player player = repository.findById(dto.getPlayerID()).get();
+            if(stopCell instanceof SpinToGraduateStopCell) {
+                stopCell.performAction(player);
+            }
+            if(stopCell instanceof GetMarriedStopCell) {
+               //todo: logic of function not yet implemented
+                stopCell.performAction(player);
+            }
+            //todo: rest of stop cells not yet implemented
+        }
+    }
+
 
 }

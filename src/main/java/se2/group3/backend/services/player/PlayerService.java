@@ -2,8 +2,12 @@ package se2.group3.backend.services.player;
 
 import org.springframework.stereotype.Service;
 import se2.group3.backend.DTOs.PlayerDTO;
+import se2.group3.backend.domain.cards.Card;
 import se2.group3.backend.domain.cards.CareerCard;
 import se2.group3.backend.domain.cells.Cell;
+import se2.group3.backend.domain.cells.StopCell;
+
+import java.util.List;
 
 @Service
 public interface PlayerService {
@@ -19,7 +23,7 @@ public interface PlayerService {
 
     void chooseRetireEarlyPath(PlayerDTO dto);
 
-    void increaseNumberOfPegs(PlayerDTO dto, Integer amount);
+    void increaseNumberOfPegs(PlayerDTO dto);
 
     void invest(PlayerDTO dto, Integer investmentNumber);
 
@@ -27,9 +31,12 @@ public interface PlayerService {
 
     void setOrUpdateCareer(PlayerDTO dto, CareerCard careerCards);
 
-
     void getPayOut(PlayerDTO dto, Cell passedCell);
 
     void spin(PlayerDTO dto);
+
+    void checkCellAndPerformAction(PlayerDTO dto, Cell cell);
+
+    void checkStopCellAndPerformAction(PlayerDTO dto, StopCell stopCell);
 
 }
