@@ -16,11 +16,4 @@ class BackendApplicationTests {
     void contextLoads() {
         Assertions.assertNotNull(context);
     }
-
-    //probably not worth having a test for, but I cant merge because of low code coverage atm
-    @Test
-    void execution() {
-        BackendApplication.main(new String[]{});
-    }
-
 }
