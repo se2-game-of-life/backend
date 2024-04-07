@@ -4,6 +4,9 @@ package se2.group3.backend.mapper;
 import se2.group3.backend.DTOs.PlayerDTO;
 import se2.group3.backend.domain.player.Player;
 
+/**
+ * Class to map a PlayerDTO to a Player object and back
+ */
 public class PlayerMapper {
 
     public static Player mapDTOToPlayer(PlayerDTO dto) {

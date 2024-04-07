@@ -8,7 +8,9 @@ import se2.group3.backend.domain.cells.Cell;
 
 import java.util.List;
 
-
+/**
+ * Class to handle the payload from the frontend, and use it for the players actions
+ */
 @Getter
 @Setter
 @NoArgsConstructor
