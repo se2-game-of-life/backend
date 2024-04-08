@@ -11,7 +11,6 @@ import se2.group3.backend.domain.cells.StopCell;
  * Interface for the PlayerService
  * Handles all the Actions a player is able to perform during the Game
  */
-@Service
 public interface PlayerService {
 
     /**

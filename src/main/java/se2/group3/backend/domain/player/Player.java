@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se2.group3.backend.domain.cards.CareerCard;
 
@@ -18,7 +19,9 @@ import se2.group3.backend.domain.cards.CareerCard;
 @EqualsAndHashCode
 public class Player {
 
+    @Id
     private String playerID;
+
     private String playerName;
     private int currentCellPosition;
     private int money;
