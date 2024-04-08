@@ -17,8 +17,7 @@ public class Lobby implements Runnable {
     public Lobby(long lobbyID, Player host) {
         this.id = lobbyID;
         this.host = host;
-        this.players[0] = host;
-        currentPlayerCount++;
+        addPlayer(host);
     }
 
     @Override
@@ -30,10 +29,9 @@ public class Lobby implements Runnable {
         }
     }
 
-    public boolean addPlayer(Player player) {
-        //add player Logic
+    public void addPlayer(Player player) {
+        players[currentPlayerCount] = player;
         currentPlayerCount++;
-        return true;
     }
 
     public void removePlayer(String uuid) {
@@ -41,6 +39,7 @@ public class Lobby implements Runnable {
         // remove player logic
         // if player is host, move host to another player at random
         currentPlayerCount--;
+        throw new UnsupportedOperationException(uuid);
     }
 
     public boolean isFull() {

@@ -9,7 +9,7 @@ import java.util.Map;
 @Slf4j
 public class SessionUtil {
 
-    private static final String attributeExtractionFail = "SessionAttributes could not be extracted from session header!";
+    private static final String ATTRIBUTE_EXTRACTION_FAIL = "SessionAttributes could not be extracted from session header!";
 
     private SessionUtil() {
         throw new UnsupportedOperationException("This class cannot be instantiated!");
@@ -18,7 +18,7 @@ public class SessionUtil {
     public static void putSessionAttribute(SimpMessageHeaderAccessor headerAccessor, String key, Object value) throws SessionOperationException {
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
         if(sessionAttributes == null) {
-            throw new SessionOperationException(attributeExtractionFail);
+            throw new SessionOperationException(ATTRIBUTE_EXTRACTION_FAIL);
         }
         sessionAttributes.put(key, value);
     }
@@ -27,7 +27,7 @@ public class SessionUtil {
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
 
         if(sessionAttributes == null) {
-            throw new SessionOperationException(attributeExtractionFail);
+            throw new SessionOperationException(ATTRIBUTE_EXTRACTION_FAIL);
         }
 
         Object lobbyID = sessionAttributes.get("lobbyID");
@@ -41,7 +41,7 @@ public class SessionUtil {
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
 
         if(sessionAttributes == null) {
-            throw new SessionOperationException(attributeExtractionFail);
+            throw new SessionOperationException(ATTRIBUTE_EXTRACTION_FAIL);
         }
 
         Object uuid = sessionAttributes.get("uuid");
