@@ -56,7 +56,17 @@ class PlayerServiceImplTest {
 
         verify(repository, atLeastOnce()).save(player);
         assertTrue(player.isCollegePath());
-        assertEquals(200000, player.getMoney()); // Überprüfen Sie das neue Geldsaldo nach der Investition
+        assertEquals(200000, player.getMoney());
+    }
+
+    @Test
+    void chooseCollegePathFalse() {
+        dto.setCollegePath(false);
+
+        service.chooseCollagePath(dto);
+
+        verify(repository, atLeastOnce()).save(player);
+        assertFalse(player.isCollegePath());
     }
 
     @Test
@@ -71,6 +81,16 @@ class PlayerServiceImplTest {
     }
 
     @Test
+    void chooseMarriedPathFalse() {
+        dto.setMarriedPath(false);
+
+        service.chooseMarryPath(dto);
+
+        verify(repository, atLeastOnce()).save(player);
+        assertFalse(player.isMarriedPath());
+    }
+
+    @Test
     void chooseGrowFamilyPath_withEnoughMoney_updatesPlayer() {
         dto.setGrowFamiliePath(true);
 
@@ -79,6 +99,16 @@ class PlayerServiceImplTest {
         verify(repository, atLeastOnce()).save(player);
         assertTrue(player.isGrowFamiliePath());
         assertEquals(200000, player.getMoney());
+    }
+
+    @Test
+    void chooseGrowFamilyPathFalse() {
+        dto.setGrowFamiliePath(false);
+
+        service.chooseGrowFamilyPath(dto);
+
+        verify(repository, atLeastOnce()).save(player);
+        assertFalse(player.isGrowFamiliePath());
     }
 
     @Test
@@ -110,6 +140,16 @@ class PlayerServiceImplTest {
         verify(repository, atLeastOnce()).save(player);
         assertTrue(player.isRetireEarlyPath());
         assertEquals(200000, player.getMoney());
+    }
+
+    @Test
+    void chooseRetireEarlyPathFalse() {
+        dto.setRetireEarlyPath(false);
+
+        service.chooseRetireEarlyPath(dto);
+
+        verify(repository, atLeastOnce()).save(player);
+        assertFalse(player.isRetireEarlyPath());
     }
 
     @Test
