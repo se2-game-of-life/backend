@@ -1,4 +1,4 @@
-package se2.group3.backend;
+package se.group3.backend;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,11 +16,4 @@ class BackendApplicationTests {
     void contextLoads() {
         Assertions.assertNotNull(context);
     }
-
-    //probably not worth having a test for, but I cant merge because of low code coverage atm
-    @Test
-    void execution() {
-        BackendApplication.main(new String[]{});
-    }
-
 }
