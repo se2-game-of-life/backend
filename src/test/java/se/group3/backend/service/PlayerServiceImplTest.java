@@ -45,7 +45,7 @@ class PlayerServiceImplTest {
         dto = PlayerMapper.mapPlayerToDTO(player);
 
 
-        when(repository.findById(dto.getPlayerID())).thenReturn(Optional.ofNullable(player));
+        lenient().when(repository.findById(dto.getPlayerID())).thenReturn(Optional.ofNullable(player));
     }
 
     @Test
@@ -89,6 +89,16 @@ class PlayerServiceImplTest {
 
         verify(repository, atLeastOnce()).save(player);
         assertTrue(player.isHasMidlifeCrisis());
+    }
+
+    @Test
+    void midLifeCrisisPath_setsFlagFalse() {
+        dto.setHasMidlifeCrisis(false);
+
+        service.midLifeCrisisPath(dto);
+
+        verify(repository, atLeastOnce()).save(player);
+        assertFalse(player.isHasMidlifeCrisis());
     }
 
     @Test
