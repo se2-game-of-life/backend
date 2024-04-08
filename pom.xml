@@ -30,6 +30,9 @@
             **se/group3/backend/dto/LobbyDTO.java,
             **se/group3/backend/dto/PlayerDTO.java,
             **se/group3/backend/services/CellService.java
+            **se/group3/backend/DTOs/PlayerMoveRequest.java
+            **se/group3/backend/controllers/player/PlayerController.java
+            **se/group3/backend/mapper/PlayerMapper.java
         </sonar.coverage.exclusions>
     </properties>
     <dependencies>
@@ -52,11 +55,6 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-sync</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
         <dependency>
