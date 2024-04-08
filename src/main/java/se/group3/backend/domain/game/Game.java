@@ -9,13 +9,16 @@ import se.group3.backend.repositories.ActionCardRepository;
 import se.group3.backend.repositories.CareerCardRepository;
 import se.group3.backend.repositories.HouseCardRepository;
 import se.group3.backend.services.CellService;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import se.group3.backend.services.CellService;
 
+@Slf4j
 @Component
 public class Game {
     private List<Player> players;
@@ -46,10 +49,7 @@ public class Game {
 
     public void initializeDecks() {
         List<ActionCard> actionCards = actionCardRepository.findAll();
-        /*
-        for (ActionCard card : actionCards) {
-            System.out.println(card);
-        }*/
+
         actionCardDeck = new Deck<>(actionCards);
         actionCardDeck.shuffle();
 
@@ -65,12 +65,13 @@ public class Game {
     public void initializeBoard(){
         List<Cell> cells = cellService.getAllCells();
         board = new Board(cells);
-        System.out.println(board);
+        log.debug(board.toString());
         }
 
 
     public void startGame() {
         // Start the game, set up initial conditions, determine starting player, etc.
+        throw new UnsupportedOperationException();
     }
 
     public void nextTurn() {
@@ -80,6 +81,7 @@ public class Game {
         board.movePlayer(currentPlayer, steps); // Move the player on the board
         if (checkWinCondition()) {
             // Handle game over condition
+            throw new UnsupportedOperationException();
         }
     }
 
@@ -91,6 +93,6 @@ public class Game {
     private boolean checkWinCondition() {
         // Check if a player has met the win condition
         // Implement the logic to check whether any player has won the game
-        return false;
+        throw new UnsupportedOperationException();
     }
 }

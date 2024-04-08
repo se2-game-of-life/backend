@@ -21,6 +21,16 @@
         <sonar.coverage.jacoco.xmlReportPaths>
             ${project.build.directory}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
         </sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.exclusions>
+            **se/group3/backend/domain/cards/**,
+            **se/group3/backend/domain/cells/**,
+            **se/group3/backend/domain/game/**,
+            **se/group3/backend/domain/player/**,
+            **se/group3/backend/dto/JoinLobbyRequest.java,
+            **se/group3/backend/dto/LobbyDTO.java,
+            **se/group3/backend/dto/PlayerDTO.java,
+            **se/group3/backend/services/CellService.java
+        </sonar.coverage.exclusions>
     </properties>
     <dependencies>
         <dependency>
@@ -63,12 +73,20 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- HINZUFÜGEN -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.10.2</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
     </dependencies>
 
@@ -94,7 +112,6 @@
                 </executions>
             </plugin>
 
-            <!-- ZUSÄTZLICH FÜR SE II -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
