@@ -35,6 +35,9 @@
             **se/group3/backend/mapper/PlayerMapper.java,
             **src/main/java/se/group3/backend/DTOs/PlayerDTO.java,
         </sonar.coverage.exclusions>
+        <sonar.cpd.exclusions>
+            **src/main/java/se/group3/backend/DTOs/PlayerDTO.java
+        </sonar.cpd.exclusions>
     </properties>
     <dependencies>
         <dependency>
