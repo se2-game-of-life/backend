@@ -1,8 +1,8 @@
 package se.group3.backend.domain.cells;
 
 
-import se.group3.backend.domain.game.Deck;
 import se.group3.backend.domain.player.Player;
+import se.group3.backend.domain.game.Deck;
 
 import java.util.List;
 

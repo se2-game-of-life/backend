@@ -1,6 +1,5 @@
 package se.group3.backend.domain.game;
 
-import lombok.extern.slf4j.Slf4j;
 import se.group3.backend.domain.cards.ActionCard;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cards.HouseCard;
@@ -9,6 +8,8 @@ import se.group3.backend.domain.player.Player;
 import se.group3.backend.repositories.ActionCardRepository;
 import se.group3.backend.repositories.CareerCardRepository;
 import se.group3.backend.repositories.HouseCardRepository;
+import se.group3.backend.services.CellService;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Random;

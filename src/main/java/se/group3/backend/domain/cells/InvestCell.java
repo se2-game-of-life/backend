@@ -16,7 +16,7 @@ public class InvestCell extends Cell {
         // Implement logic for investment
         int investmentNumber = 0;
         // determine the investment number
-        player.invest(investmentNumber);
+        throw new UnsupportedOperationException();
     }
 }
 

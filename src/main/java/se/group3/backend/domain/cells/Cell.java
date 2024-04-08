@@ -3,8 +3,8 @@ package se.group3.backend.domain.cells;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import se.group3.backend.domain.game.Deck;
 import se.group3.backend.domain.player.Player;
+import se.group3.backend.domain.game.Deck;
 import se.group3.backend.domain.cards.Card;
 
 import java.util.List;

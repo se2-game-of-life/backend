@@ -14,7 +14,7 @@ public class PaydayCell extends Cell {
     @Override
     public void performAction(Player player) {
         // Player collects bonus
-        player.setMoney(player.getMoney() + player.getcareerCard().getBonus());
+        player.setMoney(player.getMoney() + player.getCareerCard().getBonus());
         //TODO: implement collecting normal salary elsewhere
     }
 
