@@ -18,7 +18,7 @@ public class ConnectionController {
      * @param playerIdentifier the UUID provided by the client.
      * @param headerAccessor the header used to store the information.
      */
-    @MessageMapping("/topic/setIdentifier")
+    @MessageMapping("/setIdentifier")
     public void setPlayerIdentifier(@Payload String playerIdentifier, SimpMessageHeaderAccessor headerAccessor) {
         try {
             SessionUtil.putSessionAttribute(headerAccessor, "uuid", playerIdentifier);
