@@ -1,8 +1,10 @@
 package se2.group3.backend.domain.lobby;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import se2.group3.backend.domain.player.Player;
 
+@Slf4j
 @Getter
 public class Lobby implements Runnable {
 
@@ -39,7 +41,7 @@ public class Lobby implements Runnable {
         // remove player logic
         // if player is host, move host to another player at random
         currentPlayerCount--;
-        throw new UnsupportedOperationException(uuid);
+        log.debug(uuid);
     }
 
     public boolean isFull() {
