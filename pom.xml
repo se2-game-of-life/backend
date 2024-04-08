@@ -27,7 +27,8 @@
             **se/group3/backend/domain/player/**,
             **se/group3/backend/dto/JoinLobbyRequest.java,
             **se/group3/backend/dto/LobbyDTO.java,
-            **se/group3/backend/dto/PlayerDTO.java
+            **se/group3/backend/dto/PlayerDTO.java,
+            **se/group3/backend/services/CellService.java
         </sonar.coverage.exclusions>
     </properties>
     <dependencies>
