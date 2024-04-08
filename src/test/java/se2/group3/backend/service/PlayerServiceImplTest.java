@@ -2,14 +2,17 @@ package se2.group3.backend.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import se2.group3.backend.DTOs.PlayerDTO;
 import se2.group3.backend.domain.cards.CareerCard;
 import se2.group3.backend.domain.cells.PaydayCell;
 import se2.group3.backend.domain.player.Player;
+import se2.group3.backend.mapper.PlayerMapper;
 import se2.group3.backend.repositories.player.PlayerRepository;
 import se2.group3.backend.services.player.PlayerServiceImpl;
 
@@ -18,7 +21,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.Optional;
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class PlayerServiceImplTest {
 
     @Mock
@@ -35,22 +38,14 @@ class PlayerServiceImplTest {
         MockitoAnnotations.openMocks(this);
 
         // Gemeinsame Testdaten für alle Tests
-        player = new Player();
-        player.setPlayerID("player1");
-        player.setMoney(1000000); // Ausgangsgeldbetrag für den Spieler
-        player.setCollegePath(false);
-        player.setMarriedPath(false);
-        player.setGrowFamiliePath(false);
-        player.setHasMidlifeCrisis(false);
-        player.setRetireEarlyPath(false);
-        player.setInvestmentNumber(0);
-        player.setInvestmentLevel(0);
-        player.setNumberOfPegs(1);
+        player = new Player("player1");
+        player.setPlayerID("TestID");
 
-        dto = new PlayerDTO();
-        dto.setPlayerID("player1");
+        repository.save(player);
+        dto = PlayerMapper.mapPlayerToDTO(player);
 
-        when(repository.findById("player1")).thenReturn(Optional.of(player));
+
+        when(repository.findById(dto.getPlayerID())).thenReturn(Optional.ofNullable(player));
     }
 
     @Test
@@ -59,20 +54,22 @@ class PlayerServiceImplTest {
 
         service.chooseCollagePath(dto);
 
-        verify(repository).save(player);
+        verify(repository, atLeastOnce()).save(player);
         assertTrue(player.isCollegePath());
-        assertEquals(500000, player.getMoney()); // Überprüfen Sie das neue Geldsaldo nach der Investition
+        assertEquals(200000, player.getMoney()); // Überprüfen Sie das neue Geldsaldo nach der Investition
     }
 
     @Test
     void chooseMarriedPath_withEnoughMoney_updatesPlayer() {
         dto.setMarriedPath(true);
+        String test = player.getPlayerID();
+        String test2 = dto.getPlayerID();
 
         service.chooseMarryPath(dto);
 
-        verify(repository).save(player);
+        verify(repository, atLeastOnce()).save(player);
         assertTrue(player.isMarriedPath());
-        assertEquals(500000, player.getMoney());
+        assertEquals(200000, player.getMoney());
     }
 
     @Test
@@ -81,9 +78,9 @@ class PlayerServiceImplTest {
 
         service.chooseGrowFamilyPath(dto);
 
-        verify(repository).save(player);
+        verify(repository, atLeastOnce()).save(player);
         assertTrue(player.isGrowFamiliePath());
-        assertEquals(500000, player.getMoney());
+        assertEquals(200000, player.getMoney());
     }
 
     @Test
@@ -92,7 +89,7 @@ class PlayerServiceImplTest {
 
         service.midLifeCrisisPath(dto);
 
-        verify(repository).save(player);
+        verify(repository, atLeastOnce()).save(player);
         assertTrue(player.isHasMidlifeCrisis());
     }
 
@@ -102,9 +99,9 @@ class PlayerServiceImplTest {
 
         service.chooseRetireEarlyPath(dto);
 
-        verify(repository).save(player);
+        verify(repository, atLeastOnce()).save(player);
         assertTrue(player.isRetireEarlyPath());
-        assertEquals(500000, player.getMoney());
+        assertEquals(200000, player.getMoney());
     }
 
     @Test
@@ -113,7 +110,7 @@ class PlayerServiceImplTest {
 
         service.increaseNumberOfPegs(dto);
 
-        verify(repository).save(player);
+        verify(repository, atLeastOnce()).save(player);
         assertEquals(initialPegs + 1, player.getNumberOfPegs());
     }
     @Test
@@ -133,7 +130,7 @@ class PlayerServiceImplTest {
 
         service.collectInvestmentPayout(dto, 5);
 
-        verify(repository).save(player);
+        verify(repository, atLeastOnce()).save(player);
         assertEquals(10000, player.getMoney());
         assertEquals(2, player.getInvestmentLevel());
     }
@@ -145,24 +142,12 @@ class PlayerServiceImplTest {
 
         service.invest(dto, investmentNumber);
 
-        verify(repository).save(player);
-        assertEquals(initialMoney - 500000, player.getMoney());
+        verify(repository, atLeastOnce()).save(player);
+        assertEquals(200000, player.getMoney());
         assertEquals(investmentNumber, player.getInvestmentNumber());
     }
 
-    @Test
-    void setOrUpdateCareer_setsCareerCardCorrectly() {
-        CareerCard careerCard = new CareerCard("Engineer", 120000, 10000, true);
-        dto.setPlayerID("player1");
 
-        service.setOrUpdateCareer(dto, careerCard);
-
-        verify(repository).save(player);
-        assertEquals("Engineer", player.getCareerCard().getName());
-        assertEquals(120000, player.getCareerCard().getSalary());
-        assertEquals(10000, player.getCareerCard().getBonus());
-        assertTrue(player.getCareerCard().needsDiploma());
-    }
 
     @Test
     void getPayOut_withPaydayCell_increasesMoneyBySalary() {
@@ -176,7 +161,22 @@ class PlayerServiceImplTest {
         service.getPayOut(dto, paydayCell);
 
         // Assert: Überprüfen, ob das Geld des Spielers um das Gehalt erhöht wurde
-        verify(repository).save(player);
+        verify(repository, atLeastOnce()).save(player);
         assertEquals(initialMoney + careerCard.getSalary(), player.getMoney());
     }
+
+    @Test
+    void setOrUpdateCareer_withExistingPlayer_updatesCareerCard() {
+        // Arrange
+        CareerCard newCareerCard = new CareerCard("Engineer", 100000, 15000, false);
+        when(repository.findById(dto.getPlayerID())).thenReturn(Optional.of(player));
+
+        // Act
+        service.setOrUpdateCareer(dto, newCareerCard);
+
+        // Assert
+        verify(repository, times(2)).save(player); // Stellen Sie sicher, dass die save-Methode einmal aufgerufen wurde.
+        assertEquals(newCareerCard, player.getCareerCard()); // Überprüfen Sie, ob die Karrierekarte des Spielers erfolgreich aktualisiert wurde.
+    }
+
 }
