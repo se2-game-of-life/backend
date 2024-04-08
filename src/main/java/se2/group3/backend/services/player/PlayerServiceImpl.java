@@ -15,12 +15,11 @@ public class PlayerServiceImpl implements PlayerService {
 
     private static final Integer INVESTMENT = 50000;
 
-    private final PlayerRepository repository;
 
+    //the tests do not pass, if the repository is initialized in a constructor
     @Autowired
-    public PlayerServiceImpl(PlayerRepository repository) {
-        this.repository = repository;
-    }
+    private PlayerRepository repository;
+
 
     @Override
     public void chooseCollagePath(PlayerDTO dto) {
