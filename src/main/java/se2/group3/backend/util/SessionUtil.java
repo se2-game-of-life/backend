@@ -45,15 +45,11 @@ public class SessionUtil {
         }
 
         Object uuid = sessionAttributes.get("uuid");
-        if(!(uuid == null || uuid instanceof String)) {
+        if(!(uuid instanceof String)) {
             throw new SessionOperationException("Session attribute 'uuid' is not of type String!");
         }
 
-        if(uuid == null) {
-            throw new SessionOperationException("Session attribute 'uuid' is null!");
-        }
-        String result = (String) uuid;
-        return result.substring(1, result.length() - 1);
+        return (String) uuid;
     }
 }
 
