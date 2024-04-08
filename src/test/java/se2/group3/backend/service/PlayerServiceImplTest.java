@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import se2.group3.backend.DTOs.PlayerDTO;
 import se2.group3.backend.domain.cards.CareerCard;
 import se2.group3.backend.domain.cells.PaydayCell;
@@ -35,7 +34,7 @@ class PlayerServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.openMocks(PlayerRepository.class);
 
         // Gemeinsame Testdaten für alle Tests
         player = new Player("player1");
@@ -62,8 +61,6 @@ class PlayerServiceImplTest {
     @Test
     void chooseMarriedPath_withEnoughMoney_updatesPlayer() {
         dto.setMarriedPath(true);
-        String test = player.getPlayerID();
-        String test2 = dto.getPlayerID();
 
         service.chooseMarryPath(dto);
 
@@ -117,11 +114,9 @@ class PlayerServiceImplTest {
     void spin_increasesCurrentCellPosition() {
         int initialPosition = player.getCurrentCellPosition();
 
-        // Da die Spin-Methode eine Zufallszahl verwendet, müssen Sie möglicherweise den Random-Mechanismus mocken oder eine Strategie entwickeln, um den Test vorhersagbar zu machen.
-
         service.spin(dto);
 
-        assertTrue(player.getCurrentCellPosition() >= initialPosition); // Überprüft, ob die Position erhöht wurde
+        assertTrue(player.getCurrentCellPosition() >= initialPosition);
     }
     @Test
     void collectInvestmentPayout_withMatchingSpinResult_increasesMoney() {
@@ -138,7 +133,6 @@ class PlayerServiceImplTest {
     @Test
     void invest_decreasesMoneyAndSetsInvestmentNumber() {
         Integer investmentNumber = 5;
-        int initialMoney = player.getMoney();
 
         service.invest(dto, investmentNumber);
 
@@ -151,32 +145,25 @@ class PlayerServiceImplTest {
 
     @Test
     void getPayOut_withPaydayCell_increasesMoneyBySalary() {
-        // Setup: Erstellen einer PaydayCell und einer CareerCard mit einem bestimmten Gehalt
         PaydayCell paydayCell = new PaydayCell(5, Arrays.asList(6, 7)); // Position und mögliche nächste Zellen
         CareerCard careerCard = new CareerCard("Doctor", 150000, 20000, false);
         player.setCareerCard(careerCard);
         int initialMoney = player.getMoney();
 
-        // Action: Aufrufen der getPayOut Methode mit der PaydayCell
         service.getPayOut(dto, paydayCell);
 
-        // Assert: Überprüfen, ob das Geld des Spielers um das Gehalt erhöht wurde
         verify(repository, atLeastOnce()).save(player);
         assertEquals(initialMoney + careerCard.getSalary(), player.getMoney());
     }
 
     @Test
     void setOrUpdateCareer_withExistingPlayer_updatesCareerCard() {
-        // Arrange
         CareerCard newCareerCard = new CareerCard("Engineer", 100000, 15000, false);
         when(repository.findById(dto.getPlayerID())).thenReturn(Optional.of(player));
-
-        // Act
         service.setOrUpdateCareer(dto, newCareerCard);
 
-        // Assert
-        verify(repository, times(2)).save(player); // Stellen Sie sicher, dass die save-Methode einmal aufgerufen wurde.
-        assertEquals(newCareerCard, player.getCareerCard()); // Überprüfen Sie, ob die Karrierekarte des Spielers erfolgreich aktualisiert wurde.
+        verify(repository, times(2)).save(player);
+        assertEquals(newCareerCard, player.getCareerCard());
     }
 
 }

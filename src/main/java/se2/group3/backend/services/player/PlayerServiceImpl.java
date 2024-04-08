@@ -17,9 +17,12 @@ public class PlayerServiceImpl implements PlayerService {
 
 
     //the tests do not pass, if the repository is initialized in a constructor
-    @Autowired
-    private PlayerRepository repository;
+    private final PlayerRepository repository;
 
+    @Autowired
+    public PlayerServiceImpl(PlayerRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public void chooseCollagePath(PlayerDTO dto) {
