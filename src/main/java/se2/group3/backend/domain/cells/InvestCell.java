@@ -14,7 +14,8 @@ public class InvestCell extends Cell {
     @Override
     public void performAction(Player player) {
         // Implement logic for investment
-        int investmentNumber = 0; // TODO: determine the investment number
+        int investmentNumber = 0;
+        // determine the investment number
         player.invest(investmentNumber);
     }
 }

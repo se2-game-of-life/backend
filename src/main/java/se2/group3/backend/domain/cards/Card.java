@@ -6,9 +6,9 @@ import se2.group3.backend.domain.player.Player;
 public abstract class Card {
     @Id
     protected String id;
-    private String name;
+    private final String name;
 
-    public Card(String name) {
+    protected Card(String name) {
         this.name = name;
     }
 

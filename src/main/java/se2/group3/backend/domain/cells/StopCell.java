@@ -4,7 +4,7 @@ import java.util.List;
 
 public abstract class StopCell extends Cell {
 
-    public StopCell(int position, List<Integer> nextCells) {
+    protected StopCell(int position, List<Integer> nextCells) {
         super(position, nextCells);
     }
 
