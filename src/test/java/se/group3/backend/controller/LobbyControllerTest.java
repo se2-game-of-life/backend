@@ -49,6 +49,27 @@ class LobbyControllerTest {
     }
 
     @Test
+    void createLobbyIllegalStateException() {
+        String playerDTO = "{\"playerName\":\"asd\"}";
+        SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
+        LobbyDTO lobbyDTO = Mockito.mock(LobbyDTO.class);
+
+        Map<String, Object> sessionAttributes = new HashMap<>();
+        sessionAttributes.put("uuid", "TestUUID");
+        Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(sessionAttributes);
+
+        try {
+            Mockito.when(lobbyService.createLobby(Mockito.any(PlayerDTO.class), Mockito.eq(headerAccessor))).thenThrow(new IllegalStateException("Exception!"));
+        } catch (SessionOperationException e) {
+            Assertions.fail(e);
+        }
+
+        lobbyController.createLobby(playerDTO, headerAccessor);
+
+        Mockito.verify(messagingTemplate).convertAndSend(Mockito.eq("/topic/errors/TestUUID"), Mockito.anyString());
+    }
+
+    @Test
     void joinLobby() {
         SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
         LobbyDTO lobbyDTO = Mockito.mock(LobbyDTO.class);
@@ -70,6 +91,27 @@ class LobbyControllerTest {
     }
 
     @Test
+    void joinLobbyIllegalStateException() {
+        SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
+        LobbyDTO lobbyDTO = Mockito.mock(LobbyDTO.class);
+
+        Map<String, Object> sessionAttributes = new HashMap<>();
+        sessionAttributes.put("uuid", "TestUUID");
+        Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(sessionAttributes);
+        Mockito.when(lobbyDTO.getLobbyID()).thenReturn(1L);
+
+        try {
+            Mockito.when(lobbyService.joinLobby(Mockito.any(Long.class), Mockito.any(PlayerDTO.class), Mockito.eq(headerAccessor))).thenThrow(new IllegalStateException("Exception!"));
+        } catch (SessionOperationException e) {
+            Assertions.fail(e);
+        }
+
+        lobbyController.joinLobby("{\"lobbyID\":1,\"player\":{\"playerName\":\"TestName\"}}", headerAccessor);
+
+        Mockito.verify(messagingTemplate).convertAndSend(Mockito.eq("/topic/errors/TestUUID"), Mockito.anyString());
+    }
+
+    @Test
     void leaveLobby() {
         SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
         LobbyDTO lobbyDTO = Mockito.mock(LobbyDTO.class);
@@ -87,5 +129,25 @@ class LobbyControllerTest {
 
         lobbyController.leaveLobby(headerAccessor);
         Mockito.verify(messagingTemplate).convertAndSend(Mockito.eq("/topic/lobbies/1"), Mockito.anyString());
+    }
+
+    @Test
+    void leaveLobbyIllegalStateException() {
+        SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
+        LobbyDTO lobbyDTO = Mockito.mock(LobbyDTO.class);
+
+        Map<String, Object> sessionAttributes = new HashMap<>();
+        sessionAttributes.put("uuid", "TestUUID");
+        Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(sessionAttributes);
+        Mockito.when(lobbyDTO.getLobbyID()).thenReturn(1L);
+
+        try {
+            Mockito.when(lobbyService.leaveLobby(Mockito.eq(headerAccessor))).thenThrow(new IllegalStateException("Exception!"));
+        } catch (SessionOperationException e) {
+            Assertions.fail(e);
+        }
+
+        lobbyController.leaveLobby(headerAccessor);
+        Mockito.verify(messagingTemplate).convertAndSend(Mockito.eq("/topic/errors/TestUUID"), Mockito.anyString());
     }
 }
