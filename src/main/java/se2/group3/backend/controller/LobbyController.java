@@ -51,7 +51,7 @@ public class LobbyController {
 
         try {
             LobbyDTO lobby = lobbyService.createLobby((PlayerDTO) SerializationUtil.toObject(playerDTO, PlayerDTO.class), headerAccessor);
-            this.template.convertAndSendToUser(uuid, "/topic/lobbies", SerializationUtil.jsonStringFromClass(lobby));
+            this.template.convertAndSend("/topic/lobbies/" + uuid, SerializationUtil.jsonStringFromClass(lobby));
         } catch (IllegalStateException | JsonProcessingException | ClassCastException e) {
             this.template.convertAndSendToUser(uuid, ERROR_PATH, new ErrorResponse(e.getMessage()));
         } catch (SessionOperationException e) {
@@ -84,7 +84,7 @@ public class LobbyController {
             LobbyDTO lobby = lobbyService.joinLobby(request.getLobbyID(), request.getPlayer(), headerAccessor);
             this.template.convertAndSend("/topic/lobbies/" + lobby.getLobbyID(), SerializationUtil.jsonStringFromClass(lobby));
         } catch (IllegalStateException | JsonProcessingException | ClassCastException e){
-            this.template.convertAndSendToUser(uuid, ERROR_PATH, e.getMessage());
+            this.template.convertAndSend("/topic/errors/" + uuid, e.getMessage());
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
         }
@@ -113,7 +113,7 @@ public class LobbyController {
             LobbyDTO lobby = lobbyService.leaveLobby(headerAccessor);
             this.template.convertAndSend("/topic/lobbies/" + lobby.getLobbyID(), SerializationUtil.jsonStringFromClass(lobby));
         } catch (IllegalStateException | JsonProcessingException e){
-            this.template.convertAndSendToUser(uuid, ERROR_PATH, e.getMessage());
+            this.template.convertAndSend("/topic/errors/" + uuid, e.getMessage());
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
         }

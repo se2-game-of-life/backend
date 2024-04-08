@@ -21,7 +21,7 @@ public class ConnectionController {
     @MessageMapping("/setIdentifier")
     public void setPlayerIdentifier(@Payload String playerIdentifier, SimpMessageHeaderAccessor headerAccessor) {
         try {
-            SessionUtil.putSessionAttribute(headerAccessor, "uuid", playerIdentifier);
+            SessionUtil.putSessionAttribute(headerAccessor, "uuid", playerIdentifier.substring(1, playerIdentifier.length() - 1));
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
         }
