@@ -33,6 +33,7 @@
             **se/group3/backend/DTOs/PlayerMoveRequest.java,
             **se/group3/backend/controllers/player/PlayerController.java,
             **se/group3/backend/mapper/PlayerMapper.java,
+            **src/main/java/se/group3/backend/DTOs/PlayerDTO.java,
         </sonar.coverage.exclusions>
     </properties>
     <dependencies>
