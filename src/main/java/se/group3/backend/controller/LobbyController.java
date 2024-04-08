@@ -54,7 +54,7 @@ public class LobbyController {
             LobbyDTO lobby = lobbyService.createLobby((PlayerDTO) SerializationUtil.toObject(playerDTO, PlayerDTO.class), headerAccessor);
             this.template.convertAndSend(LOBBIES_PATH + uuid, SerializationUtil.jsonStringFromClass(lobby));
         } catch (IllegalStateException | JsonProcessingException | ClassCastException e) {
-            this.template.convertAndSend(ERROR_PATH + uuid, new ErrorResponse(e.getMessage()));
+            this.template.convertAndSend(ERROR_PATH + uuid, e.getMessage());
         } catch (SessionOperationException e) {
             log.error(e.getMessage());
         }
