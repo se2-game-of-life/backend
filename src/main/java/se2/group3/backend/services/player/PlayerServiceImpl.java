@@ -13,17 +13,14 @@ import java.util.Random;
 @Service
 public class PlayerServiceImpl implements PlayerService {
 
-    private final Integer INVESTMENTCOST = 500000;
-
+    private final Integer INVESTMENTCOST = 50000;
 
     private final Integer INVESTMENTMULTIPLIER = 10000;
 
-    private final PlayerRepository repository;
-
     @Autowired
-    public PlayerServiceImpl(PlayerRepository repository) {
-        this.repository = repository;
-    }
+    private PlayerRepository repository;
+
+
 
     @Override
     public void chooseCollagePath(PlayerDTO dto) {
