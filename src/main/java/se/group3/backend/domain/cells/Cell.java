@@ -59,5 +59,8 @@ public class Cell {
         drawnCard.performAction(player);
     }
 
+    public String getId() {
+        return id;
+    }
 }
 
