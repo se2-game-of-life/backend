@@ -8,7 +8,6 @@ import se.group3.backend.repositories.player.PlayerRepository;
 import se.group3.backend.DTOs.PlayerDTO;
 import se.group3.backend.domain.cards.CareerCard;
 
-import java.net.StandardProtocolFamily;
 import java.security.SecureRandom;
 import java.util.List;
 
