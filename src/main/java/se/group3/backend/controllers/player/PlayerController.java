@@ -46,13 +46,7 @@ public class PlayerController {
     public void movePlayer(@Payload PlayerMoveRequest moveRequest) {
         PlayerDTO dto = moveRequest.getPlayerDTO();
         List<Cell> cells = moveRequest.getCells();
-        for(Cell cell : cells) {
-            if(cell instanceof StopCell) {
-                playerService.checkCellAndPerformAction(dto, cell);
-                break;
-            }
-            //perform normal action
-        }
+        playerService.checkCellAndPerformAction(dto, cells);
     }
 
     /**
