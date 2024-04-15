@@ -3,6 +3,7 @@ package se.group3.backend.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.group3.backend.domain.cells.*;
+import se.group3.backend.domain.cells.stopcells.*;
 import se.group3.backend.repositories.CellRepository;
 import se.group3.backend.domain.cells.Cell;
 
@@ -56,6 +57,14 @@ public class CellService {
             }
             else if ("spinToGraduateStopCell".equals(cell.getType())) {
                 castedCells.add(new SpinToGraduateStopCell(cell.getPosition(), cell.getNextCells()));
+            }else if ("GetMarriedStopCell".equals(cell.getType())) {
+                castedCells.add(new GetMarriedStopCell(cell.getPosition(), cell.getNextCells()));
+            }else if ("GrowFamilyStopCell".equals(cell.getType())) {
+                castedCells.add(new GrowFamilyStopCell(cell.getPosition(), cell.getNextCells()));
+            }else if ("MidLifeStopCell".equals(cell.getType())) {
+                castedCells.add(new MidLifeStopCell(cell.getPosition(), cell.getNextCells()));
+            }else if ("RetireEarlyStopCell".equals(cell.getType())) {
+                castedCells.add(new RetireEarlyStopCell(cell.getPosition(), cell.getNextCells()));
             }
             else{
                 castedCells.add(cell);

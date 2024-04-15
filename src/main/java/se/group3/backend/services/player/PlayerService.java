@@ -3,7 +3,7 @@ package se.group3.backend.services.player;
 import se.group3.backend.DTOs.PlayerDTO;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cells.Cell;
-import se.group3.backend.domain.cells.StopCell;
+import se.group3.backend.domain.cells.stopcells.StopCell;
 
 
 /**

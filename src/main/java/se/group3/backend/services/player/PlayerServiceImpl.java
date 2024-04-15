@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.group3.backend.domain.cells.Cell;
 import se.group3.backend.domain.cells.PaydayCell;
-import se.group3.backend.domain.cells.StopCell;
+import se.group3.backend.domain.cells.stopcells.StopCell;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.repositories.player.PlayerRepository;
 import se.group3.backend.DTOs.PlayerDTO;

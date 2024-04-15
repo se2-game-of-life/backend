@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import se.group3.backend.DTOs.PlayerDTO;
 import se.group3.backend.DTOs.PlayerMoveRequest;
 import se.group3.backend.domain.cells.Cell;
-import se.group3.backend.domain.cells.StopCell;
+import se.group3.backend.domain.cells.stopcells.StopCell;
 import se.group3.backend.services.player.PlayerServiceImpl;
 
 import java.util.List;

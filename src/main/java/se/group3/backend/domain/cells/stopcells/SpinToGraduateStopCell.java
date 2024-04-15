@@ -1,4 +1,4 @@
-package se.group3.backend.domain.cells;
+package se.group3.backend.domain.cells.stopcells;
 
 import se.group3.backend.domain.player.Player;
 import lombok.extern.slf4j.Slf4j;
