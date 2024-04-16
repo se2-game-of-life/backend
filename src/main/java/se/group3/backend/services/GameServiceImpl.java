@@ -36,42 +36,42 @@ public class GameServiceImpl implements GameService {
     public void startGame(LobbyDTO lobbyDTO) {
         game.initializeBoard();
         game.initializeDecks();
-        throw new UnsupportedOperationException("Not implemented yet.");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void choosePath(PlayerDTO playerDTO) {
         //review: should this be implemented in GameService or PlayerService?
-        throw new UnsupportedOperationException("Not implemented yet.");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void handleCell(PlayerDTO playerDTO, CellDTO cellDTO) {
         //review: should this be implemented in GameService or PlayerService?
-        throw new UnsupportedOperationException("Not implemented yet.");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void getPlayerStats(LobbyDTO lobbyDTO) {
-        throw new UnsupportedOperationException("Not implemented yet.");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void checkWinCondition(PlayerDTO playerDTO) {
         //review: not implemented yet, but method definition exists in Game.java --> move method?
-        throw new UnsupportedOperationException("Not implemented yet.");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void spinWheel(PlayerDTO playerDTO) {
         //review: implemented in Game.java AND in PlayerService.java --> move method?
-        throw new UnsupportedOperationException("Not implemented yet.");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void nextPlayer(PlayerDTO playerDTO) {
         //review: implemented in as nextTurn() in Game.java --> move method?
-        throw new UnsupportedOperationException("Not implemented yet.");
+        throw new UnsupportedOperationException();
     }
 
 
