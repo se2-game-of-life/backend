@@ -36,5 +36,22 @@ public interface GameService {
 
     void getPlayerStats(LobbyDTO lobbyDTO);
 
+    /**
+     * Shows who won the game and which place the player finished in
+     * @param playerDTO to user Player Object from Database
+     */
+    void checkWinCondition(PlayerDTO playerDTO);
+
+    /**
+     * Implements the functionality of spinning the wheel
+     * @param playerDTO to update the Player Object in the Database
+     */
+    void spinWheel(PlayerDTO playerDTO);
+
+    /**
+     * Ends the player's turn and switches to the next player
+     * @param playerDTO Player who has just finished the turn
+     */
+    void nextPlayer(PlayerDTO playerDTO);
 
 }
