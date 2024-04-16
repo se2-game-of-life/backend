@@ -11,12 +11,13 @@ import se.group3.backend.dto.LobbyDTO;
 public interface GameService {
 
     /**
-     * Starts a new game
+     * Starts a new game, initializes conditions and determines the order in which players spin
+     * @param lobbyDTO to use Lobby Object
      */
-    void startGame();
+    void startGame(LobbyDTO lobbyDTO);
 
     /**
-     * Determines if the Player chooses College
+     * Determines if the Player chooses College or Career
      * @param playerDTO to update the player Object in the database
      */
     void choosePath(PlayerDTO playerDTO);
@@ -34,7 +35,6 @@ public interface GameService {
      */
 
     void getPlayerStats(LobbyDTO lobbyDTO);
-
 
 
 }
