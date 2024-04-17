@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 public class GameServiceImpl implements GameService {
 
-    private Game game;
+    private final Game game;
 
     private final CareerCardRepository careerCardRepository;
     private final ActionCardRepository actionCardRepository;
