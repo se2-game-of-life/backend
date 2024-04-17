@@ -27,6 +27,7 @@ public class Player {
     private int money;
 
     private CareerCard careerCard;
+    private List<HouseCard> ownedHouses = new ArrayList<>();
 
     //Booleans for the different paths the game offers
     private boolean isCollegePath;
@@ -48,5 +49,9 @@ public class Player {
         this.investmentNumber =0;
         this.investmentLevel = 0;
         this.numberOfPegs = 1;
+    }
+
+    public void assignHouseCard(HouseCard houseCard) {
+        ownedHouses.add(houseCard);
     }
 }
