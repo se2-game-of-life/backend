@@ -5,8 +5,11 @@ import org.springframework.stereotype.Service;
 import se.group3.backend.DTOs.PlayerDTO;
 import se.group3.backend.domain.game.Game;
 import se.group3.backend.domain.player.Player;
+import se.group3.backend.domain.player.PlayerStatistic;
 import se.group3.backend.dto.CellDTO;
 import se.group3.backend.dto.LobbyDTO;
+import se.group3.backend.dto.LobbyDTOtemp;
+import se.group3.backend.mapper.PlayerMapper;
 import se.group3.backend.repositories.ActionCardRepository;
 import se.group3.backend.repositories.CareerCardRepository;
 import se.group3.backend.repositories.HouseCardRepository;
@@ -62,10 +65,16 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public void getPlayerStats(LobbyDTO lobbyDTO) {
-        List<Player> playerList = new ArrayList<>();
-
-        throw new UnsupportedOperationException();
+    public List<PlayerStatistic> getPlayerStats(PlayerDTO playerDTO, LobbyDTOtemp lobbyDTO) {
+        PlayerDTO[] players = lobbyDTO.getPlayers();
+        List<PlayerStatistic> otherPlayersStats = new ArrayList<>();
+        for (PlayerDTO dto : players) {
+            if (!dto.equals(playerDTO)) {
+                Player player = PlayerMapper.mapDTOToPlayer(dto);
+                otherPlayersStats.add(new PlayerStatistic(player));
+            }
+        }
+        return otherPlayersStats;
     }
 
     @Override

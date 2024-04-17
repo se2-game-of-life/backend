@@ -1,8 +1,12 @@
 package se.group3.backend.services;
 
 import se.group3.backend.DTOs.PlayerDTO;
+import se.group3.backend.domain.player.PlayerStatistic;
 import se.group3.backend.dto.CellDTO;
 import se.group3.backend.dto.LobbyDTO;
+import se.group3.backend.dto.LobbyDTOtemp;
+
+import java.util.List;
 
 /**
  * Interface for the GameService
@@ -32,9 +36,11 @@ public interface GameService {
     /**
      * Show statistics of other players
      * @param lobbyDTO to use the PlayerDTO[]
+     * @param playerDTO to know for which player the statistic is shown
+     * @return otherPlayersStats: returns a list with PlayerStatistic objects
      */
 
-    void getPlayerStats(LobbyDTO lobbyDTO);
+    List<PlayerStatistic> getPlayerStats(PlayerDTO playerDTO, LobbyDTOtemp lobbyDTO);
 
     /**
      * Shows who won the game and which place the player finished in
