@@ -32,8 +32,4 @@ public class Deck<T> {
         return drawnCard;
     }
 
-    public void returnCardToBottom(T card) {
-        cards.add(card); // Add the card to the bottom of the deck
-    }
-
 }
