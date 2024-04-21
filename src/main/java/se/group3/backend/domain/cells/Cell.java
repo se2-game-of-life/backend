@@ -19,7 +19,7 @@ public class Cell {
     private int row;
     private int col;
 
-    public Cell(int position, String type, List<Integer> nextCells, int row, int col) {
+    public Cell(int number, String type, List<Integer> nextCells, int row, int col) {
         this.number = number;
         this.type = type;
         this.nextCells = nextCells;
@@ -29,11 +29,6 @@ public class Cell {
 
     public Cell() {
         // Default constructor
-    }
-
-    public Cell(int position, List<Integer> nextCells) {
-        this.number = position;
-        this.nextCells = nextCells;
     }
 
 
