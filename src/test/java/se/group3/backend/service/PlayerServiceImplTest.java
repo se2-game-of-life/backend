@@ -8,11 +8,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.group3.backend.DTOs.PlayerDTO;
+import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cells.PaydayCell;
 import se.group3.backend.domain.player.Player;
-import se.group3.backend.mapper.PlayerMapper;
+import se.group3.backend.dto.mapper.PlayerMapper;
 import se.group3.backend.repositories.player.PlayerRepository;
 import se.group3.backend.services.player.PlayerServiceImpl;
 
