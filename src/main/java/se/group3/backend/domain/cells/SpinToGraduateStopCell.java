@@ -7,9 +7,10 @@ import java.util.List;
 
 @Slf4j
 public class SpinToGraduateStopCell extends StopCell {
-    public SpinToGraduateStopCell(int position, List<Integer> nextCells) {
-        super(position, nextCells);
+    public SpinToGraduateStopCell(int number, String type, List<Integer> nextCells, int row, int col) {
+        super(number, type, nextCells, row, col);
     }
+
 
     @Override
     public void performAction(Player player) {

@@ -26,41 +26,86 @@ public class CellService {
 
 
     private List<Cell> castCellsByType(List<Cell> cells) {
-
         List<Cell> castedCells = new ArrayList<>();
 
         for (Cell cell : cells) {
             if ("action".equals(cell.getType())) {
-                castedCells.add(new ActionCell(cell.getPosition(), cell.getNextCells()));
-            }
-            else if ("addPeg".equals(cell.getType())) {
-                castedCells.add(new AddPegCell(cell.getPosition(), cell.getNextCells()));
-            }
-            else if ("career".equals(cell.getType())) {
-                castedCells.add(new CareerCell(cell.getPosition(), cell.getNextCells()));
-            }
-            else if ("finalRetirementCell".equals(cell.getType())) {
-                castedCells.add(new FinalRetirementCell(cell.getPosition(), cell.getNextCells()));
-            }
-            else if ("getMarriedStopCell".equals(cell.getType())) {
-                castedCells.add(new GetMarriedStopCell(cell.getPosition(), cell.getNextCells()));
-            }
-            else if ("houseCell".equals(cell.getType())) {
-                castedCells.add(new HouseCell(cell.getPosition(), cell.getNextCells()));
-            }
-            else if ("investCell".equals(cell.getType())) {
-                castedCells.add(new InvestCell(cell.getPosition(), cell.getNextCells()));
-            }
-            else if ("paydayCell".equals(cell.getType())) {
-                castedCells.add(new PaydayCell(cell.getPosition(), cell.getNextCells()));
-            }
-            else if ("spinToGraduateStopCell".equals(cell.getType())) {
-                castedCells.add(new SpinToGraduateStopCell(cell.getPosition(), cell.getNextCells()));
-            }
-            else{
+                castedCells.add(new ActionCell(
+                        cell.getNumber(),
+                        cell.getType(),
+                        cell.getNextCells(),
+                        cell.getRow(),
+                        cell.getCol()
+                ));
+            } else if ("addPeg".equals(cell.getType())) {
+                castedCells.add(new AddPegCell(
+                        cell.getNumber(),
+                        cell.getType(),
+                        cell.getNextCells(),
+                        cell.getRow(),
+                        cell.getCol()
+                ));
+            } else if ("career".equals(cell.getType())) {
+                castedCells.add(new CareerCell(
+                        cell.getNumber(),
+                        cell.getType(),
+                        cell.getNextCells(),
+                        cell.getRow(),
+                        cell.getCol()
+                ));
+            } else if ("finalRetirementCell".equals(cell.getType())) {
+                castedCells.add(new FinalRetirementCell(
+                        cell.getNumber(),
+                        cell.getType(),
+                        cell.getNextCells(),
+                        cell.getRow(),
+                        cell.getCol()
+                ));
+            } else if ("getMarriedStopCell".equals(cell.getType())) {
+                castedCells.add(new GetMarriedStopCell(
+                        cell.getNumber(),
+                        cell.getType(),
+                        cell.getNextCells(),
+                        cell.getRow(),
+                        cell.getCol()
+                ));
+            } else if ("houseCell".equals(cell.getType())) {
+                castedCells.add(new HouseCell(
+                        cell.getNumber(),
+                        cell.getType(),
+                        cell.getNextCells(),
+                        cell.getRow(),
+                        cell.getCol()
+                ));
+            } else if ("investCell".equals(cell.getType())) {
+                castedCells.add(new InvestCell(
+                        cell.getNumber(),
+                        cell.getType(),
+                        cell.getNextCells(),
+                        cell.getRow(),
+                        cell.getCol()
+                ));
+            } else if ("paydayCell".equals(cell.getType())) {
+                castedCells.add(new PaydayCell(
+                        cell.getNumber(),
+                        cell.getType(),
+                        cell.getNextCells(),
+                        cell.getRow(),
+                        cell.getCol()
+                ));
+            } else if ("spinToGraduateStopCell".equals(cell.getType())) {
+                castedCells.add(new SpinToGraduateStopCell(
+                        cell.getNumber(),
+                        cell.getType(),
+                        cell.getNextCells(),
+                        cell.getRow(),
+                        cell.getCol()
+                ));
+            } else {
                 castedCells.add(cell);
             }
         }
         return castedCells;
     }
+
 }
