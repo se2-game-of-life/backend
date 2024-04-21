@@ -96,7 +96,7 @@ public class PlayerController {
     public void growFamilyPath(@Payload PlayerMoveRequest moveRequest) {
         PlayerDTO dto = moveRequest.getPlayerDTO();
         boolean pathChange = moveRequest.isPathChange();
-        dto.setGrowFamiliePath(pathChange);
+        dto.setGrowFamilyPath(pathChange);
         playerService.chooseGrowFamilyPath(dto);
     }
 

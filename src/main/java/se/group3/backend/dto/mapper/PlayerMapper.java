@@ -17,7 +17,7 @@ public class PlayerMapper {
         player.setCareerCard(dto.getCareerCard());
         player.setCollegePath(dto.isCollegePath());
         player.setMarriedPath(dto.isMarriedPath());
-        player.setGrowFamiliePath(dto.isGrowFamiliePath());
+        player.setGrowFamiliePath(dto.isGrowFamilyPath());
         player.setHasMidlifeCrisis(dto.isHasMidlifeCrisis());
         player.setRetireEarlyPath(dto.isRetireEarlyPath());
         player.setInvestmentNumber(dto.getInvestmentNumber());
@@ -36,7 +36,7 @@ public class PlayerMapper {
         dto.setCareerCard(player.getCareerCard());
         dto.setCollegePath(player.isCollegePath());
         dto.setMarriedPath(player.isMarriedPath());
-        dto.setGrowFamiliePath(player.isGrowFamiliePath());
+        dto.setGrowFamilyPath(player.isGrowFamiliePath());
         dto.setHasMidlifeCrisis(player.isHasMidlifeCrisis());
         dto.setRetireEarlyPath(player.isRetireEarlyPath());
         dto.setInvestmentNumber(player.getInvestmentNumber());

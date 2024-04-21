@@ -53,9 +53,9 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public void chooseGrowFamilyPath(PlayerDTO dto) {
-        if (dto.isGrowFamiliePath() && repository.findById(dto.getPlayerID()).isPresent()) {
+        if (dto.isGrowFamilyPath() && repository.findById(dto.getPlayerID()).isPresent()) {
             Player player = repository.findById(dto.getPlayerID()).get();
-            if (player.getMoney() > INVESTMENT && dto.isGrowFamiliePath()) {
+            if (player.getMoney() > INVESTMENT && dto.isGrowFamilyPath()) {
                 player.setMoney(player.getMoney() - INVESTMENT);
                 player.setGrowFamiliePath(true);
                 repository.save(player);

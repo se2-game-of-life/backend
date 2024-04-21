@@ -92,7 +92,7 @@ class PlayerServiceImplTest {
 
     @Test
     void chooseGrowFamilyPath_withEnoughMoney_updatesPlayer() {
-        dto.setGrowFamiliePath(true);
+        dto.setGrowFamilyPath(true);
 
         service.chooseGrowFamilyPath(dto);
 
@@ -103,7 +103,7 @@ class PlayerServiceImplTest {
 
     @Test
     void chooseGrowFamilyPathFalse() {
-        dto.setGrowFamiliePath(false);
+        dto.setGrowFamilyPath(false);
 
         service.chooseGrowFamilyPath(dto);
 
