@@ -57,7 +57,7 @@ public class PlayerServiceImpl implements PlayerService {
             Player player = repository.findById(dto.getPlayerID()).get();
             if (player.getMoney() > INVESTMENT && dto.isGrowFamilyPath()) {
                 player.setMoney(player.getMoney() - INVESTMENT);
-                player.setGrowFamiliePath(true);
+                player.setGrowFamilyPath(true);
                 repository.save(player);
             }
 
