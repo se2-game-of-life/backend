@@ -22,6 +22,9 @@ public class Board {
         }
     }
 
+    public Cell[][] getBoard() {
+        return board;
+    }
     // Function to search for a cell by number and return it
     public Cell findCellByNumber(int cellNumber) {
         for (Cell[] row : board) {
