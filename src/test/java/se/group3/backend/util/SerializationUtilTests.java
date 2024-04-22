@@ -44,6 +44,7 @@ class SerializationUtilTests {
         try {
             String result = SerializationUtil.jsonStringFromClass(lobby);
             String expectedJson = "{\"lobbyID\":13,\"host\":{\"playerName\":\"Samantha\",\"playerID\":null,\"currentCellPosition\":0,\"money\":0,\"careerCard\":null,\"hasMidlifeCrisis\":false,\"investmentNumber\":0,\"investmentLevel\":0,\"numberOfPegs\":0,\"growFamilyPath\":false,\"retireEarlyPath\":false,\"collegePath\":false,\"marriedPath\":false},\"players\":[{\"playerName\":\"Samantha\",\"playerID\":null,\"currentCellPosition\":0,\"money\":0,\"careerCard\":null,\"hasMidlifeCrisis\":false,\"investmentNumber\":0,\"investmentLevel\":0,\"numberOfPegs\":0,\"growFamilyPath\":false,\"retireEarlyPath\":false,\"collegePath\":false,\"marriedPath\":false}]}";
+            //review: check this assertion
             //Assertions.assertEquals(expectedJson, result);
             verify(player, times(2)).getPlayerID();
             verify(player, times(2)).getPlayerName();
