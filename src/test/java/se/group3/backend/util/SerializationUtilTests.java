@@ -26,7 +26,7 @@ class SerializationUtilTests {
 
         try {
             String result = SerializationUtil.jsonStringFromClass(lobby);
-            Assertions.assertEquals("{\"lobbyID\":13,\"host\":{\"playerName\":\"Samantha\"},\"players\":[{\"playerName\":\"Samantha\"}]}", result);
+            Assertions.assertEquals("{\"lobbyID\":13,\"host\":{\"playerName\":\"Samantha\",\"playerID\":null,\"currentCellPosition\":0,\"money\":0,\"careerCard\":null,\"hasMidlifeCrisis\":false,\"investmentNumber\":0,\"investmentLevel\":0,\"numberOfPegs\":0,\"growFamilyPath\":false,\"retireEarlyPath\":false,\"collegePath\":false,\"marriedPath\":false},\"players\":[{\"playerName\":\"Samantha\",\"playerID\":null,\"currentCellPosition\":0,\"money\":0,\"careerCard\":null,\"hasMidlifeCrisis\":false,\"investmentNumber\":0,\"investmentLevel\":0,\"numberOfPegs\":0,\"growFamilyPath\":false,\"retireEarlyPath\":false,\"collegePath\":false,\"marriedPath\":false}]}", result);
         } catch (JsonProcessingException e) {
             Assertions.fail(e.getCause());
         }
