@@ -8,36 +8,35 @@ import java.util.List;
 
 public class BoardDTO {
 
-    private final Cell[][] board;
+    private final Cell[][] cells;
 
     @JsonCreator
     public BoardDTO(@JsonProperty("cells") List<Cell> cells) {
         // Initialize the board with dimensions 17x33
-        this.board = new Cell[17][33];
+        this.cells = new Cell[17][33];
 
         // Place cells on the board
         for (Cell cell : cells) {
             int row = cell.getRow();
             int col = cell.getCol();
-            this.board[row][col] = cell;
+            this.cells[row][col] = cell;
         }
     }
 
-    public Cell[][] getBoard() {
-        return board;
+    public Cell[][] getCells() {
+        return cells;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (Cell[] row : board) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Cell[] row : cells) {
             for (Cell cell : row) {
-                sb.append(cell != null ? cell.getType() : "0");
-                sb.append(" ");
+                stringBuilder.append(cell != null ? "# " : "_ ");
             }
-            sb.append("\n");
+            stringBuilder.append("\n");
         }
-        return sb.toString();
+        return stringBuilder.toString();
     }
 
 }

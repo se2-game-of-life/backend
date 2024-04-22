@@ -10,6 +10,7 @@ import se.group3.backend.dto.BoardDTO;
 import se.group3.backend.services.BoardService;
 import se.group3.backend.util.SessionUtil;
 import se.group3.backend.exceptions.SessionOperationException;
+import se.group3.backend.util.SerializationUtil;
 
 @Slf4j
 @Controller
@@ -43,7 +44,8 @@ public class BoardController {
 
         try {
             BoardDTO boardDTO = boardService.fetchBoardData();
-            this.template.convertAndSend(BOARD_PATH + uuid, boardDTO);
+            String jsonBoardDTO = SerializationUtil.jsonStringFromClass(boardDTO);
+            this.template.convertAndSend(BOARD_PATH + uuid, jsonBoardDTO);
         } catch (Exception e) {
             this.template.convertAndSend(ERROR_PATH + uuid, e.getMessage());
         }
