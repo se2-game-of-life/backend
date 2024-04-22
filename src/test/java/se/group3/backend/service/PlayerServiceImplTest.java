@@ -97,7 +97,7 @@ class PlayerServiceImplTest {
         service.chooseGrowFamilyPath(dto);
 
         verify(repository, atLeastOnce()).save(player);
-        assertTrue(player.isGrowFamiliePath());
+        assertTrue(player.isGrowFamilyPath());
         assertEquals(200000, player.getMoney());
     }
 
@@ -108,7 +108,7 @@ class PlayerServiceImplTest {
         service.chooseGrowFamilyPath(dto);
 
         verify(repository, atLeastOnce()).save(player);
-        assertFalse(player.isGrowFamiliePath());
+        assertFalse(player.isGrowFamilyPath());
     }
 
     @Test
