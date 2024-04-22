@@ -12,6 +12,7 @@ public class PaydayCell extends Cell {
     }
 
 
+
     @Override
     public void performAction(Player player) {
         // Player collects bonus

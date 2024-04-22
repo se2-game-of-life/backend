@@ -6,9 +6,10 @@ import java.util.List;
 
 // Cell for choosing to invest
 public class InvestCell extends Cell {
-    public InvestCell(int position, List<Integer> nextCells) {
-        super(position, nextCells);
+    public InvestCell(int number, String type, List<Integer> nextCells, int row, int col) {
+        super(number, type, nextCells, row, col);
     }
+
 
 
     @Override
