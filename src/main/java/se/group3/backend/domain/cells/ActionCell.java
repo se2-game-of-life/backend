@@ -8,8 +8,8 @@ import java.util.List;
 
 public class ActionCell extends Cell {
 
-    public ActionCell(int position, List<Integer> nextCells) {
-        super(position, nextCells);
+    public ActionCell(int number, String type, List<Integer> nextCells, int row, int col) {
+        super(number, type, nextCells, row, col);
     }
 
     @Override
