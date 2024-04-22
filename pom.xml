@@ -21,7 +21,7 @@
         <sonar.coverage.jacoco.xmlReportPaths>
             ${project.build.directory}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
         </sonar.coverage.jacoco.xmlReportPaths>
-<!--        <sonar.coverage.exclusions>
+        <sonar.coverage.exclusions>
             **se/group3/backend/domain/cards/**,
             **se/group3/backend/domain/cells/**,
             **se/group3/backend/domain/game/**,
@@ -35,7 +35,7 @@
         </sonar.coverage.exclusions>
         <sonar.cpd.exclusions>
             **src/main/java/se/group3/backend/dto/PlayerDTO.java
-        </sonar.cpd.exclusions>-->
+        </sonar.cpd.exclusions>
     </properties>
     <dependencies>
         <dependency>
