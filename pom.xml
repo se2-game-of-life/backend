@@ -33,9 +33,6 @@
             **se/group3/backend/dto/PlayerMoveRequest.java,
             **se/group3/backend/controllers/player/PlayerController.java,
         </sonar.coverage.exclusions>
-        <sonar.cpd.exclusions>
-            **src/main/java/se/group3/backend/DTOs/PlayerDTO.java
-        </sonar.cpd.exclusions>
     </properties>
     <dependencies>
         <dependency>
