@@ -1,5 +1,6 @@
 package se.group3.backend.services;
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import se.group3.backend.domain.game.Game;
@@ -23,15 +24,16 @@ import java.util.List;
  */
 @Slf4j
 @Service
+@NoArgsConstructor
 public class GameServiceImpl implements GameService {
 
-    private final Game game;
+    private Game game;
 
-    private final CareerCardRepository careerCardRepository;
-    private final ActionCardRepository actionCardRepository;
-    private final HouseCardRepository houseCardRepository;
-    private final CellService cellService;
-    private final PlayerRepository playerRepository;
+    private CareerCardRepository careerCardRepository;
+    private ActionCardRepository actionCardRepository;
+    private HouseCardRepository houseCardRepository;
+    private CellService cellService;
+    private PlayerRepository playerRepository;
 
 
 
@@ -43,6 +45,7 @@ public class GameServiceImpl implements GameService {
         this.playerRepository = playerRepository;
         this.game = new Game(careerCardRepository, actionCardRepository, houseCardRepository, cellService);
     }
+
 
     @Override
     public void startGame(LobbyDTO lobbyDTO) {
