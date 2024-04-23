@@ -196,7 +196,7 @@ class PlayerServiceImplTest {
 
     @Test
     void getPayOut_withPaydayCell_increasesMoneyBySalary() {
-        PaydayCell paydayCell = new PaydayCell(5, Arrays.asList(6, 7)); // Position und mögliche nächste Zellen
+        PaydayCell paydayCell = new PaydayCell(5, "Payday", Arrays.asList(6, 7), 6, 7); // Position und mögliche nächste Zellen
         CareerCard careerCard = new CareerCard("Doctor", 150000, 20000, false);
         player.setCareerCard(careerCard);
         int initialMoney = player.getMoney();
