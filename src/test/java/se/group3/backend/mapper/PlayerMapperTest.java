@@ -14,7 +14,7 @@ public class PlayerMapperTest {
         PlayerDTO playerDTO = Mockito.mock(PlayerDTO.class);
         Mockito.when(playerDTO.getPlayerName()).thenReturn("Test Player");
 
-        Player player = PlayerMapper.toPlayerModel(playerDTO);
+        Player player = PlayerMapper.mapDTOToPlayer(playerDTO);
         Assertions.assertEquals("Test Player", player.getPlayerName());
     }
 
@@ -23,7 +23,7 @@ public class PlayerMapperTest {
         Player player = Mockito.mock(Player.class);
         Mockito.when(player.getPlayerName()).thenReturn("Test Player");
 
-        PlayerDTO playerDTO = PlayerMapper.toPlayerDTO(player);
+        PlayerDTO playerDTO = PlayerMapper.mapPlayerToDTO(player);
         Assertions.assertEquals("Test Player", playerDTO.getPlayerName());
     }
 }

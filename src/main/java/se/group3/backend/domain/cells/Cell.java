@@ -20,7 +20,7 @@ public class Cell {
     private int col;
 
     public Cell(int position, String type, List<Integer> nextCells, int row, int col) {
-        this.number = number;
+        this.number = position;
         this.type = type;
         this.nextCells = nextCells;
         this.row = row;
