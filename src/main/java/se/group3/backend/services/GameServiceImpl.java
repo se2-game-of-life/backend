@@ -3,13 +3,18 @@ package se.group3.backend.services;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import se.group3.backend.domain.game.Game;
-import se.group3.backend.domain.lobby.Lobby;
+import se.group3.backend.domain.player.Player;
+import se.group3.backend.domain.player.PlayerStatistic;
 import se.group3.backend.dto.CellDTO;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.repositories.ActionCardRepository;
 import se.group3.backend.repositories.CareerCardRepository;
 import se.group3.backend.repositories.HouseCardRepository;
+import se.group3.backend.repositories.player.PlayerRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -19,16 +24,22 @@ import se.group3.backend.repositories.HouseCardRepository;
 @Service
 public class GameServiceImpl implements GameService {
 
-    private Game game;
+    private final Game game;
 
-    private CareerCardRepository careerCardRepository;
-    private ActionCardRepository actionCardRepository;
-    private HouseCardRepository houseCardRepository;
-    private CellService cellService;
+    private final CareerCardRepository careerCardRepository;
+    private final ActionCardRepository actionCardRepository;
+    private final HouseCardRepository houseCardRepository;
+    private final CellService cellService;
+    private final PlayerRepository playerRepository;
 
 
 
-    public GameServiceImpl(Lobby lobby){
+    public GameServiceImpl(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellService cellService, PlayerRepository playerRepository){
+        this.careerCardRepository = careerCardRepository;
+        this.actionCardRepository = actionCardRepository;
+        this.houseCardRepository = houseCardRepository;
+        this.cellService = cellService;
+        this.playerRepository = playerRepository;
         this.game = new Game(careerCardRepository, actionCardRepository, houseCardRepository, cellService);
     }
 
@@ -52,8 +63,16 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public void getPlayerStats(LobbyDTO lobbyDTO) {
-        throw new UnsupportedOperationException();
+    public List<PlayerStatistic> getPlayerStats(PlayerDTO playerDTO, LobbyDTOtemp lobbyDTO) {
+        PlayerDTO[] players = lobbyDTO.getPlayers();
+        List<PlayerStatistic> otherPlayersStats = new ArrayList<>();
+        for (PlayerDTO dto : players) {
+            if (!dto.equals(playerDTO)) {
+                Player player = PlayerMapper.mapDTOToPlayer(dto);
+                otherPlayersStats.add(new PlayerStatistic(player));
+            }
+        }
+        return otherPlayersStats;
     }
 
     @Override
