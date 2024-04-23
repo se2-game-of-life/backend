@@ -2,11 +2,11 @@ package se.group3.backend.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import se.group3.backend.DTOs.PlayerDTO;
 import se.group3.backend.domain.game.Game;
 import se.group3.backend.domain.lobby.Lobby;
 import se.group3.backend.dto.CellDTO;
 import se.group3.backend.dto.LobbyDTO;
+import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.repositories.ActionCardRepository;
 import se.group3.backend.repositories.CareerCardRepository;
 import se.group3.backend.repositories.HouseCardRepository;
