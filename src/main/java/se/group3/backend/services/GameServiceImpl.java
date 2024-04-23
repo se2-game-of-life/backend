@@ -8,6 +8,7 @@ import se.group3.backend.domain.player.PlayerStatistic;
 import se.group3.backend.dto.CellDTO;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;
+import se.group3.backend.dto.mapper.PlayerMapper;
 import se.group3.backend.repositories.ActionCardRepository;
 import se.group3.backend.repositories.CareerCardRepository;
 import se.group3.backend.repositories.HouseCardRepository;
@@ -63,7 +64,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public List<PlayerStatistic> getPlayerStats(PlayerDTO playerDTO, LobbyDTOtemp lobbyDTO) {
+    public List<PlayerStatistic> getPlayerStats(PlayerDTO playerDTO, LobbyDTO lobbyDTO) {
         PlayerDTO[] players = lobbyDTO.getPlayers();
         List<PlayerStatistic> otherPlayersStats = new ArrayList<>();
         for (PlayerDTO dto : players) {
