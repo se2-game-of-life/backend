@@ -6,9 +6,11 @@ import java.util.List;
 
 // Cell for collecting salary
 public class PaydayCell extends Cell {
-    public PaydayCell(int position, List<Integer> nextCells) {
-        super(position, nextCells);
+
+    public PaydayCell(int position, String type, List<Integer> nextCells, int row, int col) {
+        super(position, type, nextCells, row, col);
     }
+
 
 
     @Override

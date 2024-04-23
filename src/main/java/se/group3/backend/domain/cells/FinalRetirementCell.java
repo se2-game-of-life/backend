@@ -7,9 +7,10 @@ import java.util.List;
 
 // Cell for final retirement
 public class FinalRetirementCell extends Cell {
-    public FinalRetirementCell(int position, List<Integer> nextCells) {
-        super(position, nextCells);
+    public FinalRetirementCell(int number, String type, List<Integer> nextCells, int row, int col) {
+        super(number, type, nextCells, row, col);
     }
+
 
 
     @Override

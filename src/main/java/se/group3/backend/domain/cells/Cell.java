@@ -13,35 +13,56 @@ import java.util.List;
 public class Cell {
     @Id
     protected String id;
-    protected int position;
+    protected int number;
     private String type;
     protected List<Integer> nextCells;
+    private int row;
+    private int col;
+
+    public Cell(int position, String type, List<Integer> nextCells, int row, int col) {
+        this.number = position;
+        this.type = type;
+        this.nextCells = nextCells;
+        this.row = row;
+        this.col = col;
+    }
 
     public Cell() {
         // Default constructor
     }
 
     public Cell(int position, List<Integer> nextCells) {
-        this.position = position;
+        this.number = position;
         this.nextCells = nextCells;
     }
 
-    public Cell(int position, List<Integer> nextCells, String type) {
-        this.position = position;
-        this.nextCells = nextCells;
-        this.type = type;
-    }
 
     public String getType() {
         return type;
     }
 
-    public int getPosition() {
-        return position;
+    public int getNumber() {
+        return number;
     }
 
     public List<Integer> getNextCells() {
         return nextCells;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public void setCol(int col) {
+        this.col = col;
     }
 
     public  void performAction(Player player){
