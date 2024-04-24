@@ -10,7 +10,9 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.group3.backend.DTOs.PlayerDTO;
 import se.group3.backend.domain.cards.CareerCard;
+import se.group3.backend.domain.cells.Cell;
 import se.group3.backend.domain.cells.PaydayCell;
+import se.group3.backend.domain.cells.StopCell;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.mapper.PlayerMapper;
 import se.group3.backend.repositories.player.PlayerRepository;
@@ -20,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 @ExtendWith(MockitoExtension.class)
 class PlayerServiceImplTest {
@@ -217,4 +221,39 @@ class PlayerServiceImplTest {
         Assertions.assertEquals(newCareerCard, player.getCareerCard());
     }
 
+    @Test
+    void checkCellAndPerformAction_StopCellPresent() {
+        PlayerDTO dto = new PlayerDTO();
+        dto.setPlayerID("TestID");
+        Player player = new Player("player1");
+        Cell cell1 = mock(Cell.class);
+        StopCell stopCell = mock(StopCell.class);
+        Cell cell3 = mock(Cell.class);
+        List<Cell> cells = Arrays.asList(cell1, stopCell, cell3);
+
+        when(repository.findById(dto.getPlayerID())).thenReturn(Optional.of(player));
+
+        service.checkCellAndPerformAction(dto, cells);
+
+        verify(cell1).performAction(player);
+        verify(stopCell).performAction(player);
+        verify(cell3, never()).performAction(player); // Verifies action stops after StopCell
+    }
+
+    @Test
+    void checkCellAndPerformAction_PlayerNotFound() {
+        // Setup
+        PlayerDTO dto = new PlayerDTO();
+        dto.setPlayerID("TestID");
+        Cell cell = mock(Cell.class);
+        List<Cell> cells = Collections.singletonList(cell);
+
+        when(repository.findById(dto.getPlayerID())).thenReturn(Optional.empty());
+
+        // Execution
+        service.checkCellAndPerformAction(dto, cells);
+
+        // Verification
+        verify(cell, never()).performAction(any(Player.class));
+    }
 }
