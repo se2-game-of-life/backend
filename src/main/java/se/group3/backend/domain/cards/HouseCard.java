@@ -29,23 +29,26 @@ public class HouseCard extends Card {
 
     @Override
     public void performAction(Player player, Deck<HouseCard> deck) {
-        // Draw two cards from the deck
         HouseCard card1 = deck.drawCard();
         HouseCard card2 = deck.drawCard();
 
-        // TODO: get chosen card from frontend project
         System.out.println("Choose a house to buy:");
         System.out.println("1. " + card1);
         System.out.println("2. " + card2);
 
-        // Assume player chooses the first card for simplicity
         HouseCard chosenCard = card1;
         HouseCard unchosenCard = card2;
 
-        // Remember the player's choice
-        player.assignHouseCard(chosenCard);
+        if (player.getMoney() >= chosenCard.getPurchasePrice()) {
+            player.setMoney(player.getMoney() - chosenCard.getPurchasePrice());
 
-        // Return the unchosen card to the deck
+            player.assignHouseCard(chosenCard);
+
+            System.out.println("Congratulations! You have bought the house: " + chosenCard.getName());
+        } else {
+            System.out.println("Sorry, you don't have enough money to buy this house.");
+        }
+
         deck.addCard(unchosenCard);
     }
 
