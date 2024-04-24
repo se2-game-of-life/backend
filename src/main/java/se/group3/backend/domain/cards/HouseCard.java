@@ -52,6 +52,27 @@ public class HouseCard extends Card {
         deck.addCard(unchosenCard);
     }
 
+    public void sellHouse(Player player, boolean isRedOnWheel) {
+        int sellPrice = isRedOnWheel ? getRedSellPrice() : getBlackSellPrice();
+        
+        int index = -1;
+        for (int i = 0; i < player.getOwnedHouses().size(); i++) {
+            if (player.getOwnedHouses().get(i).equals(this)) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index != -1) {
+            player.getOwnedHouses().remove(index);
+            player.setMoney(player.getMoney() + sellPrice);
+            System.out.println("You have sold the house: " + getName() + " for " + sellPrice);
+        } else {
+            System.out.println("You don't own this house.");
+        }
+    }
+
+
     @Override
     public String toString() {
         return "HouseCard{" +
