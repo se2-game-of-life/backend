@@ -50,6 +50,9 @@ public class Player {
         this.investmentLevel = 0;
         this.numberOfPegs = 1;
     }
+    public List<HouseCard> getOwnedHouses() {
+        return ownedHouses;
+    }
 
     public void assignHouseCard(HouseCard houseCard) {
         ownedHouses.add(houseCard);
