@@ -7,6 +7,10 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.group3.backend.domain.cards.CareerCard;
+import se.group3.backend.domain.cards.HouseCard;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Player Class from the Database
