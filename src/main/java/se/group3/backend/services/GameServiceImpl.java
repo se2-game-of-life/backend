@@ -2,7 +2,10 @@ package se.group3.backend.services;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.group3.backend.domain.cells.Cell;
+import se.group3.backend.domain.cells.StopCell;
 import se.group3.backend.domain.game.Game;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.domain.player.PlayerStatistic;
@@ -24,7 +27,6 @@ import java.util.List;
  */
 @Slf4j
 @Service
-@NoArgsConstructor
 public class GameServiceImpl implements GameService {
 
     private Game game;
@@ -36,7 +38,7 @@ public class GameServiceImpl implements GameService {
     private PlayerRepository playerRepository;
 
 
-
+    @Autowired
     public GameServiceImpl(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellService cellService, PlayerRepository playerRepository){
         this.careerCardRepository = careerCardRepository;
         this.actionCardRepository = actionCardRepository;
