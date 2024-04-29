@@ -1,5 +1,6 @@
 package se.group3.backend.domain.cards;
 
+import se.group3.backend.domain.game.Bank;
 import se.group3.backend.domain.game.Game;
 import se.group3.backend.domain.player.Player;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -63,6 +64,13 @@ public class ActionCard extends Card {
                 p.setMoney(p.getMoney() - moneyAmount);
             }
             System.out.println("All players lost " + moneyAmount + " money due to action card: " + getName());
+        } else if (affectBank) {
+            // Implement action affecting the bank
+            // Example: Add money to the bank
+            // Assuming there's a bank object where you can deposit money
+            Bank bank = new Bank(0);
+            bank.depositFunds(moneyAmount);
+            System.out.println(moneyAmount + " money added to the bank due to action card: " + getName());
         }
     }
 
