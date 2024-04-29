@@ -53,6 +53,17 @@ public class ActionCard extends Card {
             player.setMoney(player.getMoney() + moneyAmount);
             System.out.println("You received " + moneyAmount + " money from action card: " + getName());
         }
+        else if (affectAllPlayers) {
+            // Implement action affecting all players
+            // Example: Deduct money from all players
+            // You might need to iterate over all players in the game and adjust their money accordingly
+            // For demonstration, let's assume there's a method getAllPlayers() in your game that returns a list of all players
+            List<Player> allPlayers = game.getAllPlayers();
+            for (Player p : allPlayers) {
+                p.setMoney(p.getMoney() - moneyAmount);
+            }
+            System.out.println("All players lost " + moneyAmount + " money due to action card: " + getName());
+        }
     }
 
     @Override
