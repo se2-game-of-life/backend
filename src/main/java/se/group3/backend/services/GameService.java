@@ -68,4 +68,5 @@ public interface GameService {
      */
     void nextPlayer(PlayerDTO playerDTO);
 
+    void handleMove(PlayerDTO playerDTO, List<Cell> cells);
 }

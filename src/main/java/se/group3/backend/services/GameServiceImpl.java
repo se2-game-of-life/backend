@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.group3.backend.domain.cells.ActionCell;
 import se.group3.backend.domain.cells.Cell;
 import se.group3.backend.domain.cells.StopCell;
 import se.group3.backend.domain.game.Game;
@@ -27,6 +28,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
+@NoArgsConstructor
 public class GameServiceImpl implements GameService {
 
     private Game game;
@@ -35,7 +37,7 @@ public class GameServiceImpl implements GameService {
     private ActionCardRepository actionCardRepository;
     private HouseCardRepository houseCardRepository;
     private CellService cellService;
-    private PlayerRepository playerRepository;
+    public PlayerRepository playerRepository;
 
 
     @Autowired
@@ -99,5 +101,37 @@ public class GameServiceImpl implements GameService {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public void handleMove(PlayerDTO playerDTO, List<Cell> cells) {
 
+        if(playerRepository.findById(playerDTO.getPlayerID()).isPresent()){
+            Player player = playerRepository.findById(playerDTO.getPlayerID()).get();
+
+            for(int i = 0; i < cells.size() - 2; i++){
+                Cell cell = cells.get(i);
+                if (cell instanceof StopCell) {
+                    cell.performAction(player);
+                    break;
+                }
+                if(!(cell instanceof ActionCell)){
+                    cell.performAction(player);
+                }
+            }
+            if(!checkForStopCell(cells)){
+                Cell cell = cells.get(cells.size()-1);
+                if(cell instanceof ActionCell){
+                    cell.performAction(player);
+                }
+            }
+        }
+    }
+
+    private boolean checkForStopCell(List<Cell> cells) {
+        for (Cell c : cells) {
+            if (c instanceof StopCell) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
