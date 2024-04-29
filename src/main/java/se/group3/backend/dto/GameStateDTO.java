@@ -16,17 +16,17 @@ public class GameStateDTO {
     /**
      * UUID from player which has to take the turn
      */
-    private String playerTurn;
+    private PlayerDTO nextPlayer;
 
-    private List<Player> players;
+    private List<PlayerDTO> players;
 
     private int diceResult;
 
     private List<Card> cardOptions;
 
     @JsonCreator
-    public GameStateDTO(@JsonProperty("playerTurn") String playerTurn, @JsonProperty("players") List<Player> players, @JsonProperty("diceResult") int diceResult, @JsonProperty("cardOptions") List<Card> cardOptions) {
-        this.playerTurn = playerTurn;
+    public GameStateDTO(@JsonProperty("playerTurn") PlayerDTO nextPlayer, @JsonProperty("players") List<PlayerDTO> players, @JsonProperty("diceResult") int diceResult, @JsonProperty("cardOptions") List<Card> cardOptions) {
+        this.nextPlayer = nextPlayer;
         this.players = players;
         this.diceResult = diceResult;
         this.cardOptions = cardOptions;
