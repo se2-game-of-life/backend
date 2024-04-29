@@ -1,4 +1,4 @@
-package se.group3.backend.DTOs;
+package se.group3.backend.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

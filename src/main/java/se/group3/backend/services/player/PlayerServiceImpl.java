@@ -7,7 +7,7 @@ import se.group3.backend.domain.cells.PaydayCell;
 import se.group3.backend.domain.cells.StopCell;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.repositories.player.PlayerRepository;
-import se.group3.backend.DTOs.PlayerDTO;
+import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.domain.cards.CareerCard;
 
 import java.security.SecureRandom;
@@ -53,11 +53,11 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public void chooseGrowFamilyPath(PlayerDTO dto) {
-        if (dto.isGrowFamiliePath() && repository.findById(dto.getPlayerID()).isPresent()) {
+        if (dto.isGrowFamilyPath() && repository.findById(dto.getPlayerID()).isPresent()) {
             Player player = repository.findById(dto.getPlayerID()).get();
-            if (player.getMoney() > INVESTMENT && dto.isGrowFamiliePath()) {
+            if (player.getMoney() > INVESTMENT && dto.isGrowFamilyPath()) {
                 player.setMoney(player.getMoney() - INVESTMENT);
-                player.setGrowFamiliePath(true);
+                player.setGrowFamilyPath(true);
                 repository.save(player);
             }
 

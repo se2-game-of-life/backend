@@ -16,7 +16,7 @@ public class LobbyMapper {
     public static LobbyDTO toLobbyDTO(Lobby newLobby) {
         return new LobbyDTO(
                 newLobby.getId(),
-                PlayerMapper.toPlayerDTO(newLobby.getHost()),
-                Arrays.stream(newLobby.getPlayers()).filter(Objects::nonNull).map(PlayerMapper::toPlayerDTO).toArray(PlayerDTO[]::new));
+                PlayerMapper.mapPlayerToDTO(newLobby.getHost()),
+                Arrays.stream(newLobby.getPlayers()).filter(Objects::nonNull).map(PlayerMapper::mapPlayerToDTO).toArray(PlayerDTO[]::new));
     }
 }

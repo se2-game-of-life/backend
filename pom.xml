@@ -8,11 +8,11 @@
         <version>3.2.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
-    <artifactId>backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>backend</name>
-    <description>backend</description>
+    <groupId>se.grp-3</groupId>
+    <artifactId>grp-3</artifactId>
+    <version>0.0.1</version>
+    <name>gameoflife-backend</name>
+    <description>gameoflife-backend</description>
     <properties>
         <java.version>17</java.version>
         <sonar.organization>se2-game-of-life</sonar.organization>
@@ -22,22 +22,12 @@
             ${project.build.directory}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
         </sonar.coverage.jacoco.xmlReportPaths>
         <sonar.coverage.exclusions>
-            **se/group3/backend/domain/cards/**,
-            **se/group3/backend/domain/cells/**,
-            **se/group3/backend/domain/game/**,
-            **se/group3/backend/domain/player/**,
-            **se/group3/backend/dto/JoinLobbyRequest.java,
-            **se/group3/backend/dto/LobbyDTO.java,
-            **se/group3/backend/dto/PlayerDTO.java,
-            **se/group3/backend/services/CellService.java,
-            **se/group3/backend/DTOs/PlayerMoveRequest.java,
-            **se/group3/backend/controllers/player/PlayerController.java,
-            **se/group3/backend/mapper/PlayerMapper.java,
-            **src/main/java/se/group3/backend/DTOs/PlayerDTO.java,
+            **se/group3/backend/dto/*.java,
+            **se/group3/backend/configuration/**,
+            **se/group3/backend/repositories/**,
+            **se/group3/backend/exceptions/**,
+            **se/group3/backend/*.java
         </sonar.coverage.exclusions>
-        <sonar.cpd.exclusions>
-            **src/main/java/se/group3/backend/DTOs/PlayerDTO.java
-        </sonar.cpd.exclusions>
     </properties>
     <dependencies>
         <dependency>

@@ -31,7 +31,7 @@ public class Player {
     //Booleans for the different paths the game offers
     private boolean isCollegePath;
     private boolean isMarriedPath;
-    private boolean isGrowFamiliePath;
+    private boolean isGrowFamilyPath;
     private boolean hasMidlifeCrisis;
     private boolean isRetireEarlyPath;
 

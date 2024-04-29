@@ -8,11 +8,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.group3.backend.DTOs.PlayerDTO;
+import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cells.PaydayCell;
 import se.group3.backend.domain.player.Player;
-import se.group3.backend.mapper.PlayerMapper;
+import se.group3.backend.dto.mapper.PlayerMapper;
 import se.group3.backend.repositories.player.PlayerRepository;
 import se.group3.backend.services.player.PlayerServiceImpl;
 
@@ -92,23 +92,23 @@ class PlayerServiceImplTest {
 
     @Test
     void chooseGrowFamilyPath_withEnoughMoney_updatesPlayer() {
-        dto.setGrowFamiliePath(true);
+        dto.setGrowFamilyPath(true);
 
         service.chooseGrowFamilyPath(dto);
 
         verify(repository, atLeastOnce()).save(player);
-        assertTrue(player.isGrowFamiliePath());
+        assertTrue(player.isGrowFamilyPath());
         assertEquals(200000, player.getMoney());
     }
 
     @Test
     void chooseGrowFamilyPathFalse() {
-        dto.setGrowFamiliePath(false);
+        dto.setGrowFamilyPath(false);
 
         service.chooseGrowFamilyPath(dto);
 
         verify(repository, atLeastOnce()).save(player);
-        assertFalse(player.isGrowFamiliePath());
+        assertFalse(player.isGrowFamilyPath());
     }
 
     @Test
@@ -196,7 +196,7 @@ class PlayerServiceImplTest {
 
     @Test
     void getPayOut_withPaydayCell_increasesMoneyBySalary() {
-        PaydayCell paydayCell = new PaydayCell(5, Arrays.asList(6, 7)); // Position und mögliche nächste Zellen
+        PaydayCell paydayCell = new PaydayCell(5, "Payday", Arrays.asList(6, 7), 6, 7); // Position und mögliche nächste Zellen
         CareerCard careerCard = new CareerCard("Doctor", 150000, 20000, false);
         player.setCareerCard(careerCard);
         int initialMoney = player.getMoney();
