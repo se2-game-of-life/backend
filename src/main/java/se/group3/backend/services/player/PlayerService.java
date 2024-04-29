@@ -3,7 +3,8 @@ package se.group3.backend.services.player;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cells.Cell;
-import se.group3.backend.domain.cells.StopCell;
+
+import java.util.List;
 
 
 /**
@@ -87,13 +88,6 @@ public interface PlayerService {
      * @param dto DTO to update the Player Object in the Database
      * @param cell the cell, which has to be checked
      */
-    void checkCellAndPerformAction(PlayerDTO dto, Cell cell);
-
-    /**
-     * checks the cell the player moves over, and performs the necessary action. Additionally, this method checks it the cell is a StopCell and stops the players move
-     * @param dto DTO to update the Player Object in the Database
-     * @param stopCell the stopCell, where the player has to be stopped
-     */
-    void checkStopCellAndPerformAction(PlayerDTO dto, StopCell stopCell);
+    void checkCellAndPerformAction(PlayerDTO dto, List<Cell> cell);
 
 }

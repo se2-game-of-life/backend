@@ -2,15 +2,14 @@ package se.group3.backend.services.player;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.group3.backend.domain.cells.Cell;
-import se.group3.backend.domain.cells.PaydayCell;
-import se.group3.backend.domain.cells.StopCell;
+import se.group3.backend.domain.cells.*;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.repositories.player.PlayerRepository;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.domain.cards.CareerCard;
 
 import java.security.SecureRandom;
+import java.util.List;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -151,51 +150,20 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void checkCellAndPerformAction(PlayerDTO dto, Cell cell) {
-        /*if (repository.findById(dto.getPlayerID()).isPresent()) {
-            Player player = repository.findById(dto.getPlayerID()).get();
-            //todo: implement the logic when a player steps on a cell
-            if (cell instanceof ActionCell) {
-
-            }
-            if (cell instanceof AddPegCell) {
-
-            }
-            if (cell instanceof CareerCell) {
-
-            }
-            if (cell instanceof FinalRetirementCell) {
-
-            }
-            if (cell instanceof HouseCell) {
-
-            }
-            if (cell instanceof InvestCell) {
-
-            }
-            if (cell instanceof PaydayCell) {
-
-            }
-        }
-        */
-    }
-
-    @Override
-    public void checkStopCellAndPerformAction(PlayerDTO dto, StopCell stopCell) {
-        /*
+    public void checkCellAndPerformAction(PlayerDTO dto, List<Cell> cell) {
         if (repository.findById(dto.getPlayerID()).isPresent()) {
             Player player = repository.findById(dto.getPlayerID()).get();
-            if (stopCell instanceof SpinToGraduateStopCell) {
-                stopCell.performAction(player);
+
+            //todo: implement the performAction method in the cells
+            for (Cell c : cell) {
+                if (c instanceof StopCell) {
+                    c.performAction(player);
+                    break;
+                }
+                c.performAction(player);
             }
-            if (stopCell instanceof GetMarriedStopCell) {
-                //todo: logic of function not yet implemented
-                stopCell.performAction(player);
-            }
-            //todo: rest of stop cells not yet implemented
         }
 
-         */
     }
 
 
