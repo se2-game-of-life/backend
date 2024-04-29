@@ -1,7 +1,10 @@
 package se.group3.backend.domain.cards;
 
+import se.group3.backend.domain.game.Game;
 import se.group3.backend.domain.player.Player;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 @Document(collection = "ActionCards")
 public class ActionCard extends Card {
@@ -10,6 +13,7 @@ public class ActionCard extends Card {
     private boolean affectAllPlayers;
     private boolean affectBank;
     private int moneyAmount;
+    private Game game;
 
     public ActionCard(String name, String description, boolean affectOnePlayer, boolean affectAllPlayers, boolean affectBank, int moneyAmount) {
         super(name);
@@ -42,7 +46,13 @@ public class ActionCard extends Card {
 
     @Override
     public void performAction(Player player) {
-        // Implement action specific to action cards
+        // Check the type of action and perform accordingly
+        if (affectOnePlayer) {
+            // Implement action affecting only one player
+            // Example: Give money to the player
+            player.setMoney(player.getMoney() + moneyAmount);
+            System.out.println("You received " + moneyAmount + " money from action card: " + getName());
+        }
     }
 
     @Override
