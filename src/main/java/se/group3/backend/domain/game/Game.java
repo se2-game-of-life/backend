@@ -85,6 +85,10 @@ public class Game {
         }
     }
 
+    public List<Player> getAllPlayers() {
+        return players;
+    }
+
     private int spinSpinner() {
         // Simulate spinning the spinner to get a random number of steps
         return spinnedNumber.nextInt(10) + 1; // Generates a random number between 1 and 10
