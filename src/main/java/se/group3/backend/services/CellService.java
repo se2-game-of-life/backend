@@ -29,7 +29,7 @@ public class CellService {
         List<Cell> castedCells = new ArrayList<>();
 
         for (Cell cell : cells) {
-            if ("action".equals(cell.getType())) {
+            if ("actionCell".equals(cell.getType())) {
                 castedCells.add(new ActionCell(
                         cell.getNumber(),
                         cell.getType(),
@@ -37,7 +37,7 @@ public class CellService {
                         cell.getRow(),
                         cell.getCol()
                 ));
-            } else if ("addPeg".equals(cell.getType())) {
+            } else if ("addPegCell".equals(cell.getType())) {
                 castedCells.add(new AddPegCell(
                         cell.getNumber(),
                         cell.getType(),
@@ -45,7 +45,7 @@ public class CellService {
                         cell.getRow(),
                         cell.getCol()
                 ));
-            } else if ("career".equals(cell.getType())) {
+            } else if ("careerCell".equals(cell.getType())) {
                 castedCells.add(new CareerCell(
                         cell.getNumber(),
                         cell.getType(),
