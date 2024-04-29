@@ -4,16 +4,24 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.group3.backend.domain.cells.ActionCell;
+import se.group3.backend.domain.cells.Cell;
+import se.group3.backend.domain.cells.StopCell;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.domain.player.PlayerStatistic;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.dto.mapper.PlayerMapper;
+import se.group3.backend.repositories.player.PlayerRepository;
 import se.group3.backend.services.GameServiceImpl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -26,13 +34,15 @@ public class GameServiceImplTest {
     private LobbyDTO lobbyDTOMock;
     private GameServiceImpl gameService;
 
+    @Mock
+    private PlayerRepository playerRepository;
 
     @BeforeEach
     void setUp(){
         this.playerDTOMockHost = mock(PlayerDTO.class);
         this.playerDTOMock = mock(PlayerDTO.class);
         this.lobbyDTOMock = mock(LobbyDTO.class);
-        this.gameService = new GameServiceImpl();
+        this.gameService = new GameServiceImpl(null, null, null, null, playerRepository);
     }
 
 
@@ -77,6 +87,80 @@ public class GameServiceImplTest {
         }
         return otherPlayersStats;
     }
+
+    @Test
+    void testHandleMove() {
+        // Arrange
+        PlayerDTO playerDTO = mock(PlayerDTO.class);
+        when(playerDTO.getPlayerID()).thenReturn("player1");
+        Player player = new Player("player1");
+
+        ActionCell actionCell = mock(ActionCell.class);
+        StopCell stopCell = mock(StopCell.class);
+        Cell genericCell = mock(Cell.class);
+
+        List<Cell> cells = Arrays.asList(genericCell, actionCell, stopCell);
+
+        // Setup repository to return player
+        when(playerRepository.findById("player1")).thenReturn(Optional.of(player));
+
+        // Act
+        gameService.handleMove(playerDTO, cells);
+
+        // Assert
+        InOrder inOrder = inOrder(genericCell, actionCell, stopCell);
+        inOrder.verify(genericCell).performAction(player);
+    }
+
+    @Test
+    void handleMove_StopsAtStopCell() {
+        // Arrange
+        PlayerDTO playerDTO = mock(PlayerDTO.class);
+        when(playerDTO.getPlayerID()).thenReturn("player1");
+        Player player = new Player("player1");
+
+        ActionCell actionCell = mock(ActionCell.class);
+        StopCell stopCell = mock(StopCell.class);
+        Cell genericCell = mock(Cell.class);
+
+        List<Cell> cells = Arrays.asList(genericCell, stopCell, actionCell);  // StopCell in the middle
+
+        when(playerRepository.findById("player1")).thenReturn(Optional.of(player));
+
+        // Act
+        gameService.handleMove(playerDTO, cells);
+
+        // Assert
+        verify(genericCell).performAction(player);
+
+    }
+
+    @Test
+    void handleMove_LastCellActionCell_PerformsAction() {
+        // Arrange
+        PlayerDTO playerDTO = mock(PlayerDTO.class);
+        when(playerDTO.getPlayerID()).thenReturn("player1");
+        Player player = new Player("player1");
+
+        ActionCell lastActionCell = mock(ActionCell.class);
+        Cell firstGenericCell = mock(Cell.class);
+        Cell secondGenericCell = mock(Cell.class);
+
+        List<Cell> cells = Arrays.asList(firstGenericCell, secondGenericCell, lastActionCell);
+
+        when(playerRepository.findById("player1")).thenReturn(Optional.of(player));
+
+        // Act
+        gameService.handleMove(playerDTO, cells);
+
+        // Assert
+        verify(firstGenericCell).performAction(player);
+    }
+
+
+
+
+
 
     @AfterEach
     void breakDown(){
