@@ -28,9 +28,6 @@
             **se/group3/backend/exceptions/**,
             **se/group3/backend/*.java
         </sonar.coverage.exclusions>
-        <sonar.cpd.exclusions>
-            **src/main/java/se/group3/backend/dto/PlayerDTO.java
-        </sonar.cpd.exclusions>
     </properties>
     <dependencies>
         <dependency>
