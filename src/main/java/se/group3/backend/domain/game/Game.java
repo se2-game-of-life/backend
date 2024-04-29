@@ -1,5 +1,6 @@
 package se.group3.backend.domain.game;
 
+import lombok.Getter;
 import se.group3.backend.domain.cards.ActionCard;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cards.HouseCard;
@@ -20,6 +21,7 @@ import se.group3.backend.services.CellService;
 
 @Slf4j
 @Component
+@Getter
 public class Game {
     private List<Player> players;
     private Board board;
@@ -85,7 +87,7 @@ public class Game {
         }
     }
 
-    private int spinSpinner() {
+    public int spinSpinner() {
         // Simulate spinning the spinner to get a random number of steps
         return spinnedNumber.nextInt(10) + 1; // Generates a random number between 1 and 10
     }
@@ -95,4 +97,5 @@ public class Game {
         // Implement the logic to check whether any player has won the game
         throw new UnsupportedOperationException();
     }
+
 }
