@@ -1,5 +1,6 @@
 package se.group3.backend.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
 import se.group3.backend.domain.cards.Card;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@JsonSerialize
 public class GameStateDTO {
 
     /**
