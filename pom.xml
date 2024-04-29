@@ -22,16 +22,11 @@
             ${project.build.directory}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
         </sonar.coverage.jacoco.xmlReportPaths>
         <sonar.coverage.exclusions>
-            **se/group3/backend/domain/cards/**,
-            **se/group3/backend/domain/cells/**,
-            **se/group3/backend/domain/game/**,
-            **se/group3/backend/domain/player/**,
-            **se/group3/backend/dto/JoinLobbyRequest.java,
-            **se/group3/backend/dto/LobbyDTO.java,
-            **se/group3/backend/dto/PlayerDTO.java,
-            **se/group3/backend/services/CellService.java,
-            **se/group3/backend/dto/PlayerMoveRequest.java,
-            **se/group3/backend/controllers/player/PlayerController.java,
+            **se/group3/backend/dto/*.java,
+            **se/group3/backend/configuration/**,
+            **se/group3/backend/repositories/**,
+            **se/group3/backend/exceptions/**,
+            **se/group3/backend/*.java
         </sonar.coverage.exclusions>
         <sonar.cpd.exclusions>
             **src/main/java/se/group3/backend/dto/PlayerDTO.java
