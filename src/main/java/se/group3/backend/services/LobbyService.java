@@ -5,6 +5,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
 import se.group3.backend.controller.LobbyController;
 import se.group3.backend.domain.player.Player;
+import se.group3.backend.dto.GameStateDTO;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.dto.mapper.LobbyMapper;
@@ -44,7 +45,6 @@ public class LobbyService {
         Lobby newLobby = new Lobby(lobbyID, host);
         SessionUtil.putSessionAttribute(headerAccessor, "lobbyID", newLobby.getId());
         lobbyMap.put(lobbyID, newLobby);
-        new Thread(newLobby).start();
         return LobbyMapper.toLobbyDTO(newLobby);
     }
 
@@ -102,6 +102,14 @@ public class LobbyService {
 
         lobby.removePlayer(uuid);
         return LobbyMapper.toLobbyDTO(lobby);
+    }
+
+    public GameStateDTO startGame(long lobbyID) {
+        Lobby lobby = lobbyMap.get(lobbyID);
+        if(lobby == null) throw new IllegalStateException("The lobby doesn't exist!");
+
+        //todo: get game state from lobby ()
+        return null;
     }
 
     public Lobby getLobby(long lobbyID) {
