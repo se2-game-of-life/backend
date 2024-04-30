@@ -31,13 +31,29 @@ public class HouseCard extends Card {
 
     @Override
     public void performAction(Player player) {
-        if (player.getMoney() >= purchasePrice) {
-            player.setMoney(player.getMoney() - purchasePrice);
-            player.assignHouseCard(this);
-            System.out.println("Congratulations! You have bought the house: " + getName());
+        // Implement the action specific to HouseCard
+        // You need to implement the logic for the player to choose between two cards here
+        Deck<HouseCard> deck = getHouseCardDeck(); // Assuming you have a method to get the house card deck
+        HouseCard card1 = deck.drawCard();
+        HouseCard card2 = deck.drawCard();
+
+        System.out.println("Choose a house to buy:");
+        System.out.println("1. " + card1.getName());
+        System.out.println("2. " + card2.getName());
+
+        // Example: Let's assume the player always chooses the first card for simplicity
+        HouseCard chosenCard = card1;
+        HouseCard unchosenCard = card2;
+
+        if (player.getMoney() >= chosenCard.getPurchasePrice()) {
+            player.setMoney(player.getMoney() - chosenCard.getPurchasePrice());
+            player.assignHouseCard(chosenCard);
+            System.out.println("Congratulations! You have bought the house: " + chosenCard.getName());
         } else {
             System.out.println("Sorry, you don't have enough money to buy this house.");
         }
+
+        deck.addCard(unchosenCard);
     }
 
     public void sellHouse(Player player, boolean isRedOnWheel) {
@@ -58,6 +74,11 @@ public class HouseCard extends Card {
                 "id='" + getId() + '\'' +
                 ", name='" + getName() + '\'' +
                 '}';
+    }
+    // Method to get the house card deck (replace with your actual implementation)
+    private Deck<HouseCard> getHouseCardDeck() {
+        // Implement logic to get the house card deck
+        return null; // Placeholder, replace with actual implementation
     }
 }
 
