@@ -61,4 +61,7 @@ public class Player {
     public void assignHouseCard(HouseCard houseCard) {
         ownedHouses.add(houseCard);
     }
+    public void assignCareerCard(CareerCard careerCard) {
+        this.careerCard = careerCard;
+    }
 }
