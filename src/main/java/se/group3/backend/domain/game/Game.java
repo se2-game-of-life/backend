@@ -1,6 +1,7 @@
 package se.group3.backend.domain.game;
 
 import lombok.Getter;
+import lombok.Setter;
 import se.group3.backend.domain.cards.ActionCard;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cards.HouseCard;
@@ -14,39 +15,29 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Random;
+import java.util.random.RandomGenerator;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import se.group3.backend.services.CellService;
-
-@Slf4j
-@Component
 @Getter
+@Setter
+@Slf4j
 public class Game {
-    private List<Player> players;
+    private Player[] players;
     private Board board;
     private Deck<ActionCard> actionCardDeck;
     private Deck<CareerCard> careerCardDeck;
     private Deck<HouseCard> houseCardDeck;
 
-    private final CareerCardRepository careerCardRepository;
-    private final ActionCardRepository actionCardRepository;
-    private final HouseCardRepository houseCardRepository;
+//    private final CellService cellService;
 
-    private final CellService cellService;
+    private Player currentPlayer;
+    private int spunNumber;
 
-    private int currentPlayerIndex;
-    private Random spinnedNumber;
-
-
-    @Autowired
-    public Game(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellService cellService) {
-        this.careerCardRepository = careerCardRepository;
-        this.actionCardRepository = actionCardRepository;
-        this.houseCardRepository = houseCardRepository;
-        this.cellService = cellService;
-        currentPlayerIndex = 0; // Start with the first player
-        spinnedNumber = new Random();
+    public Game(Player[] players) {
+        this.players = players;
+//        this.careerCardRepository = careerCardRepository;
+//        this.actionCardRepository = actionCardRepository;
+//        this.houseCardRepository = houseCardRepository;
+//        this.cellService = cellService;
     }
 
     public void initializeDecks() {
@@ -64,11 +55,11 @@ public class Game {
         houseCardDeck.shuffle();
     }
 
-    public void initializeBoard(){
-        List<Cell> cells = cellService.getAllCells();
-        board = new Board(cells);
-        log.debug(board.toString());
-        }
+//    public void initializeBoard(){
+//        List<Cell> cells = cellService.getAllCells();
+//        board = new Board(cells);
+//        log.debug(board.toString());
+//    }
 
 
     public void startGame() {
@@ -76,20 +67,20 @@ public class Game {
         throw new UnsupportedOperationException();
     }
 
-    public void nextTurn() {
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.size(); // Move to the next player
-        Player currentPlayer = players.get(currentPlayerIndex);
-        int steps = spinSpinner(); // Spin the spinner to determine the number of steps
-        board.movePlayer(currentPlayer, steps); // Move the player on the board
-        if (checkWinCondition()) {
-            // Handle game over condition
-            throw new UnsupportedOperationException();
-        }
-    }
+//    public void nextTurn() {
+////        currentPlayer = (currentPlayer + 1) % players.size(); // Move to the next player
+////        Player currentPlayer = players.get(this.currentPlayer);
+////        int steps = spinSpinner(); // Spin the spinner to determine the number of steps
+////        board.movePlayer(currentPlayer, steps); // Move the player on the board
+////        if (checkWinCondition()) {
+////            // Handle game over condition
+////            throw new UnsupportedOperationException();
+////        }
+//    }
 
     public int spinSpinner() {
         // Simulate spinning the spinner to get a random number of steps
-        return spinnedNumber.nextInt(10) + 1; // Generates a random number between 1 and 10
+        return spunNumber = new Random().nextInt(10) + 1; // Generates a random number between 1 and 10
     }
 
     private boolean checkWinCondition() {
