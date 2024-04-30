@@ -39,34 +39,22 @@ public class GameServiceImpl implements GameService {
     private CellService cellService;
     public PlayerRepository playerRepository;
 
-
     @Autowired
-    public GameServiceImpl(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellService cellService, PlayerRepository playerRepository){
+    public GameServiceImpl(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellService cellService, PlayerRepository playerRepository) {
         this.careerCardRepository = careerCardRepository;
         this.actionCardRepository = actionCardRepository;
         this.houseCardRepository = houseCardRepository;
         this.cellService = cellService;
         this.playerRepository = playerRepository;
-        this.game = new Game(careerCardRepository, actionCardRepository, houseCardRepository, cellService);
     }
 
-
     @Override
-    public void startGame(LobbyDTO lobbyDTO) {
-        game.initializeBoard();
-        game.initializeDecks();
+    public void choosePath(String playerUUID, long lobbyID) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void choosePath(PlayerDTO playerDTO) {
-        //review: should this be implemented in GameService or PlayerService?
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void handleCell(PlayerDTO playerDTO, CellDTO cellDTO) {
-        //review: should this be implemented in GameService or PlayerService?
+    public void chooseAction(String playerUUID, long lobbyID, boolean pickOptionOne) {
         throw new UnsupportedOperationException();
     }
 
@@ -84,20 +72,8 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public void checkWinCondition(PlayerDTO playerDTO) {
-        //review: not implemented yet, but method definition exists in Game.java --> move method?
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void spinWheel(PlayerDTO playerDTO) {
-        //review: implemented in Game.java AND in PlayerService.java --> move method?
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void nextPlayer(PlayerDTO playerDTO) {
-        //review: implemented in as nextTurn() in Game.java --> move method?
+    public void spinWheel(String playerUUID, long lobbyID) {
+        //todo: get lobby and player for current player and do move logic
         throw new UnsupportedOperationException();
     }
 
