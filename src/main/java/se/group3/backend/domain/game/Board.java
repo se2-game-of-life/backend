@@ -23,30 +23,7 @@ public class Board {
     public Cell[][] getCells() {
         return cells;
     }
-    // Function to search for a cell by number and return it
-    public Cell findCellByNumber(int cellNumber) {
-        for (Cell[] row : cells) {
-            for (Cell cell : row) {
-                if (cell != null && cell.getNumber() == cellNumber) {
-                    return cell;
-                }
-            }
-        }
-        // Return null if cell with given number is not found
-        return null;
-    }
 
-    // Move the current player to the next cell based on the spinner result
-    public void movePlayer(Player currentPlayer, int steps) {
-        // TODO: use findCellByNumber to get cell row and col from cell number, this is useful to know the coordinates to place the player
-        // TODO: edit moving to account for STOP and PayDay cells
-        /*
-        int currentPosition = currentPlayer.getCurrentCellPosition(); // Cell position is cell.number
-        int newPosition = (currentPosition + steps) % cells.size();
-        currentPlayer.setCurrentCellPosition(newPosition);
-        Cell currentCell = cells.get(newPosition);
-        currentCell.performAction(currentPlayer);*/
-    }
 
     // Override toString() method to print the contents of the board
     @Override
