@@ -21,10 +21,10 @@ public class CellService {
 
     public List<Cell> getAllCells() {
         List<Cell> cells = cellRepository.findAll();
-        return castCellsByType(cells);
+        return cells;
     }
 
-
+    /*
     private List<Cell> castCellsByType(List<Cell> cells) {
         List<Cell> castedCells = new ArrayList<>();
 
@@ -107,5 +107,5 @@ public class CellService {
         }
         return castedCells;
     }
-
+    */
 }

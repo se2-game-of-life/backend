@@ -25,19 +25,12 @@ public class CellServiceTest {
     }
 
     @Test
-    void testCastCellsByType() {
+    void testGetAlCells() {
         // Arrange
         List<Cell> inputCells = new ArrayList<>();
         inputCells.add(new Cell(1, "actionCell", new ArrayList<>(), 0, 0));
         inputCells.add(new Cell(2, "addPegCell", new ArrayList<>(), 0, 1));
         inputCells.add(new Cell(3, "careerCell", new ArrayList<>(), 0, 2));
-        inputCells.add(new Cell(4, "finalRetirementCell", new ArrayList<>(), 0, 3));
-        inputCells.add(new Cell(5, "getMarriedStopCell", new ArrayList<>(), 0, 4));
-        inputCells.add(new Cell(6, "houseCell", new ArrayList<>(), 0, 5));
-        inputCells.add(new Cell(7, "investCell", new ArrayList<>(), 0, 6));
-        inputCells.add(new Cell(8, "paydayCell", new ArrayList<>(), 0, 7));
-        inputCells.add(new Cell(9, "spinToGraduateStopCell", new ArrayList<>(), 0, 8));
-        // Add more test cells for any additional types...
 
         // Mock the cell repository to return the input cells
         when(cellRepository.findAll()).thenReturn(inputCells);
@@ -46,15 +39,9 @@ public class CellServiceTest {
         List<Cell> castedCells = cellService.getAllCells();
 
         // Assert
-        assertEquals(ActionCell.class, castedCells.get(0).getClass());
-        assertEquals(AddPegCell.class, castedCells.get(1).getClass());
-        assertEquals(CareerCell.class, castedCells.get(2).getClass());
-        assertEquals(FinalRetirementCell.class, castedCells.get(3).getClass());
-        assertEquals(GetMarriedStopCell.class, castedCells.get(4).getClass());
-        assertEquals(HouseCell.class, castedCells.get(5).getClass());
-        assertEquals(InvestCell.class, castedCells.get(6).getClass());
-        assertEquals(PaydayCell.class, castedCells.get(7).getClass());
-        assertEquals(SpinToGraduateStopCell.class, castedCells.get(8).getClass());
+        assertEquals(1, castedCells.get(0).getNumber());
+        assertEquals(2, castedCells.get(1).getNumber());
+        assertEquals(3, castedCells.get(2).getNumber());
         // Add more assertions for any additional types...
     }
 

@@ -11,8 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cells.Cell;
-import se.group3.backend.domain.cells.PaydayCell;
-import se.group3.backend.domain.cells.StopCell;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.dto.mapper.PlayerMapper;
 import se.group3.backend.repositories.player.PlayerRepository;
@@ -200,7 +198,7 @@ class PlayerServiceImplTest {
 
     @Test
     void getPayOut_withPaydayCell_increasesMoneyBySalary() {
-        PaydayCell paydayCell = new PaydayCell(5, "Payday", Arrays.asList(6, 7), 6, 7); // Position und mögliche nächste Zellen
+        Cell paydayCell = new Cell(5, "paydayCell", Arrays.asList(6, 7), 6, 7); // Position und mögliche nächste Zellen
         CareerCard careerCard = new CareerCard("Doctor", 150000, 20000, false);
         player.setCareerCard(careerCard);
         int initialMoney = player.getMoney();
@@ -221,6 +219,9 @@ class PlayerServiceImplTest {
         Assertions.assertEquals(newCareerCard, player.getCareerCard());
     }
 
+    /*
+    Removed because cell subclass is removed.
+
     @Test
     void checkCellAndPerformAction_StopCellPresent() {
         PlayerDTO dto = new PlayerDTO();
@@ -238,7 +239,7 @@ class PlayerServiceImplTest {
         verify(cell1).performAction(player);
         verify(stopCell).performAction(player);
         verify(cell3, never()).performAction(player); // Verifies action stops after StopCell
-    }
+    }*/
 
     @Test
     void checkCellAndPerformAction_PlayerNotFound() {
