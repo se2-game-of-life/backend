@@ -54,14 +54,14 @@ public interface PlayerService {
      * @param dto DTO to update the Player Object in the Database
      * @param investmentNumber the number the player chooses. When the Number is spinnend during game, the Player receives a payout
      */
-    void invest(PlayerDTO dto, Integer investmentNumber);
+   /* void invest(PlayerDTO dto, Integer investmentNumber);*/
 
     /**
      * The Player collects a payout, if he invested earlier in the game
      * @param dto DTO to update the Player Object in the Database
      * @param spinResult the Result of the spin, it hast to macht with the players investmentNumber
      */
-    void collectInvestmentPayout(PlayerDTO dto, Integer spinResult);
+    /*void collectInvestmentPayout(PlayerDTO dto, Integer spinResult);*/
 
     /**
      * Gives a Player a Job, or allows him to change it

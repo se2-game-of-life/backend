@@ -169,6 +169,8 @@ class PlayerServiceImplTest {
 
         assertTrue(player.getCurrentCellPosition() >= initialPosition);
     }
+    /*
+    Remove investment
     @Test
     void collectInvestmentPayout_withMatchingSpinResult_increasesMoney() {
         player.setInvestmentNumber(5);
@@ -190,7 +192,7 @@ class PlayerServiceImplTest {
         verify(repository, atLeastOnce()).save(player);
         assertEquals(200000, player.getMoney());
         assertEquals(investmentNumber, player.getInvestmentNumber());
-    }
+    }*/
 
 
 

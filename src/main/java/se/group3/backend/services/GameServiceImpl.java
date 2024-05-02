@@ -50,8 +50,6 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public void startGame(LobbyDTO lobbyDTO) {
-        game.initializeBoard();
-        game.initializeDecks();
         throw new UnsupportedOperationException();
     }
 

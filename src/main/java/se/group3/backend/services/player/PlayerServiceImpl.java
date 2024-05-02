@@ -26,6 +26,8 @@ public class PlayerServiceImpl implements PlayerService {
         this.repository = repository;
     }
 
+    //TODO: choose path functions not needed
+
     @Override
     public void chooseCollagePath(PlayerDTO dto) {
         if (dto.isCollegePath() && repository.findById(dto.getPlayerID()).isPresent()) {
@@ -94,6 +96,8 @@ public class PlayerServiceImpl implements PlayerService {
         }
     }
 
+    /*
+    Remove investment
     @Override
     public void invest(PlayerDTO dto, Integer investmentNumber) {
         if (repository.findById(dto.getPlayerID()).isPresent()) {
@@ -119,7 +123,7 @@ public class PlayerServiceImpl implements PlayerService {
             }
 
         }
-    }
+    }*/
 
     @Override
     public void setOrUpdateCareer(PlayerDTO dto, CareerCard careerCard) {
