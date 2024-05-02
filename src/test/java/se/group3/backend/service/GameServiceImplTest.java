@@ -47,7 +47,6 @@ public class GameServiceImplTest {
         when(lobbyDTOMock.getPlayers()).thenReturn(playersMock);
         when(playerDTOMock.getPlayerName()).thenReturn("Player1");
         when(playerDTOMock.getMoney()).thenReturn(150);
-        when(playerDTOMock.getInvestmentNumber()).thenReturn(1);
         when(playerDTOMock.getNumberOfPegs()).thenReturn(2);
 
         PlayerStatistic expectedStatistics = new PlayerStatistic(player1);
