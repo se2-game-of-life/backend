@@ -8,6 +8,7 @@ import se.group3.backend.domain.game.Deck;
 import se.group3.backend.domain.cards.Card;
 
 import java.util.List;
+
 @Slf4j
 @Document(collection = "Cells")
 public class Cell {
@@ -48,31 +49,8 @@ public class Cell {
         return row;
     }
 
-    public void setRow(int row) {
-        this.row = row;
-    }
-
     public int getCol() {
         return col;
-    }
-
-    public void setCol(int col) {
-        this.col = col;
-    }
-
-    public  void performAction(Player player){
-        throw new UnsupportedOperationException();
-    }
-
-    public  <T extends Card> void performAction(Player player, Deck<T> cardDeck){
-        throw new UnsupportedOperationException();
-    }
-
-    // Shared method for drawing a card and performing its action
-    protected <T extends Card> void drawAndPerformCardAction(Player player, Deck<T> cardDeck) {
-        T drawnCard = cardDeck.drawCard();
-        log.debug("{} draws a card: {}", player.getPlayerName(), drawnCard.getName());
-        drawnCard.performAction(player);
     }
 
     public String getId() {

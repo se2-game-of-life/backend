@@ -220,7 +220,8 @@ class PlayerServiceImplTest {
     }
 
     /*
-    Removed because cell subclass is removed.
+    Removed because cell subclass is removed. There is no cel.preform action anymore.
+    Cells shouldn't be tested in the player service tests
 
     @Test
     void checkCellAndPerformAction_StopCellPresent() {
@@ -239,7 +240,7 @@ class PlayerServiceImplTest {
         verify(cell1).performAction(player);
         verify(stopCell).performAction(player);
         verify(cell3, never()).performAction(player); // Verifies action stops after StopCell
-    }*/
+    }
 
     @Test
     void checkCellAndPerformAction_PlayerNotFound() {
@@ -256,5 +257,5 @@ class PlayerServiceImplTest {
 
         // Verification
         verify(cell, never()).performAction(any(Player.class));
-    }
+    } */
 }
