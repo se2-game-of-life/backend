@@ -1,6 +1,6 @@
 package se.group3.backend.dto.mapper;
 
-import se.group3.backend.domain.cells.Cell;
+import se.group3.backend.domain.game.Cell;
 import se.group3.backend.dto.BoardDTO;
 
 import java.util.List;

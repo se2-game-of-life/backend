@@ -2,7 +2,7 @@ package se.group3.backend.services.player;
 
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.domain.cards.CareerCard;
-import se.group3.backend.domain.cells.Cell;
+import se.group3.backend.domain.game.Cell;
 
 import java.util.List;
 

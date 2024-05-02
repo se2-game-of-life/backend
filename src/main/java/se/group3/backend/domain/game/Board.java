@@ -1,6 +1,5 @@
 package se.group3.backend.domain.game;
 
-import se.group3.backend.domain.cells.Cell;
 import se.group3.backend.domain.player.Player;
 
 import java.util.List;

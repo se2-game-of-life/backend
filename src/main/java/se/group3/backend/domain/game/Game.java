@@ -3,7 +3,6 @@ package se.group3.backend.domain.game;
 import se.group3.backend.domain.cards.ActionCard;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cards.HouseCard;
-import se.group3.backend.domain.cells.Cell;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.repositories.ActionCardRepository;
 import se.group3.backend.repositories.CareerCardRepository;
@@ -16,16 +15,13 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import se.group3.backend.services.CellService;
 
 @Slf4j
 @Component
 public class Game {
     private List<Player> players;
     private Board board;
-    private Deck<ActionCard> actionCardDeck;
-    private Deck<CareerCard> careerCardDeck;
-    private Deck<HouseCard> houseCardDeck;
+
 
     private final CareerCardRepository careerCardRepository;
     private final ActionCardRepository actionCardRepository;
@@ -50,16 +46,10 @@ public class Game {
     public void initializeDecks() {
         List<ActionCard> actionCards = actionCardRepository.findAll();
 
-        actionCardDeck = new Deck<>(actionCards);
-        actionCardDeck.shuffle();
-
         List<CareerCard> careerCards = careerCardRepository.findAll();
-        careerCardDeck = new Deck<>(careerCards);
-        careerCardDeck.shuffle();
 
         List<HouseCard> houseCards = houseCardRepository.findAll();
-        houseCardDeck = new Deck<>(houseCards);
-        houseCardDeck.shuffle();
+
     }
 
     public void initializeBoard(){

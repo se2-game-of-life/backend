@@ -2,11 +2,9 @@ package se.group3.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.group3.backend.domain.cells.*;
 import se.group3.backend.repositories.CellRepository;
-import se.group3.backend.domain.cells.Cell;
+import se.group3.backend.domain.game.Cell;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
