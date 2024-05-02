@@ -12,6 +12,7 @@ import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.dto.mapper.PlayerMapper;
 import se.group3.backend.repositories.ActionCardRepository;
 import se.group3.backend.repositories.CareerCardRepository;
+import se.group3.backend.repositories.CellRepository;
 import se.group3.backend.repositories.HouseCardRepository;
 import se.group3.backend.repositories.player.PlayerRepository;
 
@@ -32,18 +33,18 @@ public class GameServiceImpl implements GameService {
     private CareerCardRepository careerCardRepository;
     private ActionCardRepository actionCardRepository;
     private HouseCardRepository houseCardRepository;
-    private CellService cellService;
+    private CellRepository cellRepository;
     private PlayerRepository playerRepository;
 
 
 
-    public GameServiceImpl(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellService cellService, PlayerRepository playerRepository){
+    public GameServiceImpl(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellRepository cellRepository, PlayerRepository playerRepository){
         this.careerCardRepository = careerCardRepository;
         this.actionCardRepository = actionCardRepository;
         this.houseCardRepository = houseCardRepository;
-        this.cellService = cellService;
+        this.cellRepository = cellRepository;
         this.playerRepository = playerRepository;
-        this.game = new Game(careerCardRepository, actionCardRepository, houseCardRepository, cellService);
+        this.game = new Game(careerCardRepository, actionCardRepository, houseCardRepository, cellRepository);
     }
 
 

@@ -6,8 +6,8 @@ import se.group3.backend.domain.cards.HouseCard;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.repositories.ActionCardRepository;
 import se.group3.backend.repositories.CareerCardRepository;
+import se.group3.backend.repositories.CellRepository;
 import se.group3.backend.repositories.HouseCardRepository;
-import se.group3.backend.services.CellService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -27,33 +27,25 @@ public class Game {
     private final ActionCardRepository actionCardRepository;
     private final HouseCardRepository houseCardRepository;
 
-    private final CellService cellService;
+    private final CellRepository cellRepository;
 
     private int currentPlayerIndex;
     private Random spinnedNumber;
 
 
     @Autowired
-    public Game(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellService cellService) {
+    public Game(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellRepository cellRepository) {
         this.careerCardRepository = careerCardRepository;
         this.actionCardRepository = actionCardRepository;
         this.houseCardRepository = houseCardRepository;
-        this.cellService = cellService;
+        this.cellRepository = cellRepository;
         currentPlayerIndex = 0; // Start with the first player
         spinnedNumber = new Random();
     }
 
-    public void initializeDecks() {
-        List<ActionCard> actionCards = actionCardRepository.findAll();
-
-        List<CareerCard> careerCards = careerCardRepository.findAll();
-
-        List<HouseCard> houseCards = houseCardRepository.findAll();
-
-    }
 
     public void initializeBoard(){
-        List<Cell> cells = cellService.getAllCells();
+        List<Cell> cells = cellRepository.findAll();
         board = new Board(cells);
         log.debug(board.toString());
         }
