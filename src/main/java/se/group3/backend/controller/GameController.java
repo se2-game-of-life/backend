@@ -75,8 +75,23 @@ public class GameController {
     }
 
     @MessageMapping("/game/path")
-    public void choosePath() {
-        //get lobby and player id from session header
+    public void choosePath(SimpMessageHeaderAccessor headerAccessor) {
+        long lobbyUUID;
+        String playerUUID;
+        try {
+            lobbyUUID = SessionUtil.getLobbyID(headerAccessor);
+            playerUUID = SessionUtil.getUUID(headerAccessor);
+        } catch (SessionOperationException | NullPointerException e) {
+            log.error(e.getMessage());
+            return;
+        }
+
+        try {
+            gameService.choosePath(playerUUID, lobbyUUID);
+        } catch (IllegalStateException e) {
+            template.convertAndSend(ERROR_PATH + lobbyUUID, e.getMessage());
+            template.convertAndSend(ERROR_PATH + playerUUID, e.getMessage());
+        }
     }
 
     @MessageMapping("/game/action")
