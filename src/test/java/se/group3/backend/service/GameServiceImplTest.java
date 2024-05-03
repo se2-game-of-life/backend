@@ -1,6 +1,9 @@
 package se.group3.backend.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.extern.java.Log;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,12 +20,14 @@ import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.dto.mapper.PlayerMapper;
 import se.group3.backend.repositories.player.PlayerRepository;
 import se.group3.backend.services.GameServiceImpl;
+import se.group3.backend.util.SerializationUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -71,22 +76,6 @@ public class GameServiceImplTest {
         verify(playerDTOMock, times(1)).getPlayerName();
     }
 
-    private String playerName;
-    private int money;
-    private int investmentNumber;
-    private int numberOfPegs;
-
-    public List<PlayerStatistic> getPlayerStats(PlayerDTO playerDTO, LobbyDTO lobbyDTO) {
-        PlayerDTO[] players = lobbyDTO.getPlayers();
-        List<PlayerStatistic> otherPlayersStats = new ArrayList<>();
-        for (PlayerDTO dto : players) {
-            if (!dto.equals(playerDTO)) {
-                Player player = PlayerMapper.mapDTOToPlayer(dto);
-                otherPlayersStats.add(new PlayerStatistic(player));
-            }
-        }
-        return otherPlayersStats;
-    }
 
     @Test
     void testHandleMove() {
@@ -157,7 +146,53 @@ public class GameServiceImplTest {
         verify(firstGenericCell).performAction(player);
     }
 
+    @Test
+    void testChoosePath_CollegePath(){
+        PlayerDTO playerDTO = new PlayerDTO("Player");
+        playerDTO.setCollegePath(true);
+        playerDTO.setMoney(250000);
+        String playerUUID = null;
 
+        try {
+            playerUUID = SerializationUtil.jsonStringFromClass(playerDTO);
+        } catch (JsonProcessingException e) {
+            Assertions.fail(e);
+        }
+        playerUUID = gameService.choosePath(playerUUID);
+        try {
+            playerDTO = (PlayerDTO) SerializationUtil.toObject(playerUUID, PlayerDTO.class);
+        } catch (JsonProcessingException e) {
+            Assertions.fail(e);
+        }
+
+        assertEquals(150000, playerDTO.getMoney());
+        assertEquals(true, playerDTO.isCollegePath());
+
+    }
+
+    @Test
+    void testChoosePath_CareerPath(){
+        PlayerDTO playerDTO = new PlayerDTO("Player");
+        playerDTO.setCollegePath(false);
+        playerDTO.setMoney(250000);
+        String playerUUID = null;
+
+        try {
+            playerUUID = SerializationUtil.jsonStringFromClass(playerDTO);
+        } catch (JsonProcessingException e) {
+            Assertions.fail(e);
+        }
+        playerUUID = gameService.choosePath(playerUUID);
+        try {
+            playerDTO = (PlayerDTO) SerializationUtil.toObject(playerUUID, PlayerDTO.class);
+        } catch (JsonProcessingException e) {
+            Assertions.fail(e);
+        }
+
+        assertEquals(250000, playerDTO.getMoney());
+        assertEquals(false, playerDTO.isCollegePath());
+
+    }
 
 
 
