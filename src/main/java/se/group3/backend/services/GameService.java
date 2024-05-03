@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface GameService {
 
-    void choosePath(String playerUUID, long lobbyID);
+    String choosePath(String playerUUID);
 
     void chooseAction(String playerUUID, long lobbyID, boolean pickOptionOne);
 

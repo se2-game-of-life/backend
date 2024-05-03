@@ -1,5 +1,6 @@
 package se.group3.backend.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import se.group3.backend.domain.cells.ActionCell;
 import se.group3.backend.domain.cells.Cell;
 import se.group3.backend.domain.cells.StopCell;
 import se.group3.backend.domain.game.Game;
+import se.group3.backend.domain.lobby.Lobby;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.domain.player.PlayerStatistic;
 import se.group3.backend.dto.CellDTO;
@@ -18,6 +20,7 @@ import se.group3.backend.repositories.ActionCardRepository;
 import se.group3.backend.repositories.CareerCardRepository;
 import se.group3.backend.repositories.HouseCardRepository;
 import se.group3.backend.repositories.player.PlayerRepository;
+import se.group3.backend.util.SerializationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +52,19 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public void choosePath(String playerUUID, long lobbyID) {
-        throw new UnsupportedOperationException();
+    public String choosePath(String playerUUID) {
+        try {
+            PlayerDTO playerDTO = (PlayerDTO) SerializationUtil.toObject(playerUUID, PlayerDTO.class);
+            if(playerDTO.isCollegePath()){
+                log.debug("Player chose collegePath.");
+                playerDTO.setMoney(150000);
+                log.debug("Player paid 100k for college.");
+            }
+            return SerializationUtil.jsonStringFromClass(playerDTO);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+        }
+        return playerUUID;
     }
 
     @Override
