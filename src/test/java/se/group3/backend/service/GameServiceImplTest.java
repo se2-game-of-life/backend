@@ -1,7 +1,7 @@
 package se.group3.backend.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.extern.java.Log;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,12 +17,11 @@ import se.group3.backend.domain.player.Player;
 import se.group3.backend.domain.player.PlayerStatistic;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;
-import se.group3.backend.dto.mapper.PlayerMapper;
+
 import se.group3.backend.repositories.player.PlayerRepository;
 import se.group3.backend.services.GameServiceImpl;
 import se.group3.backend.util.SerializationUtil;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
