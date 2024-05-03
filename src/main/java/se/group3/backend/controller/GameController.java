@@ -1,12 +1,15 @@
 package se.group3.backend.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import se.group3.backend.dto.BoardDTO;
+import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.services.BoardService;
 import se.group3.backend.services.GameService;
 import se.group3.backend.services.LobbyService;
@@ -78,6 +81,7 @@ public class GameController {
     public void choosePath(SimpMessageHeaderAccessor headerAccessor) {
         long lobbyUUID;
         String playerUUID;
+
         try {
             lobbyUUID = SessionUtil.getLobbyID(headerAccessor);
             playerUUID = SessionUtil.getUUID(headerAccessor);
@@ -86,8 +90,10 @@ public class GameController {
             return;
         }
 
+
         try {
-            gameService.choosePath(playerUUID, lobbyUUID);
+            String player = gameService.choosePath(playerUUID);
+            this.template.convertAndSend(GAME_PATH + lobbyUUID, player);
         } catch (IllegalStateException e) {
             template.convertAndSend(ERROR_PATH + lobbyUUID, e.getMessage());
             template.convertAndSend(ERROR_PATH + playerUUID, e.getMessage());
