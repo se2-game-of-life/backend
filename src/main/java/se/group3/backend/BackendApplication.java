@@ -16,8 +16,8 @@ public class BackendApplication {
         Game game = context.getBean(Game.class);
 
         // Initialize decks
-        game.initializeDecks();
-        game.initializeBoard();
+/*        game.initializeDecks();
+        game.initializeBoard();*/
     }
 
 }

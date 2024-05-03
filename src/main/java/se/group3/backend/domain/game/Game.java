@@ -40,7 +40,7 @@ public class Game {
 //        this.cellService = cellService;
     }
 
-    public void initializeDecks() {
+/*    public void initializeDecks() {
         List<ActionCard> actionCards = actionCardRepository.findAll();
 
         actionCardDeck = new Deck<>(actionCards);
@@ -53,7 +53,7 @@ public class Game {
         List<HouseCard> houseCards = houseCardRepository.findAll();
         houseCardDeck = new Deck<>(houseCards);
         houseCardDeck.shuffle();
-    }
+    }*/
 
 //    public void initializeBoard(){
 //        List<Cell> cells = cellService.getAllCells();

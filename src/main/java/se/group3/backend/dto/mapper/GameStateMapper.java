@@ -14,14 +14,14 @@ public class GameStateMapper {
         throw new UnsupportedOperationException("This class cannot be instantiated!");
     }
 
-    public static GameStateDTO mapGameToGameStateDTO(Game game) {
+/*    public static GameStateDTO mapGameToGameStateDTO(Game game) {
         List<Player> playerList = game.getPlayers();
         List<PlayerDTO> playerDTOList = new ArrayList<>();
         for (Player player : playerList) {
             playerDTOList.add(PlayerMapper.mapPlayerToDTO(player));
         }
         return new GameStateDTO(playerDTOList.get(game.getCurrentPlayerIndex()), playerDTOList, game.spinSpinner(), null);
-    }
+    }*/
 
 
 }
