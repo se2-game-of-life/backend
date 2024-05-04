@@ -2,7 +2,7 @@ package se.group3.backend.services.player;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.group3.backend.domain.cells.*;
+import se.group3.backend.domain.game.Cell;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.repositories.player.PlayerRepository;
 import se.group3.backend.dto.PlayerDTO;
@@ -10,6 +10,7 @@ import se.group3.backend.domain.cards.CareerCard;
 
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -24,6 +25,8 @@ public class PlayerServiceImpl implements PlayerService {
     public PlayerServiceImpl(PlayerRepository repository) {
         this.repository = repository;
     }
+
+    //TODO: choose path functions not needed
 
     @Override
     public void chooseCollagePath(PlayerDTO dto) {
@@ -93,6 +96,8 @@ public class PlayerServiceImpl implements PlayerService {
         }
     }
 
+    /*
+    Remove investment
     @Override
     public void invest(PlayerDTO dto, Integer investmentNumber) {
         if (repository.findById(dto.getPlayerID()).isPresent()) {
@@ -118,7 +123,7 @@ public class PlayerServiceImpl implements PlayerService {
             }
 
         }
-    }
+    }*/
 
     @Override
     public void setOrUpdateCareer(PlayerDTO dto, CareerCard careerCard) {
@@ -132,7 +137,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public void getPayOut(PlayerDTO dto, Cell passedCell) {
-        if (passedCell instanceof PaydayCell && repository.findById(dto.getPlayerID()).isPresent()) {
+        if (Objects.equals(passedCell.getType(), "paydayCell") && repository.findById(dto.getPlayerID()).isPresent()) {
             Player player = repository.findById(dto.getPlayerID()).get();
             player.setMoney(player.getMoney() + player.getCareerCard().getSalary());
 
@@ -154,14 +159,16 @@ public class PlayerServiceImpl implements PlayerService {
         if (repository.findById(dto.getPlayerID()).isPresent()) {
             Player player = repository.findById(dto.getPlayerID()).get();
 
-            //todo: implement the performAction method in the cells
-            for (Cell c : cell) {
+            //TODO: implement the performAction method in the cells
+
+            // removed since cell subclases are removed. There is no cell.preformAction
+            /* for (Cell c : cell) {
                 if (c instanceof StopCell) {
                     c.performAction(player);
                     break;
                 }
                 c.performAction(player);
-            }
+            }*/
         }
 
     }

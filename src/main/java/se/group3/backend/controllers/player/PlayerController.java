@@ -7,7 +7,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Controller;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.dto.PlayerMoveRequest;
-import se.group3.backend.domain.cells.Cell;
+import se.group3.backend.domain.game.Cell;
 import se.group3.backend.services.player.PlayerServiceImpl;
 
 import java.util.List;

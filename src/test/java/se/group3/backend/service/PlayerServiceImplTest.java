@@ -10,9 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.domain.cards.CareerCard;
-import se.group3.backend.domain.cells.Cell;
-import se.group3.backend.domain.cells.PaydayCell;
-import se.group3.backend.domain.cells.StopCell;
+import se.group3.backend.domain.game.Cell;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.dto.mapper.PlayerMapper;
 import se.group3.backend.repositories.player.PlayerRepository;
@@ -22,8 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 @ExtendWith(MockitoExtension.class)
 class PlayerServiceImplTest {
@@ -173,6 +169,8 @@ class PlayerServiceImplTest {
 
         assertTrue(player.getCurrentCellPosition() >= initialPosition);
     }
+    /*
+    Remove investment
     @Test
     void collectInvestmentPayout_withMatchingSpinResult_increasesMoney() {
         player.setInvestmentNumber(5);
@@ -194,13 +192,13 @@ class PlayerServiceImplTest {
         verify(repository, atLeastOnce()).save(player);
         assertEquals(200000, player.getMoney());
         assertEquals(investmentNumber, player.getInvestmentNumber());
-    }
+    }*/
 
 
 
     @Test
     void getPayOut_withPaydayCell_increasesMoneyBySalary() {
-        PaydayCell paydayCell = new PaydayCell(5, "Payday", Arrays.asList(6, 7), 6, 7); // Position und mögliche nächste Zellen
+        Cell paydayCell = new Cell(5, "paydayCell", Arrays.asList(6, 7), 6, 7); // Position und mögliche nächste Zellen
         CareerCard careerCard = new CareerCard("Doctor", 150000, 20000, false);
         player.setCareerCard(careerCard);
         int initialMoney = player.getMoney();
@@ -220,6 +218,10 @@ class PlayerServiceImplTest {
         verify(repository, times(2)).save(player);
         Assertions.assertEquals(newCareerCard, player.getCareerCard());
     }
+
+    /*
+    Removed because cell subclass is removed. There is no cel.preform action anymore.
+    Cells shouldn't be tested in the player service tests
 
     @Test
     void checkCellAndPerformAction_StopCellPresent() {
@@ -255,5 +257,5 @@ class PlayerServiceImplTest {
 
         // Verification
         verify(cell, never()).performAction(any(Player.class));
-    }
+    } */
 }
