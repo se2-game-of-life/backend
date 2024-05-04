@@ -1,12 +1,16 @@
 package se.group3.backend.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.group3.backend.domain.cells.ActionCell;
+import se.group3.backend.domain.cells.Cell;
+import se.group3.backend.domain.cells.StopCell;
 import se.group3.backend.domain.game.Game;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.domain.player.PlayerStatistic;
-import se.group3.backend.dto.CellDTO;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.dto.mapper.PlayerMapper;
@@ -15,6 +19,7 @@ import se.group3.backend.repositories.CareerCardRepository;
 import se.group3.backend.repositories.CellRepository;
 import se.group3.backend.repositories.HouseCardRepository;
 import se.group3.backend.repositories.player.PlayerRepository;
+import se.group3.backend.util.SerializationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,17 +38,20 @@ public class GameServiceImpl implements GameService {
     private CareerCardRepository careerCardRepository;
     private ActionCardRepository actionCardRepository;
     private HouseCardRepository houseCardRepository;
+
     private CellRepository cellRepository;
     private PlayerRepository playerRepository;
 
 
 
     public GameServiceImpl(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellRepository cellRepository, PlayerRepository playerRepository){
+
         this.careerCardRepository = careerCardRepository;
         this.actionCardRepository = actionCardRepository;
         this.houseCardRepository = houseCardRepository;
         this.cellRepository = cellRepository;
         this.playerRepository = playerRepository;
+
         this.game = new Game(careerCardRepository, actionCardRepository, houseCardRepository, cellRepository);
     }
 
@@ -51,17 +59,33 @@ public class GameServiceImpl implements GameService {
     @Override
     public void startGame(LobbyDTO lobbyDTO) {
         throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public void choosePath(PlayerDTO playerDTO) {
-        //review: should this be implemented in GameService or PlayerService?
-        throw new UnsupportedOperationException();
+    public String choosePath(String playerUUID) {
+        try {
+            PlayerDTO playerDTO = (PlayerDTO) SerializationUtil.toObject(playerUUID, PlayerDTO.class);
+            if(playerRepository.findById(playerDTO.getPlayerID()).isPresent()) {
+                Player player = playerRepository.findById(playerDTO.getPlayerID()).get();
+                if(playerDTO.isCollegePath()){
+                    log.debug("Player chose collegePath.");
+                    playerDTO.setMoney(150000);
+                    log.debug("Player paid 100k for college.");
+                    player.setCollegePath(true);
+                    player.setMoney(150000);
+                    playerRepository.save(player);
+                }
+            }
+            return SerializationUtil.jsonStringFromClass(playerDTO);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+        }
+        return playerUUID;
     }
 
     @Override
-    public void handleCell(PlayerDTO playerDTO, CellDTO cellDTO) {
-        //review: should this be implemented in GameService or PlayerService?
+    public void chooseAction(String playerUUID, long lobbyID, boolean pickOptionOne) {
         throw new UnsupportedOperationException();
     }
 
@@ -79,22 +103,42 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public void checkWinCondition(PlayerDTO playerDTO) {
-        //review: not implemented yet, but method definition exists in Game.java --> move method?
+    public void spinWheel(String playerUUID, long lobbyID) {
+        //todo: get lobby and player for current player and do move logic
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void spinWheel(PlayerDTO playerDTO) {
-        //review: implemented in Game.java AND in PlayerService.java --> move method?
-        throw new UnsupportedOperationException();
+    public void handleMove(PlayerDTO playerDTO, List<Cell> cells) {
+
+        if(playerRepository.findById(playerDTO.getPlayerID()).isPresent()){
+            Player player = playerRepository.findById(playerDTO.getPlayerID()).get();
+
+            for(int i = 0; i < cells.size() - 2; i++){
+                Cell cell = cells.get(i);
+                if (cell instanceof StopCell) {
+                    cell.performAction(player);
+                    break;
+                }
+                if(!(cell instanceof ActionCell)){
+                    cell.performAction(player);
+                }
+            }
+            if(!checkForStopCell(cells)){
+                Cell cell = cells.get(cells.size()-1);
+                if(cell instanceof ActionCell){
+                    cell.performAction(player);
+                }
+            }
+        }
     }
 
-    @Override
-    public void nextPlayer(PlayerDTO playerDTO) {
-        //review: implemented in as nextTurn() in Game.java --> move method?
-        throw new UnsupportedOperationException();
+    private boolean checkForStopCell(List<Cell> cells) {
+        for (Cell c : cells) {
+            if (c instanceof StopCell) {
+                return true;
+            }
+        }
+        return false;
     }
-
-
 }
