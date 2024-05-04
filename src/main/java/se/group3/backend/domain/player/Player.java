@@ -35,7 +35,8 @@ public class Player {
     private boolean hasMidlifeCrisis;
     private boolean isRetireEarlyPath;
 
-
+    private int investmentNumber; // The chosen investment number
+    private int investmentLevel; // The current level of investment
     private int numberOfPegs;
 
     // Constructor
@@ -44,6 +45,8 @@ public class Player {
         this.currentCellPosition = 0;
         this.money = 250000; // Starting money
         this.isCollegePath = false;
+        this.investmentNumber =0;
+        this.investmentLevel = 0;
         this.numberOfPegs = 1;
     }
 }

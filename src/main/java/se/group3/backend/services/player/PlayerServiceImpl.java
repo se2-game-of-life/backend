@@ -2,15 +2,15 @@ package se.group3.backend.services.player;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.group3.backend.domain.game.Cell;
+import se.group3.backend.domain.cells.Cell;
+import se.group3.backend.domain.cells.PaydayCell;
+import se.group3.backend.domain.cells.StopCell;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.repositories.player.PlayerRepository;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.domain.cards.CareerCard;
 
 import java.security.SecureRandom;
-import java.util.List;
-import java.util.Objects;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -25,8 +25,6 @@ public class PlayerServiceImpl implements PlayerService {
     public PlayerServiceImpl(PlayerRepository repository) {
         this.repository = repository;
     }
-
-    //TODO: choose path functions not needed
 
     @Override
     public void chooseCollagePath(PlayerDTO dto) {
@@ -96,8 +94,6 @@ public class PlayerServiceImpl implements PlayerService {
         }
     }
 
-    /*
-    Remove investment
     @Override
     public void invest(PlayerDTO dto, Integer investmentNumber) {
         if (repository.findById(dto.getPlayerID()).isPresent()) {
@@ -123,7 +119,7 @@ public class PlayerServiceImpl implements PlayerService {
             }
 
         }
-    }*/
+    }
 
     @Override
     public void setOrUpdateCareer(PlayerDTO dto, CareerCard careerCard) {
@@ -137,7 +133,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public void getPayOut(PlayerDTO dto, Cell passedCell) {
-        if (Objects.equals(passedCell.getType(), "paydayCell") && repository.findById(dto.getPlayerID()).isPresent()) {
+        if (passedCell instanceof PaydayCell && repository.findById(dto.getPlayerID()).isPresent()) {
             Player player = repository.findById(dto.getPlayerID()).get();
             player.setMoney(player.getMoney() + player.getCareerCard().getSalary());
 
@@ -155,22 +151,51 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void checkCellAndPerformAction(PlayerDTO dto, List<Cell> cell) {
+    public void checkCellAndPerformAction(PlayerDTO dto, Cell cell) {
+        /*if (repository.findById(dto.getPlayerID()).isPresent()) {
+            Player player = repository.findById(dto.getPlayerID()).get();
+            //todo: implement the logic when a player steps on a cell
+            if (cell instanceof ActionCell) {
+
+            }
+            if (cell instanceof AddPegCell) {
+
+            }
+            if (cell instanceof CareerCell) {
+
+            }
+            if (cell instanceof FinalRetirementCell) {
+
+            }
+            if (cell instanceof HouseCell) {
+
+            }
+            if (cell instanceof InvestCell) {
+
+            }
+            if (cell instanceof PaydayCell) {
+
+            }
+        }
+        */
+    }
+
+    @Override
+    public void checkStopCellAndPerformAction(PlayerDTO dto, StopCell stopCell) {
+        /*
         if (repository.findById(dto.getPlayerID()).isPresent()) {
             Player player = repository.findById(dto.getPlayerID()).get();
-
-            //TODO: implement the performAction method in the cells
-
-            // removed since cell subclases are removed. There is no cell.preformAction
-            /* for (Cell c : cell) {
-                if (c instanceof StopCell) {
-                    c.performAction(player);
-                    break;
-                }
-                c.performAction(player);
-            }*/
+            if (stopCell instanceof SpinToGraduateStopCell) {
+                stopCell.performAction(player);
+            }
+            if (stopCell instanceof GetMarriedStopCell) {
+                //todo: logic of function not yet implemented
+                stopCell.performAction(player);
+            }
+            //todo: rest of stop cells not yet implemented
         }
 
+         */
     }
 
 

@@ -7,7 +7,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Controller;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.dto.PlayerMoveRequest;
-import se.group3.backend.domain.game.Cell;
+import se.group3.backend.domain.cells.Cell;
+import se.group3.backend.domain.cells.StopCell;
 import se.group3.backend.services.player.PlayerServiceImpl;
 
 import java.util.List;
@@ -45,7 +46,13 @@ public class PlayerController {
     public void movePlayer(@Payload PlayerMoveRequest moveRequest) {
         PlayerDTO dto = moveRequest.getPlayerDTO();
         List<Cell> cells = moveRequest.getCells();
-        playerService.checkCellAndPerformAction(dto, cells);
+        for(Cell cell : cells) {
+            if(cell instanceof StopCell) {
+                playerService.checkCellAndPerformAction(dto, cell);
+                break;
+            }
+            //perform normal action
+        }
     }
 
     /**

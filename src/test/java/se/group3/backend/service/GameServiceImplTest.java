@@ -55,11 +55,13 @@ public class GameServiceImplTest {
         playersMock[1] = playerDTOMock;
         Player player1 = new Player("Player1");
         player1.setMoney(150);
+        player1.setInvestmentNumber(1);
         player1.setNumberOfPegs(2);
 
         when(lobbyDTOMock.getPlayers()).thenReturn(playersMock);
         when(playerDTOMock.getPlayerName()).thenReturn("Player1");
         when(playerDTOMock.getMoney()).thenReturn(150);
+        when(playerDTOMock.getInvestmentNumber()).thenReturn(1);
         when(playerDTOMock.getNumberOfPegs()).thenReturn(2);
 
         PlayerStatistic expectedStatistics = new PlayerStatistic(player1);
@@ -67,6 +69,7 @@ public class GameServiceImplTest {
         assertTrue(actualStatistics.contains(expectedStatistics));
         verify(lobbyDTOMock, times(1)).getPlayers();
         verify(playerDTOMock, times(1)).getMoney();
+        verify(playerDTOMock, times(1)).getInvestmentNumber();
         verify(playerDTOMock, times(1)).getNumberOfPegs();
         verify(playerDTOMock, times(1)).getPlayerName();
     }
