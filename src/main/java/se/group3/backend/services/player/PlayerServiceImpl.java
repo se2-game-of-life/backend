@@ -2,15 +2,9 @@ package se.group3.backend.services.player;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.group3.backend.domain.game.Cell;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.repositories.player.PlayerRepository;
-import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.domain.cards.CareerCard;
-
-import java.security.SecureRandom;
-import java.util.List;
-import java.util.Objects;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
