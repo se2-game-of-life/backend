@@ -10,7 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.domain.cards.CareerCard;
-import se.group3.backend.domain.game.Cell;
+import se.group3.backend.domain.cells.PaydayCell;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.dto.mapper.PlayerMapper;
 import se.group3.backend.repositories.player.PlayerRepository;
@@ -169,8 +169,6 @@ class PlayerServiceImplTest {
 
         assertTrue(player.getCurrentCellPosition() >= initialPosition);
     }
-    /*
-    Remove investment
     @Test
     void collectInvestmentPayout_withMatchingSpinResult_increasesMoney() {
         player.setInvestmentNumber(5);
@@ -192,13 +190,13 @@ class PlayerServiceImplTest {
         verify(repository, atLeastOnce()).save(player);
         assertEquals(200000, player.getMoney());
         assertEquals(investmentNumber, player.getInvestmentNumber());
-    }*/
+    }
 
 
 
     @Test
     void getPayOut_withPaydayCell_increasesMoneyBySalary() {
-        Cell paydayCell = new Cell(5, "paydayCell", Arrays.asList(6, 7), 6, 7); // Position und mögliche nächste Zellen
+        PaydayCell paydayCell = new PaydayCell(5, "Payday", Arrays.asList(6, 7), 6, 7); // Position und mögliche nächste Zellen
         CareerCard careerCard = new CareerCard("Doctor", 150000, 20000, false);
         player.setCareerCard(careerCard);
         int initialMoney = player.getMoney();
@@ -219,43 +217,4 @@ class PlayerServiceImplTest {
         Assertions.assertEquals(newCareerCard, player.getCareerCard());
     }
 
-    /*
-    Removed because cell subclass is removed. There is no cel.preform action anymore.
-    Cells shouldn't be tested in the player service tests
-
-    @Test
-    void checkCellAndPerformAction_StopCellPresent() {
-        PlayerDTO dto = new PlayerDTO();
-        dto.setPlayerID("TestID");
-        Player player = new Player("player1");
-        Cell cell1 = mock(Cell.class);
-        StopCell stopCell = mock(StopCell.class);
-        Cell cell3 = mock(Cell.class);
-        List<Cell> cells = Arrays.asList(cell1, stopCell, cell3);
-
-        when(repository.findById(dto.getPlayerID())).thenReturn(Optional.of(player));
-
-        service.checkCellAndPerformAction(dto, cells);
-
-        verify(cell1).performAction(player);
-        verify(stopCell).performAction(player);
-        verify(cell3, never()).performAction(player); // Verifies action stops after StopCell
-    }
-
-    @Test
-    void checkCellAndPerformAction_PlayerNotFound() {
-        // Setup
-        PlayerDTO dto = new PlayerDTO();
-        dto.setPlayerID("TestID");
-        Cell cell = mock(Cell.class);
-        List<Cell> cells = Collections.singletonList(cell);
-
-        when(repository.findById(dto.getPlayerID())).thenReturn(Optional.empty());
-
-        // Execution
-        service.checkCellAndPerformAction(dto, cells);
-
-        // Verification
-        verify(cell, never()).performAction(any(Player.class));
-    } */
 }

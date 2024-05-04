@@ -20,6 +20,8 @@ public class PlayerMapper {
         player.setGrowFamilyPath(dto.isGrowFamilyPath());
         player.setHasMidlifeCrisis(dto.isHasMidlifeCrisis());
         player.setRetireEarlyPath(dto.isRetireEarlyPath());
+        player.setInvestmentNumber(dto.getInvestmentNumber());
+        player.setInvestmentLevel(dto.getInvestmentLevel());
         player.setNumberOfPegs(dto.getNumberOfPegs());
 
         return player;
@@ -37,7 +39,8 @@ public class PlayerMapper {
         dto.setGrowFamilyPath(player.isGrowFamilyPath());
         dto.setHasMidlifeCrisis(player.isHasMidlifeCrisis());
         dto.setRetireEarlyPath(player.isRetireEarlyPath());
-
+        dto.setInvestmentNumber(player.getInvestmentNumber());
+        dto.setInvestmentLevel(player.getInvestmentLevel());
         dto.setNumberOfPegs(player.getNumberOfPegs());
 
         return dto;

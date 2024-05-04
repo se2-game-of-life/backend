@@ -26,6 +26,7 @@
             **se/group3/backend/configuration/**,
             **se/group3/backend/repositories/**,
             **se/group3/backend/exceptions/**,
+            **se/group3/backend/*.java
         </sonar.coverage.exclusions>
     </properties>
     <dependencies>

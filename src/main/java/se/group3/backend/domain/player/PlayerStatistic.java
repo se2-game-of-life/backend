@@ -10,6 +10,7 @@ import lombok.Setter;
 public class PlayerStatistic {
     private String playerName;
     private int money;
+    private int investmentNumber;
     private int numberOfPegs;
     private int numberOfHouses;
 
@@ -17,9 +18,9 @@ public class PlayerStatistic {
     public PlayerStatistic(Player player) {
         this.playerName = player.getPlayerName();
         this.money = player.getMoney();
+        this.investmentNumber = player.getInvestmentNumber();
         this.numberOfPegs = player.getNumberOfPegs();
         //todo: player needs a variable how many houses he has
-        //TODO: for player Houses add attribute List<HouseCards> that contains all the houses they own
         this.numberOfHouses = 0;
     }
 

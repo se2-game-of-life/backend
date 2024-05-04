@@ -16,7 +16,6 @@ import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.dto.mapper.PlayerMapper;
 import se.group3.backend.repositories.ActionCardRepository;
 import se.group3.backend.repositories.CareerCardRepository;
-import se.group3.backend.repositories.CellRepository;
 import se.group3.backend.repositories.HouseCardRepository;
 import se.group3.backend.repositories.player.PlayerRepository;
 import se.group3.backend.util.SerializationUtil;
@@ -38,28 +37,16 @@ public class GameServiceImpl implements GameService {
     private CareerCardRepository careerCardRepository;
     private ActionCardRepository actionCardRepository;
     private HouseCardRepository houseCardRepository;
+    private CellService cellService;
+    public PlayerRepository playerRepository;
 
-    private CellRepository cellRepository;
-    private PlayerRepository playerRepository;
-
-
-
-    public GameServiceImpl(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellRepository cellRepository, PlayerRepository playerRepository){
-
+    @Autowired
+    public GameServiceImpl(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellService cellService, PlayerRepository playerRepository) {
         this.careerCardRepository = careerCardRepository;
         this.actionCardRepository = actionCardRepository;
         this.houseCardRepository = houseCardRepository;
-        this.cellRepository = cellRepository;
+        this.cellService = cellService;
         this.playerRepository = playerRepository;
-
-        this.game = new Game(careerCardRepository, actionCardRepository, houseCardRepository, cellRepository);
-    }
-
-
-    @Override
-    public void startGame(LobbyDTO lobbyDTO) {
-        throw new UnsupportedOperationException();
-
     }
 
     @Override

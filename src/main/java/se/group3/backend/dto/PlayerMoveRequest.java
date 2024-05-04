@@ -3,7 +3,7 @@ package se.group3.backend.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import se.group3.backend.domain.game.Cell;
+import se.group3.backend.domain.cells.Cell;
 
 import java.util.List;
 
