@@ -27,15 +27,6 @@ public class Player {
     private int money;
 
     private CareerCard careerCard;
-
-    //Booleans for the different paths the game offers
-    private boolean isCollegePath;
-    private boolean isMarriedPath;
-    private boolean isGrowFamilyPath;
-    private boolean hasMidlifeCrisis;
-    private boolean isRetireEarlyPath;
-
-
     private int numberOfPegs;
 
     // Constructor
@@ -43,7 +34,6 @@ public class Player {
         this.playerName = playerName;
         this.currentCellPosition = 0;
         this.money = 250000; // Starting money
-        this.isCollegePath = false;
         this.numberOfPegs = 1;
     }
 }
