@@ -26,8 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -147,10 +146,15 @@ public class GameServiceImplTest {
 
     @Test
     void testChoosePath_CollegePath(){
-        PlayerDTO playerDTO = new PlayerDTO("Player");
+        PlayerDTO playerDTO = new PlayerDTO("player1");
         playerDTO.setCollegePath(true);
         playerDTO.setMoney(250000);
+        playerDTO.setPlayerID("1");
         String playerUUID = null;
+        Player player = new Player("player1");
+
+
+        when(playerRepository.findById("1")).thenReturn(Optional.of(player));
 
         try {
             playerUUID = SerializationUtil.jsonStringFromClass(playerDTO);
@@ -165,16 +169,22 @@ public class GameServiceImplTest {
         }
 
         assertEquals(150000, playerDTO.getMoney());
-        assertEquals(true, playerDTO.isCollegePath());
+        assertTrue(playerDTO.isCollegePath());
+        assertTrue(player.isCollegePath());
 
     }
 
     @Test
     void testChoosePath_CareerPath(){
-        PlayerDTO playerDTO = new PlayerDTO("Player");
+        PlayerDTO playerDTO = new PlayerDTO("player1");
         playerDTO.setCollegePath(false);
         playerDTO.setMoney(250000);
+        playerDTO.setPlayerID("1");
         String playerUUID = null;
+        Player player = new Player("player1");
+
+
+        when(playerRepository.findById("1")).thenReturn(Optional.of(player));
 
         try {
             playerUUID = SerializationUtil.jsonStringFromClass(playerDTO);
@@ -189,8 +199,8 @@ public class GameServiceImplTest {
         }
 
         assertEquals(250000, playerDTO.getMoney());
-        assertEquals(false, playerDTO.isCollegePath());
-
+        assertFalse(playerDTO.isCollegePath());
+        assertFalse(player.isCollegePath());
     }
 
 
