@@ -53,10 +53,16 @@ public class GameServiceImpl implements GameService {
     public String choosePath(String playerUUID) {
         try {
             PlayerDTO playerDTO = (PlayerDTO) SerializationUtil.toObject(playerUUID, PlayerDTO.class);
-            if(playerDTO.isCollegePath()){
-                log.debug("Player chose collegePath.");
-                playerDTO.setMoney(150000);
-                log.debug("Player paid 100k for college.");
+            if(playerRepository.findById(playerDTO.getPlayerID()).isPresent()) {
+                Player player = playerRepository.findById(playerDTO.getPlayerID()).get();
+                if(playerDTO.isCollegePath()){
+                    log.debug("Player chose collegePath.");
+                    playerDTO.setMoney(150000);
+                    log.debug("Player paid 100k for college.");
+                    player.setCollegePath(true);
+                    player.setMoney(150000);
+                    playerRepository.save(player);
+                }
             }
             return SerializationUtil.jsonStringFromClass(playerDTO);
         } catch (JsonProcessingException e) {
