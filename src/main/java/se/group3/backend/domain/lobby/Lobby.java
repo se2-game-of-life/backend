@@ -2,36 +2,33 @@ package se.group3.backend.domain.lobby;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import se.group3.backend.domain.game.Game;
 import se.group3.backend.domain.player.Player;
 
 @Slf4j
 @Getter
-public class Lobby {
+public class Lobby implements Runnable {
 
-    private volatile boolean running;
+    private boolean running;
 
     private final long id;
-    private static final short MAXIMUM_PLAYER_COUNT = 4;
-    private short currentPlayerCount = 0;
+    private static final Short MAXIMUM_PLAYER_COUNT = 4;
+    private Short currentPlayerCount = 0;
     private final Player host;
     private final Player[] players = new Player[MAXIMUM_PLAYER_COUNT];
-    private short currentPlayerIndex;
-    private final Game game;
 
     public Lobby(long lobbyID, Player host) {
         this.id = lobbyID;
         this.host = host;
-        game = new Game(players);
         addPlayer(host);
-        this.currentPlayerIndex = 0;
     }
 
-    public void nextTurn(boolean goAgain) {
-        game.setCurrentPlayer(players[currentPlayerIndex++]);
-        if(!goAgain) currentPlayerIndex++;
-        if(currentPlayerIndex > MAXIMUM_PLAYER_COUNT) currentPlayerIndex = 0;
+    @Override
+    public void run() {
+        running = true;
+        while (running) {
+            //add game logic
+            running = false;
+        }
     }
 
     public void addPlayer(Player player) {

@@ -1,6 +1,5 @@
 package se.group3.backend.domain.game;
 
-
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.repositories.ActionCardRepository;
 import se.group3.backend.repositories.CareerCardRepository;
@@ -10,15 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Random;
-import java.util.random.RandomGenerator;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class Game {
-
     private List<Player> players;
 
 
@@ -30,10 +27,6 @@ public class Game {
 
     private int currentPlayerIndex;
     private Random spinnedNumber;
-
-
-    private Player currentPlayer;
-    private int spunNumber;
 
 
     @Autowired
@@ -48,12 +41,10 @@ public class Game {
 
 
 
-
     public void startGame() {
         // Start the game, set up initial conditions, determine starting player, etc.
         throw new UnsupportedOperationException();
     }
-
 
     public void nextTurn() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size(); // Move to the next player
@@ -67,9 +58,8 @@ public class Game {
     }
 
     private int spinSpinner() {
-
         // Simulate spinning the spinner to get a random number of steps
-        return spunNumber = new Random().nextInt(10) + 1; // Generates a random number between 1 and 10
+        return spinnedNumber.nextInt(10) + 1; // Generates a random number between 1 and 10
     }
 
     private boolean checkWinCondition() {
@@ -77,5 +67,4 @@ public class Game {
         // Implement the logic to check whether any player has won the game
         throw new UnsupportedOperationException();
     }
-
 }
