@@ -4,8 +4,6 @@ import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.game.Cell;
 
-import java.util.List;
-
 
 /**
  * Interface for the PlayerService
@@ -14,80 +12,23 @@ import java.util.List;
 public interface PlayerService {
 
     /**
-     * Determines if the Player chooses College
-     * @param dto DTO to update the Player Object in the Database
-     */
-    void chooseCollagePath(PlayerDTO dto);
-
-    /**
-     * Determines if the Player chooses Marriage
-     * @param dto DTO to update the Player Object in the Database
-     */
-    void chooseMarryPath(PlayerDTO dto);
-
-    /**
-     * Determines if the Player chooses to grow the Family
-     * @param dto DTO to update the Player Object in the Database
-     */
-    void chooseGrowFamilyPath(PlayerDTO dto);
-
-    /**
-     * Determines if the Player gets a midlifecrisis
-     * @param dto DTO to update the Player Object in the Database
-     */
-    void midLifeCrisisPath(PlayerDTO dto);
-
-    /**
-     * Determines if the Player chooses to retire early
-     * @param dto DTO to update the Player Object in the Database
-     */
-    void chooseRetireEarlyPath(PlayerDTO dto);
-
-    /**
      * Handles if the Player wants to increase the Number of Pegs
-     * @param dto DTO to update the Player Object in the Database
+     * @param playerID the ID of the Player
      */
-    void increaseNumberOfPegs(PlayerDTO dto);
-
-    /**
-     * Handles if the Player wants to Invest
-     * @param dto DTO to update the Player Object in the Database
-     * @param investmentNumber the number the player chooses. When the Number is spinnend during game, the Player receives a payout
-     */
-   /* void invest(PlayerDTO dto, Integer investmentNumber);*/
-
-    /**
-     * The Player collects a payout, if he invested earlier in the game
-     * @param dto DTO to update the Player Object in the Database
-     * @param spinResult the Result of the spin, it hast to macht with the players investmentNumber
-     */
-    /*void collectInvestmentPayout(PlayerDTO dto, Integer spinResult);*/
+    void increaseNumberOfPegs(String playerID);
 
     /**
      * Gives a Player a Job, or allows him to change it
-     * @param dto DTO to update the Player Object in the Database
+     * @param playerID the ID of the Player
      * @param careerCard the new Job the Player choose
      */
-    void setOrUpdateCareer(PlayerDTO dto, CareerCard careerCard);
+    void setCareer(String playerID, CareerCard careerCard);
 
     /**
      * If the Player moves over a Payout cell, he receives a Payout. The Payout gets calculated by the Players chosen Job
-     * @param dto DTO to update the Player Object in the Database
-     * @param passedCell the Method has to check each cell the player passes.
+     * @param playerID the ID of the Player
      */
-    void getPayOut(PlayerDTO dto, Cell passedCell);
+    void getSalary(String playerID);
 
-    /**
-     * Moves the player a random amount of fields between 1-10
-     * @param dto DTO to update the Player Object in the Database
-     */
-    void spin(PlayerDTO dto);
-
-    /**
-     * checks the cell the player moves over, and performs the necessary action
-     * @param dto DTO to update the Player Object in the Database
-     * @param cell the cell, which has to be checked
-     */
-    void checkCellAndPerformAction(PlayerDTO dto, List<Cell> cell);
-
+    void getSalaryWithBonus(String playerID);
 }
