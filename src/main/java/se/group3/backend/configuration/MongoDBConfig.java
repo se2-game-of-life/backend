@@ -15,6 +15,6 @@ public class MongoDBConfig extends AbstractMongoClientConfiguration {
 
     @Override
     public MongoClient mongoClient() {
-        return MongoClients.create("mongodb+srv://ayasafan16:12345@cluster0.fqmjinm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+        return MongoClients.create("mongodb://localhost:27017");
     }
 }
