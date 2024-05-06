@@ -31,6 +31,7 @@ public class Player {
     private CareerCard careerCard;
     private int numberOfPegs;
     private List<HouseCard> houses;
+    private boolean collegeDegree = false;
 
     // Constructor
     public Player(String playerName) {
@@ -39,5 +40,6 @@ public class Player {
         this.money = 250000; // Starting money
         this.numberOfPegs = 1;
         houses = new ArrayList<>();
+        collegeDegree = false;
     }
 }
