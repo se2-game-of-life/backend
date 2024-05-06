@@ -2,6 +2,7 @@ package se.group3.backend.services.player;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.group3.backend.domain.cards.HouseCard;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.repositories.player.PlayerRepository;
 import se.group3.backend.domain.cards.CareerCard;
@@ -50,6 +51,15 @@ public class PlayerServiceImpl implements PlayerService {
         if (repository.findById(playerID).isPresent()) {
             Player player = repository.findById(playerID).get();
             player.setMoney(player.getMoney() + player.getCareerCard().getBonus());
+            repository.save(player);
+        }
+    }
+
+    @Override
+    public void addHouse(String playerID, HouseCard houseCard) {
+        if (repository.findById(playerID).isPresent()) {
+            Player player = repository.findById(playerID).get();
+            player.getHouses().add(houseCard);
             repository.save(player);
         }
     }

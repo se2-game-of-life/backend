@@ -1,6 +1,7 @@
 package se.group3.backend.services.player;
 
 import se.group3.backend.domain.cards.CareerCard;
+import se.group3.backend.domain.cards.HouseCard;
 
 
 /**
@@ -29,4 +30,7 @@ public interface PlayerService {
     void getSalary(String playerID);
 
     void getSalaryWithBonus(String playerID);
+
+
+    void addHouse(String playerID, HouseCard houseCard);
 }
