@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class GameServiceImplTest {
+class GameServiceImplTest {
     private PlayerDTO playerDTOMockHost;
     private PlayerDTO playerDTOMock;
     private PlayerDTO[] playersMock = new PlayerDTO[2];
