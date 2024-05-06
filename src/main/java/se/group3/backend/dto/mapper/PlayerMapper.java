@@ -15,11 +15,6 @@ public class PlayerMapper {
         player.setCurrentCellPosition(dto.getCurrentCellPosition());
         player.setMoney(dto.getMoney());
         player.setCareerCard(dto.getCareerCard());
-        player.setCollegePath(dto.isCollegePath());
-        player.setMarriedPath(dto.isMarriedPath());
-        player.setGrowFamilyPath(dto.isGrowFamilyPath());
-        player.setHasMidlifeCrisis(dto.isHasMidlifeCrisis());
-        player.setRetireEarlyPath(dto.isRetireEarlyPath());
         player.setNumberOfPegs(dto.getNumberOfPegs());
 
         return player;
@@ -32,11 +27,6 @@ public class PlayerMapper {
         dto.setCurrentCellPosition(player.getCurrentCellPosition());
         dto.setMoney(player.getMoney());
         dto.setCareerCard(player.getCareerCard());
-        dto.setCollegePath(player.isCollegePath());
-        dto.setMarriedPath(player.isMarriedPath());
-        dto.setGrowFamilyPath(player.isGrowFamilyPath());
-        dto.setHasMidlifeCrisis(player.isHasMidlifeCrisis());
-        dto.setRetireEarlyPath(player.isRetireEarlyPath());
 
         dto.setNumberOfPegs(player.getNumberOfPegs());
 
