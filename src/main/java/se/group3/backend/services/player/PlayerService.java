@@ -29,8 +29,16 @@ public interface PlayerService {
      */
     void getSalary(String playerID);
 
+    /**
+     * if the Player steps on a Payday Cell, he receives a Bonus.
+     * @param playerID the ID of the Player
+     */
     void getSalaryWithBonus(String playerID);
 
-
+    /**
+     * If the Player wants to buy a House, this method handles the transaction
+     * @param playerID the ID of the Player
+     * @param houseCard the House the Player wants to buy
+     */
     void addHouse(String playerID, HouseCard houseCard);
 }
