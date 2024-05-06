@@ -54,8 +54,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public void choosePath(PlayerDTO playerDTO) {
-        //review: should this be implemented in GameService or PlayerService?
+    public String choosePath(String playerUUID) {
         throw new UnsupportedOperationException();
     }
 
