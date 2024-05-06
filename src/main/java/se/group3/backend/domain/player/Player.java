@@ -31,7 +31,7 @@ public class Player {
     private CareerCard careerCard;
     private int numberOfPegs;
     private List<HouseCard> houses;
-    private boolean collegeDegree = false;
+    private boolean collegeDegree;
 
     // Constructor
     public Player(String playerName) {
