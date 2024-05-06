@@ -53,6 +53,23 @@ public class GameController {
             template.convertAndSend(ERROR_PATH + playerUUID, e.getMessage());
         }
     }
+
+    @MessageMapping("/game/start")
+    public void startGame(SimpMessageHeaderAccessor headerAccessor) {
+        long uuid;
+        try {
+            uuid = SessionUtil.getLobbyID(headerAccessor);
+        } catch (SessionOperationException | NullPointerException e) {
+            log.error(e.getMessage());
+            return;
+        }
+
+        try {
+            lobbyService.startGame(uuid);
+        } catch (IllegalStateException e) {
+            template.convertAndSend(ERROR_PATH + uuid, e.getMessage());
+        }
+    }
 }
 
 
