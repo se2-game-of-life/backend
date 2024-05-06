@@ -132,5 +132,7 @@ class GameServiceImplTest {
     void breakDown(){
         this.playerDTOMock = null;
         this.lobbyDTOMock = null;
+        this.gameService = null;
+        this.playerDTOMockHost = null;
     }
 }
