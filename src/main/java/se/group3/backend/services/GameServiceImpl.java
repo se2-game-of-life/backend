@@ -1,5 +1,6 @@
 package se.group3.backend.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import se.group3.backend.repositories.CareerCardRepository;
 import se.group3.backend.repositories.CellRepository;
 import se.group3.backend.repositories.HouseCardRepository;
 import se.group3.backend.repositories.player.PlayerRepository;
+import se.group3.backend.util.SerializationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,9 +56,25 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public void choosePath(PlayerDTO playerDTO) {
-        //review: should this be implemented in GameService or PlayerService?
-        throw new UnsupportedOperationException();
+    public String choosePath(String playerUUID) {
+        try {
+            PlayerDTO playerDTO = (PlayerDTO) SerializationUtil.toObject(playerUUID, PlayerDTO.class);
+            if(playerRepository.findById(playerDTO.getPlayerID()).isPresent()) {
+                Player player = playerRepository.findById(playerDTO.getPlayerID()).get();
+                if(playerDTO.isCollegePath()){
+                    log.debug("Player chose college path.");
+                    playerDTO.setMoney(150000);
+                    log.debug("Player paid 100k for college.");
+                    player.setCollegeDegree(true);
+                    player.setMoney(150000);
+                    playerRepository.save(player);
+                }
+            }
+            return SerializationUtil.jsonStringFromClass(playerDTO);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+        }
+        return playerUUID;
     }
 
     @Override

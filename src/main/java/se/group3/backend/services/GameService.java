@@ -22,9 +22,9 @@ public interface GameService {
 
     /**
      * Determines if the Player chooses College or Career
-     * @param playerDTO to update the player Object in the database
+     * @param playerUUID to update the player in the database
      */
-    void choosePath(PlayerDTO playerDTO);
+    String choosePath(String playerUUID);
 
     /**
      * Determines what happens on the cell

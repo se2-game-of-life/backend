@@ -107,4 +107,8 @@ public class LobbyService {
     public Lobby getLobby(long lobbyID) {
         return lobbyMap.get(lobbyID);
     }
+
+    public void startGame(long uuid) {
+        throw new UnsupportedOperationException();
+    }
 }
