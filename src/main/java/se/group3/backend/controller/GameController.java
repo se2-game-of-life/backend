@@ -4,6 +4,7 @@ package se.group3.backend.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -32,7 +33,7 @@ public class GameController {
     }
 
     @MessageMapping("/game/path")
-    public void choosePath(SimpMessageHeaderAccessor headerAccessor) {
+    public void choosePath(@Payload boolean collegePath, SimpMessageHeaderAccessor headerAccessor) {
         long lobbyUUID;
         String playerUUID;
 
@@ -46,7 +47,7 @@ public class GameController {
 
 
         try {
-            String player = gameService.choosePath(playerUUID);
+            String player = gameService.choosePath(playerUUID, collegePath);
             this.template.convertAndSend(GAME_PATH + lobbyUUID, player);
         } catch (IllegalStateException e) {
             template.convertAndSend(ERROR_PATH + lobbyUUID, e.getMessage());

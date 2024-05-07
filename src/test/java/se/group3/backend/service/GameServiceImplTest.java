@@ -12,12 +12,10 @@ import se.group3.backend.domain.player.Player;
 import se.group3.backend.domain.player.PlayerStatistic;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;
-import se.group3.backend.dto.mapper.PlayerMapper;
 import se.group3.backend.repositories.player.PlayerRepository;
 import se.group3.backend.services.GameServiceImpl;
 import se.group3.backend.util.SerializationUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,7 +68,6 @@ class GameServiceImplTest {
     @Test
     void testChoosePath_CollegePath(){
         PlayerDTO playerDTO = new PlayerDTO("player1");
-        playerDTO.setCollegePath(true);
         playerDTO.setMoney(250000);
         playerDTO.setPlayerID("1");
         String playerUUID = null;
@@ -84,7 +81,7 @@ class GameServiceImplTest {
         } catch (JsonProcessingException e) {
             Assertions.fail(e);
         }
-        playerUUID = gameService.choosePath(playerUUID);
+        playerUUID = gameService.choosePath(playerUUID, true);
         try {
             playerDTO = (PlayerDTO) SerializationUtil.toObject(playerUUID, PlayerDTO.class);
         } catch (JsonProcessingException e) {
@@ -100,7 +97,6 @@ class GameServiceImplTest {
     @Test
     void testChoosePath_CareerPath(){
         PlayerDTO playerDTO = new PlayerDTO("player1");
-        playerDTO.setCollegePath(false);
         playerDTO.setMoney(250000);
         playerDTO.setPlayerID("1");
         String playerUUID = null;
@@ -114,7 +110,7 @@ class GameServiceImplTest {
         } catch (JsonProcessingException e) {
             Assertions.fail(e);
         }
-        playerUUID = gameService.choosePath(playerUUID);
+        playerUUID = gameService.choosePath(playerUUID, false);
         try {
             playerDTO = (PlayerDTO) SerializationUtil.toObject(playerUUID, PlayerDTO.class);
         } catch (JsonProcessingException e) {
