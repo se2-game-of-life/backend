@@ -23,8 +23,9 @@ public interface GameService {
     /**
      * Determines if the Player chooses College or Career
      * @param playerUUID to update the player in the database
+     * @param collegePath to show if player chooses collegePath
      */
-    String choosePath(String playerUUID);
+    String choosePath(String playerUUID, boolean collegePath);
 
     /**
      * Determines what happens on the cell

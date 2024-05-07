@@ -56,11 +56,13 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public String choosePath(String playerUUID) {
+    public String choosePath(String playerUUID, boolean collegePath) {
         try {
             PlayerDTO playerDTO = (PlayerDTO) SerializationUtil.toObject(playerUUID, PlayerDTO.class);
+            playerDTO.setCollegePath(collegePath);
             if(playerRepository.findById(playerDTO.getPlayerID()).isPresent()) {
                 Player player = playerRepository.findById(playerDTO.getPlayerID()).get();
+                player.setCollegeDegree(collegePath);
                 if(playerDTO.isCollegePath()){
                     log.debug("Player chose college path.");
                     playerDTO.setMoney(150000);
