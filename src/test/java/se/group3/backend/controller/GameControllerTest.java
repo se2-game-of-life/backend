@@ -1,23 +1,20 @@
 package se.group3.backend.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import se.group3.backend.dto.LobbyDTO;
-import se.group3.backend.dto.PlayerDTO;
-import se.group3.backend.exceptions.SessionOperationException;
 import se.group3.backend.services.GameService;
-import se.group3.backend.util.SessionUtil;
+
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.anyString;
+
 import static org.mockito.Mockito.*;
 
 
