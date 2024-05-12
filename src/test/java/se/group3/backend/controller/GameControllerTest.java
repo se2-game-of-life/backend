@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 
-public class GameControllerTest {
+class GameControllerTest {
     private GameController gameController;
     private SimpMessagingTemplate messagingTemplate;
     private GameService gameService;
