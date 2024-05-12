@@ -1,10 +1,24 @@
 package se.group3.backend.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import se.group3.backend.dto.LobbyDTO;
+import se.group3.backend.dto.PlayerDTO;
+import se.group3.backend.exceptions.SessionOperationException;
 import se.group3.backend.services.GameService;
+import se.group3.backend.util.SessionUtil;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 
 public class GameControllerTest {
@@ -14,10 +28,34 @@ public class GameControllerTest {
 
     @BeforeEach
     void setUp() {
-        gameService = Mockito.mock(GameService.class);
-        messagingTemplate = Mockito.mock(SimpMessagingTemplate.class);
+        gameService = mock(GameService.class);
+        messagingTemplate = mock(SimpMessagingTemplate.class);
         gameController = new GameController(gameService, null, null, messagingTemplate);
     }
+
+    @Test
+    void choosePathTest(){
+        SimpMessageHeaderAccessor headerAccessor = mock(SimpMessageHeaderAccessor.class);
+        LobbyDTO lobbyDTO = mock(LobbyDTO.class);
+        Map<String, Object> sessionAttributes = new HashMap<>();
+        sessionAttributes.put("uuid", "TestUUID");
+        sessionAttributes.put("lobbyID", 1L);
+        Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(sessionAttributes);
+
+        when(lobbyDTO.getLobbyID()).thenReturn(1L);
+        String player = "Player1";
+
+        when(gameService.choosePath("TestUUID", true)).thenReturn(player);
+
+        gameController.choosePath(true, headerAccessor);
+
+        verify(messagingTemplate).convertAndSend("/topic/game/1", "\"Player1\"");
+    }
+
+
+
+
+
 
     @AfterEach
     void breakDown(){
