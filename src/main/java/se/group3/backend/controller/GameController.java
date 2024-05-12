@@ -1,6 +1,7 @@
 package se.group3.backend.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import se.group3.backend.services.BoardService;
 import se.group3.backend.services.GameService;
 import se.group3.backend.services.LobbyService;
+import se.group3.backend.util.SerializationUtil;
 import se.group3.backend.util.SessionUtil;
 import se.group3.backend.exceptions.SessionOperationException;
 
@@ -48,8 +50,8 @@ public class GameController {
 
         try {
             String player = gameService.choosePath(playerUUID, collegePath);
-            this.template.convertAndSend(GAME_PATH + lobbyUUID, player);
-        } catch (IllegalStateException e) {
+            this.template.convertAndSend(GAME_PATH + lobbyUUID, SerializationUtil.jsonStringFromClass(player));
+        } catch (IllegalStateException | JsonProcessingException e) {
             template.convertAndSend(ERROR_PATH + lobbyUUID, e.getMessage());
             template.convertAndSend(ERROR_PATH + playerUUID, e.getMessage());
         }
