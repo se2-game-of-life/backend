@@ -14,7 +14,6 @@ import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.repositories.player.PlayerRepository;
 import se.group3.backend.services.GameServiceImpl;
-import se.group3.backend.util.SerializationUtil;
 
 import java.util.List;
 import java.util.Optional;

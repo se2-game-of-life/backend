@@ -11,8 +11,6 @@ import org.springframework.stereotype.Controller;
 import se.group3.backend.dto.*;
 import se.group3.backend.exceptions.SessionOperationException;
 import se.group3.backend.services.LobbyService;
-import se.group3.backend.util.SerializationUtil;
-import se.group3.backend.util.SessionUtil;
 
 @Slf4j
 @Controller

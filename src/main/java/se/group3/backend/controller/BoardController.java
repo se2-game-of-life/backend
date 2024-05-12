@@ -8,9 +8,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import se.group3.backend.dto.BoardDTO;
 import se.group3.backend.services.BoardService;
-import se.group3.backend.util.SessionUtil;
 import se.group3.backend.exceptions.SessionOperationException;
-import se.group3.backend.util.SerializationUtil;
 
 @Slf4j
 @Controller

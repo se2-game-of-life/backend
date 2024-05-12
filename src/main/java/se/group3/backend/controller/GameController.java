@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import se.group3.backend.services.BoardService;
 import se.group3.backend.services.GameService;
 import se.group3.backend.services.LobbyService;
-import se.group3.backend.util.SessionUtil;
 import se.group3.backend.exceptions.SessionOperationException;
 
 
@@ -66,7 +65,7 @@ public class GameController {
         }
 
         try {
-            lobbyService.startGame(uuid);
+            lobbyService.startLobby(uuid);
         } catch (IllegalStateException e) {
             template.convertAndSend(ERROR_PATH + uuid, e.getMessage());
         }

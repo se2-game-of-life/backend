@@ -16,7 +16,6 @@ import se.group3.backend.repositories.CareerCardRepository;
 import se.group3.backend.repositories.CellRepository;
 import se.group3.backend.repositories.HouseCardRepository;
 import se.group3.backend.repositories.player.PlayerRepository;
-import se.group3.backend.util.SerializationUtil;
 
 import java.util.ArrayList;
 import java.util.List;

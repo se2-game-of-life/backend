@@ -6,7 +6,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import se.group3.backend.exceptions.SessionOperationException;
-import se.group3.backend.util.SessionUtil;
 
 @Slf4j
 @Controller
