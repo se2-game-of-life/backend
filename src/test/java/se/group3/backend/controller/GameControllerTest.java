@@ -1,4 +1,4 @@
 package se.group3.backend.controller;
 
-public class GameServiceControllerTest {
+public class GameControllerTest {
 }
