@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 public class Lobby {
 
-    private final long id;
+    private final long lobbyID;
     private static final Short MAXIMUM_PLAYER_COUNT = 4;
     private final List<Player> players;
     private Player currentPlayer;
@@ -23,7 +23,7 @@ public class Lobby {
     private boolean hasStarted;
 
     public Lobby(long lobbyID, Player host) {
-        this.id = lobbyID;
+        this.lobbyID = lobbyID;
         players = new ArrayList<>(MAXIMUM_PLAYER_COUNT);
         currentPlayer = host;
         cards = new ArrayList<>(2);

@@ -14,7 +14,7 @@ public class LobbyMapper {
 
     public static LobbyDTO toLobbyDTO(Lobby newLobby) {
         return new LobbyDTO(
-                newLobby.getId(),
+                newLobby.getLobbyID(),
                 newLobby.getPlayers().stream().map(PlayerMapper::mapPlayerToDTO).toList(),
                 PlayerMapper.mapPlayerToDTO(newLobby.getCurrentPlayer()),
                 newLobby.isHasDecision(),
