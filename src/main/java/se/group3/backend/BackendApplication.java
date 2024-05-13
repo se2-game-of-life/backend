@@ -8,11 +8,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class BackendApplication {
 
     public static void main(String[] args) {
-
         ConfigurableApplicationContext context = SpringApplication.run(BackendApplication.class, args);
-
-        // Create a game instance
-        Game game = context.getBean(Game.class);
     }
 
 }

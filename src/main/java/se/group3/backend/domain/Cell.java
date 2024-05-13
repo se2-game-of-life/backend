@@ -13,12 +13,12 @@ public class Cell {
     @Id
     protected String id;
     protected int number;
-    private String type;
+    private CellType type;
     protected List<Integer> nextCells;
     private int row;
     private int col;
 
-    public Cell(int number, String type, List<Integer> nextCells, int row, int col) {
+    public Cell(int number, CellType type, List<Integer> nextCells, int row, int col) {
         this.number = number;
         this.type = type;
         this.nextCells = nextCells;
@@ -31,7 +31,7 @@ public class Cell {
     }
 
 
-    public String getType() {
+    public CellType getType() {
         return type;
     }
 

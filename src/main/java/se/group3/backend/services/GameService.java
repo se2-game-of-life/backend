@@ -3,9 +3,19 @@ package se.group3.backend.services;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.group3.backend.domain.Cell;
+import se.group3.backend.domain.CellType;
+import se.group3.backend.domain.Lobby;
+import se.group3.backend.domain.Player;
 import se.group3.backend.dto.LobbyDTO;
+import se.group3.backend.dto.mapper.LobbyMapper;
 import se.group3.backend.repositories.*;
 import se.group3.backend.repositories.player.PlayerRepository;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
 
 @Slf4j
 @Service
@@ -28,34 +38,64 @@ public class GameService {
         this.lobbyRepository = lobbyRepository;
     }
 
-    public LobbyDTO handleTurn() {
-        return new LobbyDTO();
+    public LobbyDTO handleTurn(String playerUUID) throws IllegalArgumentException {
+        Optional<Player> playerOptional = playerRepository.findById(playerUUID);
+        if(playerOptional.isEmpty()) throw new IllegalArgumentException("Player not found!");
+        Player player = playerOptional.get();
+
+        Long lobbyID = player.getLobbyID();
+        if(lobbyID == null) throw new IllegalArgumentException("Player not in lobby!");
+
+        Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
+        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
+        Lobby lobby = lobbyOptional.get();
+
+        if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), playerUUID)) throw new IllegalArgumentException("It's not the player's turn!");
+        lobby.setSpunNumber(spinWheel());
+
+        makeMove(lobby, player);
+
+        return LobbyMapper.toLobbyDTO(lobby);
     }
 
-    public LobbyDTO makeChoice() {
-        return new LobbyDTO();
+    public LobbyDTO makeChoice(boolean chooseLeft, String uuid) {
+        //todo: implement choices
+        throw new UnsupportedOperationException("Not implemented yet!");
     }
 
-//    public String choosePath(String playerUUID, boolean collegePath) {
-//        try {
-//            PlayerDTO playerDTO = (PlayerDTO) SerializationUtil.toObject(playerUUID, PlayerDTO.class);
-//            playerDTO.setCollegePath(collegePath);
-//            if(playerRepository.findById(playerDTO.getPlayerID()).isPresent()) {
-//                Player player = playerRepository.findById(playerDTO.getPlayerID()).get();
-//                player.setCollegeDegree(collegePath);
-//                if(playerDTO.isCollegePath()){
-//                    log.debug("Player chose college path.");
-//                    playerDTO.setMoney(150000);
-//                    log.debug("Player paid 100k for college.");
-//                    player.setCollegeDegree(true);
-//                    player.setMoney(150000);
-//                    playerRepository.save(player);
-//                }
-//            }
-//            return SerializationUtil.jsonStringFromClass(playerDTO);
-//        } catch (JsonProcessingException e) {
-//            log.error(e.getMessage());
-//        }
-//        return playerUUID;
-//    }
+    private void makeMove(Lobby lobby, Player player) {
+        Cell currentCell = cellRepository.findByNumber(player.getCurrentCellPosition());
+        for(int i = 0; i < lobby.getSpunNumber(); i++) {
+            List<Integer> nextCellNumbers = currentCell.getNextCells();
+            if(nextCellNumbers.size() > 1) {
+                //todo: handle stop cell
+            }
+            //todo: handle final stop cell
+            currentCell = cellRepository.findByNumber(nextCellNumbers.get(0)); //get next cell
+            if(currentCell.getType() == CellType.CASH) { //todo: put correct string for cash cell type
+                player.setMoney(player.getMoney() + player.getCareerCard().getSalary());
+            }
+            if(i == lobby.getSpunNumber() - 1) { //cell you land on
+                if(currentCell.getType() == CellType.CASH) {
+                    player.setMoney(player.getMoney() + player.getCareerCard().getSalary() + player.getCareerCard().getBonus());
+                }
+                if(currentCell.getType() == CellType.ACTION) { //todo: put correct string for cash cell type
+                    //todo: do action
+                }
+                if(currentCell.getType() == CellType.FAMILY) { //todo: put correct string for cash cell type
+                    //todo: do action
+                }
+                if(currentCell.getType() == CellType.CAREER) { //todo: put correct string for cash cell type
+                    //todo: do action
+                }
+                if(currentCell.getType() == CellType.HOUSE) { //todo: put correct string for cash cell type
+                    //todo: do action
+                }
+            }
+        }
+    }
+
+    private int spinWheel() {
+        return new Random().nextInt(10) + 1;
+    }
 }
