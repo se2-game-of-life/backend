@@ -12,7 +12,7 @@ import se.group3.backend.domain.player.Player;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.repositories.player.PlayerRepository;
-import se.group3.backend.services.GameServiceImpl;
+import se.group3.backend.services.GameService;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +26,7 @@ class GameServiceImplTest {
     private PlayerDTO playerDTOMock;
     private PlayerDTO[] playersMock = new PlayerDTO[2];
     private LobbyDTO lobbyDTOMock;
-    private GameServiceImpl gameService;
+    private GameService gameService;
 
     @Mock
     private PlayerRepository playerRepository;
@@ -37,7 +37,7 @@ class GameServiceImplTest {
         this.playerDTOMockHost = mock(PlayerDTO.class);
         this.playerDTOMock = mock(PlayerDTO.class);
         this.lobbyDTOMock = mock(LobbyDTO.class);
-        this.gameService = new GameServiceImpl(null, null, null, null, playerRepository);
+        this.gameService = new GameService(null, null, null, null, playerRepository);
     }
 
 

@@ -3,16 +3,16 @@ package se.group3.backend.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 public class LobbyDTO {
 
     private final long lobbyID;
-    private final PlayerDTO host;
-    private final PlayerDTO[] players;
+    private final List<PlayerDTO> players;
 
     @JsonCreator
-    public LobbyDTO(@JsonProperty("lobbyID") long lobbyID, @JsonProperty("host") PlayerDTO host, @JsonProperty("players") PlayerDTO[] players) {
+    public LobbyDTO(@JsonProperty("lobbyID") long lobbyID, @JsonProperty("players") List<PlayerDTO> players) {
         this.lobbyID = lobbyID;
-        this.host = host;
         this.players = players;
     }
 
@@ -20,11 +20,7 @@ public class LobbyDTO {
         return this.lobbyID;
     }
 
-    public PlayerDTO getHost() {
-        return host;
-    }
-
-    public PlayerDTO[] getPlayers() {
+    public List<PlayerDTO> getPlayers() {
         return players;
     }
 }

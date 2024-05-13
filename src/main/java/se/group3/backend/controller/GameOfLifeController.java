@@ -8,9 +8,10 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import se.group3.backend.dto.BoardDTO;
+import se.group3.backend.dto.GameStateUpdate;
 import se.group3.backend.dto.JoinLobbyRequest;
 import se.group3.backend.dto.LobbyDTO;
-import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.exceptions.SessionOperationException;
 import se.group3.backend.services.*;
 
@@ -29,6 +30,7 @@ public class GameOfLifeController {
     //path definitions
     private static final String ERROR_PATH = "/topic/errors/";
     private static final String LOBBIES_PATH = "/topic/lobbies/";
+    private static final String BOARD_PATH = "/topic/board/";
 
     @Autowired
     public GameOfLifeController(SimpMessagingTemplate template, LobbyService lobbyService, BoardService boardService, GameService gameService, SessionService sessionService, SerializationService serializationService) {
@@ -72,7 +74,14 @@ public class GameOfLifeController {
     }
 
     @MessageMapping("/lobby/start")
-    public void startLobby() {}
+    public void startLobby(SimpMessageHeaderAccessor headerAccessor) {
+        try {
+            GameStateUpdate gameStateUpdate = lobbyService.startLobby(getUUID(headerAccessor));
+            messagingTemplate.convertAndSend(LOBBIES_PATH + gameStateUpdate.getLobbyDTO().getLobbyID() + "/game", SerializationService.jsonStringFromClass(gameStateUpdate));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+    }
 
     @MessageMapping("/lobby/turn")
     public void handlePlayerTurn() {}
@@ -80,8 +89,25 @@ public class GameOfLifeController {
     @MessageMapping("/lobby/choice")
     public void makeChoice() {}
 
-    @MessageMapping("/fetch")
-    public void fetchBoard() {}
+    @MessageMapping("/board/fetch")
+    public void fetchBoard(SimpMessageHeaderAccessor headerAccessor) {
+        try {
+            BoardDTO boardDTO = boardService.fetchBoardData();
+            String jsonBoardDTO = SerializationService.jsonStringFromClass(boardDTO);
+            messagingTemplate.convertAndSend(BOARD_PATH + getUUID(headerAccessor), jsonBoardDTO);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    @MessageMapping("/setIdentifier")
+    public void setPlayerIdentifier(@Payload String playerIdentifier, SimpMessageHeaderAccessor headerAccessor) {
+        try {
+            sessionService.putUUID(headerAccessor,  playerIdentifier.substring(1, playerIdentifier.length() - 1));
+        } catch (SessionOperationException e) {
+            log.error(e.getMessage());
+        }
+    }
 
     private String getUUID(SimpMessageHeaderAccessor headerAccessor) {
         try {

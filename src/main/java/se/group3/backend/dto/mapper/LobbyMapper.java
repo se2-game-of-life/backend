@@ -6,6 +6,7 @@ import se.group3.backend.dto.PlayerDTO;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class LobbyMapper {
 
@@ -14,9 +15,6 @@ public class LobbyMapper {
     }
 
     public static LobbyDTO toLobbyDTO(Lobby newLobby) {
-        return new LobbyDTO(
-                newLobby.getId(),
-                PlayerMapper.mapPlayerToDTO(newLobby.getHost()),
-                Arrays.stream(newLobby.getPlayers()).filter(Objects::nonNull).map(PlayerMapper::mapPlayerToDTO).toArray(PlayerDTO[]::new));
+        return new LobbyDTO(newLobby.getId(), newLobby.getPlayers().stream().map(PlayerMapper::mapPlayerToDTO).toList());
     }
 }

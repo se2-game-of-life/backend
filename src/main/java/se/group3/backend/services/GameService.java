@@ -1,63 +1,103 @@
 package se.group3.backend.services;
 
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import se.group3.backend.domain.game.Game;
+import se.group3.backend.domain.player.Player;
 import se.group3.backend.dto.CellDTO;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;
+import se.group3.backend.dto.mapper.PlayerMapper;
+import se.group3.backend.repositories.ActionCardRepository;
+import se.group3.backend.repositories.CareerCardRepository;
+import se.group3.backend.repositories.CellRepository;
+import se.group3.backend.repositories.HouseCardRepository;
+import se.group3.backend.repositories.player.PlayerRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Interface for the GameService
- * Handles all the actions that are needed in a game
- */
-public interface GameService {
+@Slf4j
+@Service
+public class GameService {
 
-    /**
-     * Starts a new game, initializes conditions and determines the order in which players spin
-     * @param lobbyDTO to use Lobby Object
-     */
-    void startGame(LobbyDTO lobbyDTO);
+    private CareerCardRepository careerCardRepository;
+    private ActionCardRepository actionCardRepository;
+    private HouseCardRepository houseCardRepository;
+    private CellRepository cellRepository;
+    private PlayerRepository playerRepository;
 
-    /**
-     * Determines if the Player chooses College or Career
-     * @param playerUUID to update the player in the database
-     * @param collegePath to show if player chooses collegePath
-     */
-    String choosePath(String playerUUID, boolean collegePath);
+    public GameService(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellRepository cellRepository, PlayerRepository playerRepository){
+        this.careerCardRepository = careerCardRepository;
+        this.actionCardRepository = actionCardRepository;
+        this.houseCardRepository = houseCardRepository;
+        this.cellRepository = cellRepository;
+        this.playerRepository = playerRepository;
+    }
 
-    /**
-     * Determines what happens on the cell
-     * @param playerDTO to update the Player Object in the Database
-     * @param cellDTO to know which cell has just been stepped on
-     */
-    void handleCell(PlayerDTO playerDTO, CellDTO cellDTO);
 
-    /**
-     * Show statistics of other players
-     * @param lobbyDTO to use the PlayerDTO[]
-     * @param playerDTO to know for which player the statistic is shown
-     * @return otherPlayersStats: returns a list with PlayerStatistic objects
-     */
+    public void startGame(LobbyDTO lobbyDTO) {
+        throw new UnsupportedOperationException();
+    }
 
-    List<PlayerStatistic> getPlayerStats(PlayerDTO playerDTO, LobbyDTO lobbyDTO);
 
-    /**
-     * Shows who won the game and which place the player finished in
-     * @param playerDTO to user Player Object from Database
-     */
-    void checkWinCondition(PlayerDTO playerDTO);
+    public String choosePath(String playerUUID, boolean collegePath) {
+        try {
+            PlayerDTO playerDTO = (PlayerDTO) SerializationUtil.toObject(playerUUID, PlayerDTO.class);
+            playerDTO.setCollegePath(collegePath);
+            if(playerRepository.findById(playerDTO.getPlayerID()).isPresent()) {
+                Player player = playerRepository.findById(playerDTO.getPlayerID()).get();
+                player.setCollegeDegree(collegePath);
+                if(playerDTO.isCollegePath()){
+                    log.debug("Player chose college path.");
+                    playerDTO.setMoney(150000);
+                    log.debug("Player paid 100k for college.");
+                    player.setCollegeDegree(true);
+                    player.setMoney(150000);
+                    playerRepository.save(player);
+                }
+            }
+            return SerializationUtil.jsonStringFromClass(playerDTO);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+        }
+        return playerUUID;
+    }
 
-    /**
-     * Implements the functionality of spinning the wheel
-     * @param playerDTO to update the Player Object in the Database
-     */
-    void spinWheel(PlayerDTO playerDTO);
 
-    /**
-     * Ends the player's turn and switches to the next player
-     * @param playerDTO Player who has just finished the turn
-     */
-    void nextPlayer(PlayerDTO playerDTO);
+    public void handleCell(PlayerDTO playerDTO, CellDTO cellDTO) {
+        //review: should this be implemented in GameService or PlayerService?
+        throw new UnsupportedOperationException();
+    }
+
+
+    public List<PlayerStatistic> getPlayerStats(PlayerDTO playerDTO, LobbyDTO lobbyDTO) {
+        PlayerDTO[] players = lobbyDTO.getPlayers();
+        List<PlayerStatistic> otherPlayersStats = new ArrayList<>();
+        for (PlayerDTO dto : players) {
+            if (!dto.equals(playerDTO)) {
+                Player player = PlayerMapper.mapDTOToPlayer(dto);
+                otherPlayersStats.add(new PlayerStatistic(player));
+            }
+        }
+        return otherPlayersStats;
+    }
+
+    public void checkWinCondition(PlayerDTO playerDTO) {
+        //review: not implemented yet, but method definition exists in Game.java --> move method?
+        throw new UnsupportedOperationException();
+    }
+
+    public void spinWheel(PlayerDTO playerDTO) {
+        //review: implemented in Game.java AND in PlayerService.java --> move method?
+        throw new UnsupportedOperationException();
+    }
+
+    public void nextPlayer(PlayerDTO playerDTO) {
+        //review: implemented in as nextTurn() in Game.java --> move method?
+        throw new UnsupportedOperationException();
+    }
 
 }

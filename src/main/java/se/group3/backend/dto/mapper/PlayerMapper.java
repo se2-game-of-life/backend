@@ -10,8 +10,7 @@ import se.group3.backend.domain.player.Player;
 public class PlayerMapper {
 
     public static Player mapDTOToPlayer(PlayerDTO dto) {
-        Player player = new Player(dto.getPlayerName());
-        player.setPlayerUUID(dto.getPlayerID());
+        Player player = new Player(dto.getPlayerUUID(), dto.getPlayerName());
         player.setCurrentCellPosition(dto.getCurrentCellPosition());
         player.setMoney(dto.getMoney());
         player.setCareerCard(dto.getCareerCard());
@@ -22,7 +21,7 @@ public class PlayerMapper {
 
     public static PlayerDTO mapPlayerToDTO(Player player) {
         PlayerDTO dto = new PlayerDTO();
-        dto.setPlayerID(player.getPlayerUUID());
+        dto.setPlayerUUID(player.getPlayerUUID());
         dto.setPlayerName(player.getPlayerName());
         dto.setCurrentCellPosition(player.getCurrentCellPosition());
         dto.setMoney(player.getMoney());

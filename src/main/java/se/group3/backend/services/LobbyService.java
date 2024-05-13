@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.group3.backend.domain.player.Player;
+import se.group3.backend.dto.GameStateUpdate;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.mapper.LobbyMapper;
 import se.group3.backend.domain.lobby.Lobby;
@@ -72,7 +73,8 @@ public class LobbyService {
         throw new IllegalStateException("The player doesn't exist!");
     }
 
-    public void startLobby(long uuid) {
+    public GameStateUpdate startLobby(String playerUUID) {
+        //todo: start the game and return a game state update with the initial conditions
         throw new UnsupportedOperationException();
     }
 }
