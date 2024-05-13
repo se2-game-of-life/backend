@@ -22,6 +22,11 @@ public class Deck<T> {
         Collections.shuffle(cards);
     }
 
+    // Method to get information about the cards in the deck
+    public List<T> getCards() {
+        return cards;
+    }
+
     public T drawCard() {
         if (cards.isEmpty()) {
             // Handle empty deck scenario (throw an exception, return null, etc.)
