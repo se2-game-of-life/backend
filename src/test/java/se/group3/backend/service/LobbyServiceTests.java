@@ -8,13 +8,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import se.group3.backend.domain.Lobby;
+import se.group3.backend.domain.Player;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;
+import se.group3.backend.dto.mapper.LobbyMapper;
 import se.group3.backend.exceptions.SessionOperationException;
+import se.group3.backend.repositories.LobbyRepository;
+import se.group3.backend.repositories.PlayerRepository;
 import se.group3.backend.services.LobbyService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,71 +28,56 @@ import static org.junit.jupiter.api.Assertions.*;
 class LobbyServiceTests {
 
     @InjectMocks
+    private final LobbyRepository lobbyRepository = Mockito.mock(LobbyRepository.class);
+
+    @InjectMocks
+    private final PlayerRepository playerRepository = Mockito.mock(PlayerRepository.class);
+
+    @InjectMocks
     private LobbyService lobbyService;
 
     @BeforeEach
     void setUp() {
-        lobbyService = new LobbyService();
+        lobbyService = new LobbyService(lobbyRepository, playerRepository);
     }
 
     @Test
     void createLobby() {
-        PlayerDTO playerDTO = Mockito.mock(PlayerDTO.class);
-        SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
-
-        Map<String, Object> header = new HashMap<>();
-        Mockito.when(playerDTO.getPlayerName()).thenReturn("Player 1");
-        Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(header);
-
         try {
-            LobbyDTO lobby = lobbyService.createLobby(playerDTO, headerAccessor);
+            LobbyDTO lobby = lobbyService.createLobby("Test UUID", "/Player 1/");
             Assertions.assertNotNull(lobby);
-            Assertions.assertEquals(0, lobby.getLobbyID());
-            Assertions.assertEquals("Player 1", lobby.getHost().getPlayerName());
-        } catch (SessionOperationException e) {
+            Assertions.assertEquals(1, lobby.getLobbyID());
+            Assertions.assertEquals("Test UUID", lobby.getCurrentPlayer().getPlayerUUID());
+            Assertions.assertEquals("Player 1", lobby.getCurrentPlayer().getPlayerName());
+        } catch (Exception e) {
             Assertions.fail(e);
         }
     }
 
+
+
     @Test
     void createLobbyWhileInLobby() {
-        PlayerDTO host = Mockito.mock(PlayerDTO.class);
-        SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
-        Map<String, Object> header = new HashMap<>();
-        header.put("lobbyID", 12L);
-        Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(header);
         try {
-            lobbyService.createLobby(host, headerAccessor);
+            lobbyService.createLobby("Test UUID", "/Player 1/");
+            lobbyService.createLobby("Test UUID", "/Player 1/");
         } catch (IllegalStateException e) {
             Assertions.assertEquals(IllegalStateException.class, e.getClass());
-        } catch (SessionOperationException e) {
+        } catch (Exception e) {
             Assertions.fail(e);
         }
     }
 
     @Test
     void joinLobby() {
-        PlayerDTO host = Mockito.mock(PlayerDTO.class);
-        SimpMessageHeaderAccessor headerAccessorHost = Mockito.mock(SimpMessageHeaderAccessor.class);
-        PlayerDTO player = Mockito.mock(PlayerDTO.class);
-        SimpMessageHeaderAccessor headerAccessorPlayer = Mockito.mock(SimpMessageHeaderAccessor.class);
-
-        Mockito.when(headerAccessorHost.getSessionAttributes()).thenReturn(new HashMap<>());
-        Mockito.when(host.getPlayerName()).thenReturn("Player 1");
-        Mockito.when(headerAccessorPlayer.getSessionAttributes()).thenReturn(new HashMap<>());
-        Mockito.when(player.getPlayerName()).thenReturn("Player 2");
+        Mockito.when(lobbyRepository.findById(1L)).thenReturn(Optional.of(new Lobby(1L, new Player("Test UUID1", "Player 1"))));
 
         try {
-            lobbyService.createLobby(host, headerAccessorHost);
-        } catch (Exception e) {
-            Assertions.fail(e);
-        }
-
-        try {
-            LobbyDTO lobby = lobbyService.joinLobby(0L, player, headerAccessorPlayer);
+            LobbyDTO lobby = lobbyService.joinLobby(1L, "Test UUID2","/Player 2/");
             Assertions.assertNotNull(lobby);
-            Assertions.assertEquals(0, lobby.getLobbyID());
-            Assertions.assertEquals("Player 1", lobby.getHost().getPlayerName());
+            Assertions.assertEquals(1, lobby.getLobbyID());
+            Assertions.assertEquals("Player 1", lobby.getCurrentPlayer().getPlayerName());
+            Assertions.assertEquals(2, lobby.getPlayers().size());
         } catch (Exception e) {
             Assertions.fail(e);
         }
@@ -94,135 +85,49 @@ class LobbyServiceTests {
 
     @Test
     void joinLobbyFull() {
-        PlayerDTO host = Mockito.mock(PlayerDTO.class);
-        SimpMessageHeaderAccessor headerAccessorHost = Mockito.mock(SimpMessageHeaderAccessor.class);
-        PlayerDTO player1 = Mockito.mock(PlayerDTO.class);
-        PlayerDTO player2 = Mockito.mock(PlayerDTO.class);
-        PlayerDTO player3 = Mockito.mock(PlayerDTO.class);
-        SimpMessageHeaderAccessor headerAccessorPlayer1 = Mockito.mock(SimpMessageHeaderAccessor.class);
-        SimpMessageHeaderAccessor headerAccessorPlayer2 = Mockito.mock(SimpMessageHeaderAccessor.class);
-        SimpMessageHeaderAccessor headerAccessorPlayer3 = Mockito.mock(SimpMessageHeaderAccessor.class);
+        Lobby lobby = new Lobby(1L, new Player("Test UUID1", "Player 1"));
+        lobby.addPlayer(new Player("Test UUID2", "Player 2"));
+        lobby.addPlayer(new Player("Test UUID3", "Player 3"));
+        lobby.addPlayer(new Player("Test UUID4", "Player 4"));
+        Mockito.when(lobbyRepository.findById(1L)).thenReturn(Optional.of(lobby));
 
-        Mockito.when(headerAccessorHost.getSessionAttributes()).thenReturn(new HashMap<>());
-        Mockito.when(host.getPlayerName()).thenReturn("Host");
-        Mockito.when(headerAccessorPlayer1.getSessionAttributes()).thenReturn(new HashMap<>());
-        Mockito.when(headerAccessorPlayer2.getSessionAttributes()).thenReturn(new HashMap<>());
-        Mockito.when(headerAccessorPlayer3.getSessionAttributes()).thenReturn(new HashMap<>());
-
-        try {
-            lobbyService.createLobby(host, headerAccessorHost);
-        } catch (Exception e) {
-            Assertions.fail(e);
-        }
-
-        try {
-            LobbyDTO lobby = lobbyService.joinLobby(0L, player1, headerAccessorPlayer1);
-            Assertions.assertNotNull(lobby);
-            Assertions.assertEquals(0, lobby.getLobbyID());
-            Assertions.assertEquals("Host", lobby.getHost().getPlayerName());
-        } catch (Exception e) {
-            Assertions.fail(e);
-        }
-        try {
-            LobbyDTO lobby = lobbyService.joinLobby(0L, player2, headerAccessorPlayer2);
-            Assertions.assertNotNull(lobby);
-            Assertions.assertEquals(0, lobby.getLobbyID());
-            Assertions.assertEquals("Host", lobby.getHost().getPlayerName());
-        } catch (Exception e) {
-            Assertions.fail(e);
-        }
-
-        try {
-            lobbyService.joinLobby(0L, player3, headerAccessorPlayer3);
-        } catch (Exception e) {
-            Assertions.assertEquals(IllegalStateException.class, e.getClass());
-        }
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            lobbyService.joinLobby(lobby.getLobbyID(), "Test UUID5", "Player 5");
+        });
     }
 
     @Test
     void joinLobbyNotFound() {
-        PlayerDTO playerDTO = Mockito.mock(PlayerDTO.class);
-        SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
-
-        try {
-            lobbyService.joinLobby(1L, playerDTO, headerAccessor);
-        } catch (Exception e) {
-            Assertions.assertEquals(IllegalStateException.class, e.getClass());
-        }
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            lobbyService.joinLobby(1L, "Test UUID5", "Player 5");
+        });
     }
 
     @Test
     void joinLobbyWhileInLobby() {
-        PlayerDTO host = Mockito.mock(PlayerDTO.class);
-        SimpMessageHeaderAccessor headerAccessorHost = Mockito.mock(SimpMessageHeaderAccessor.class);
-        PlayerDTO playerDTO = Mockito.mock(PlayerDTO.class);
-        SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
-
-        Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(Map.of("lobbyID", 2L));
-
-        try {
-            lobbyService.createLobby(host, headerAccessorHost);
-        } catch (Exception e) {
-            Assertions.fail(e);
-        }
-
-        try {
-            lobbyService.joinLobby(0L, playerDTO, headerAccessor);
-        } catch (Exception e) {
-            Assertions.assertEquals(IllegalStateException.class, e.getClass());
-        }
+        Player player = new Player("Test UUID1", "Player 1");
+        player.setLobbyID(1L);
+        Lobby lobby = new Lobby(1L, player);
+        Mockito.when(lobbyRepository.findById(1L)).thenReturn(Optional.of(lobby));
+        Mockito.when(playerRepository.findById("Test UUID1")).thenReturn(Optional.of(player));
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            lobbyService.joinLobby(lobby.getLobbyID(), "Test UUID1", "Player 1");
+        });
     }
 
     @Test
     void leaveLobby() {
-        PlayerDTO playerDTO = Mockito.mock(PlayerDTO.class);
-        SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
-
-        Map<String, Object> headerMap = new HashMap<>();
-        headerMap.put("uuid", "1234");
-        Mockito.when(playerDTO.getPlayerName()).thenReturn("Player 1");
-        Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(headerMap);
+        Player player = new Player("Test UUID1", "Player 1");
+        player.setLobbyID(1L);
+        Lobby lobby = new Lobby(1L, player);
+        Mockito.when(lobbyRepository.findById(1L)).thenReturn(Optional.of(lobby));
+        Mockito.when(playerRepository.findById("Test UUID1")).thenReturn(Optional.of(player));
 
         try {
-            LobbyDTO lobby = lobbyService.createLobby(playerDTO, headerAccessor);
-            Assertions.assertNotNull(lobby);
-            Assertions.assertEquals(0, lobby.getLobbyID());
-            Assertions.assertEquals("Player 1", lobby.getHost().getPlayerName());
-        } catch (SessionOperationException e) {
-            Assertions.fail(e);
-        }
-
-        try {
-            LobbyDTO lobbyDTO = lobbyService.leaveLobby(headerAccessor);
-            Assertions.assertEquals(0, lobbyDTO.getLobbyID());
-        } catch (Exception e) {
+            LobbyDTO lobbyDTO = lobbyService.leaveLobby(player.getPlayerUUID());
+            Assertions.assertEquals(1, lobbyDTO.getLobbyID());
+        } catch (IllegalStateException e) {
             Assertions.fail(e);
         }
     }
-
-    @Test
-    void leaveLobbyWhileNotInLobby() {
-        SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
-
-        Map<String, Object> headerMap = new HashMap<>();
-        headerMap.put("uuid", "1234");
-        Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(headerMap);
-
-        Exception ex = assertThrows(IllegalStateException.class, () -> lobbyService.leaveLobby(headerAccessor));
-        Assertions.assertEquals("Attempting to leave lobby, when player is not part of any lobby!", ex.getMessage());
-    }
-
-    @Test
-    void leaveLobbyNotFound() {
-        SimpMessageHeaderAccessor headerAccessor = Mockito.mock(SimpMessageHeaderAccessor.class);
-
-        Map<String, Object> headerMap = new HashMap<>();
-        headerMap.put("lobbyID", 12L);
-        headerMap.put("uuid", "1234");
-        Mockito.when(headerAccessor.getSessionAttributes()).thenReturn(headerMap);
-
-        Exception ex = assertThrows(IllegalStateException.class, () -> lobbyService.leaveLobby(headerAccessor));
-        Assertions.assertEquals("Lobby associated with session connection does not exist!", ex.getMessage());
-    }
-
 }

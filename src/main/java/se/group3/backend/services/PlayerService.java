@@ -1,4 +1,4 @@
-package se.group3.backend.services.player;
+package se.group3.backend.services;
 
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cards.HouseCard;

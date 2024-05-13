@@ -2,7 +2,7 @@ package se.group3.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.group3.backend.domain.game.Cell;
+import se.group3.backend.domain.Cell;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package se.group3.backend.domain.player;
+package se.group3.backend.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,10 +12,6 @@ import se.group3.backend.domain.cards.HouseCard;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Player Class from the Database
- */
-
 @Document(collection = "player")
 @Getter
 @Setter
@@ -24,7 +20,8 @@ import java.util.List;
 public class Player {
 
     @Id
-    private String playerID;
+    private String playerUUID;
+    private Long lobbyID;
     private String playerName;
     private int currentCellPosition;
     private int money;
@@ -34,7 +31,8 @@ public class Player {
     private boolean collegeDegree;
 
     // Constructor
-    public Player(String playerName) {
+    public Player(String playerUUID, String playerName) {
+        this.playerUUID = playerUUID;
         this.playerName = playerName;
         this.currentCellPosition = 0;
         this.money = 250000; // Starting money

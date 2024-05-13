@@ -1,11 +1,10 @@
 package se.group3.backend.dto.mapper;
 
 import se.group3.backend.dto.LobbyDTO;
-import se.group3.backend.domain.lobby.Lobby;
-import se.group3.backend.dto.PlayerDTO;
+import se.group3.backend.domain.Lobby;
 
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class LobbyMapper {
 
@@ -15,8 +14,13 @@ public class LobbyMapper {
 
     public static LobbyDTO toLobbyDTO(Lobby newLobby) {
         return new LobbyDTO(
-                newLobby.getId(),
-                PlayerMapper.mapPlayerToDTO(newLobby.getHost()),
-                Arrays.stream(newLobby.getPlayers()).filter(Objects::nonNull).map(PlayerMapper::mapPlayerToDTO).toArray(PlayerDTO[]::new));
+                newLobby.getLobbyID(),
+                newLobby.getPlayers().stream().map(PlayerMapper::mapPlayerToDTO).toList(),
+                PlayerMapper.mapPlayerToDTO(newLobby.getCurrentPlayer()),
+                newLobby.isHasDecision(),
+                newLobby.getCards(),
+                newLobby.getSpunNumber(),
+                newLobby.isHasStarted()
+        );
     }
 }

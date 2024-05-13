@@ -1,64 +1,112 @@
 package se.group3.backend.services;
 
-
-import se.group3.backend.domain.player.PlayerStatistic;
-import se.group3.backend.dto.CellDTO;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import se.group3.backend.domain.Cell;
+import se.group3.backend.domain.CellType;
+import se.group3.backend.domain.Lobby;
+import se.group3.backend.domain.Player;
 import se.group3.backend.dto.LobbyDTO;
-import se.group3.backend.dto.PlayerDTO;
+import se.group3.backend.dto.mapper.LobbyMapper;
+import se.group3.backend.repositories.*;
+import se.group3.backend.repositories.PlayerRepository;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
 
-/**
- * Interface for the GameService
- * Handles all the actions that are needed in a game
- */
-public interface GameService {
+@Slf4j
+@Service
+public class GameService {
 
-    /**
-     * Starts a new game, initializes conditions and determines the order in which players spin
-     * @param lobbyDTO to use Lobby Object
-     */
-    void startGame(LobbyDTO lobbyDTO);
+    private CareerCardRepository careerCardRepository;
+    private ActionCardRepository actionCardRepository;
+    private HouseCardRepository houseCardRepository;
+    private CellRepository cellRepository;
+    private PlayerRepository playerRepository;
+    private LobbyRepository lobbyRepository;
 
-    /**
-     * Determines if the Player chooses College or Career
-     * @param playerUUID to update the player in the database
-     * @param collegePath to show if player chooses collegePath
-     */
-    String choosePath(String playerUUID, boolean collegePath);
+    private static final Random RANDOM = new Random();
 
-    /**
-     * Determines what happens on the cell
-     * @param playerDTO to update the Player Object in the Database
-     * @param cellDTO to know which cell has just been stepped on
-     */
-    void handleCell(PlayerDTO playerDTO, CellDTO cellDTO);
+    @Autowired
+    public GameService(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellRepository cellRepository, PlayerRepository playerRepository, LobbyRepository lobbyRepository){
+        this.careerCardRepository = careerCardRepository;
+        this.actionCardRepository = actionCardRepository;
+        this.houseCardRepository = houseCardRepository;
+        this.cellRepository = cellRepository;
+        this.playerRepository = playerRepository;
+        this.lobbyRepository = lobbyRepository;
+    }
 
-    /**
-     * Show statistics of other players
-     * @param lobbyDTO to use the PlayerDTO[]
-     * @param playerDTO to know for which player the statistic is shown
-     * @return otherPlayersStats: returns a list with PlayerStatistic objects
-     */
+    public LobbyDTO handleTurn(String playerUUID) throws IllegalArgumentException {
+        Optional<Player> playerOptional = playerRepository.findById(playerUUID);
+        if(playerOptional.isEmpty()) throw new IllegalArgumentException("Player not found!");
+        Player player = playerOptional.get();
 
-    List<PlayerStatistic> getPlayerStats(PlayerDTO playerDTO, LobbyDTO lobbyDTO);
+        Long lobbyID = player.getLobbyID();
+        if(lobbyID == null) throw new IllegalArgumentException("Player not in lobby!");
 
-    /**
-     * Shows who won the game and which place the player finished in
-     * @param playerDTO to user Player Object from Database
-     */
-    void checkWinCondition(PlayerDTO playerDTO);
+        Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
+        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
+        Lobby lobby = lobbyOptional.get();
 
-    /**
-     * Implements the functionality of spinning the wheel
-     * @param playerDTO to update the Player Object in the Database
-     */
-    void spinWheel(PlayerDTO playerDTO);
+        if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), playerUUID)) throw new IllegalArgumentException("It's not the player's turn!");
+        lobby.setSpunNumber(spinWheel());
 
-    /**
-     * Ends the player's turn and switches to the next player
-     * @param playerDTO Player who has just finished the turn
-     */
-    void nextPlayer(PlayerDTO playerDTO);
+        makeMove(lobby, player);
 
+        lobbyRepository.save(lobby);
+        playerRepository.save(player);
+        return LobbyMapper.toLobbyDTO(lobby);
+    }
+
+    public LobbyDTO makeChoice(boolean chooseLeft, String uuid) {
+        //todo: implement choices
+        throw new UnsupportedOperationException("Not implemented yet!");
+    }
+
+    private void makeMove(Lobby lobby, Player player) {
+        Cell currentCell = cellRepository.findByNumber(player.getCurrentCellPosition());
+        for(int i = 0; i < lobby.getSpunNumber() - 1; i++) {
+            List<Integer> nextCellNumbers = currentCell.getNextCells();
+            if(nextCellNumbers.size() > 1) {
+                //todo: handle stop cell
+            }
+            //todo: handle final stop cell
+            currentCell = cellRepository.findByNumber(nextCellNumbers.get(0)); //get next cell
+            if(currentCell.getType() == CellType.CASH) {
+                player.setMoney(player.getMoney() + player.getCareerCard().getSalary());
+            }
+        }
+        handleCell(lobby, player, currentCell);
+    }
+
+    private void handleCell(Lobby lobby, Player player, Cell cell) {
+        switch(cell.getType()) {
+            case CASH:
+                player.setMoney(player.getMoney() + player.getCareerCard().getBonus());
+                lobby.nextPlayer();
+                break;
+            case ACTION:
+                lobby.nextPlayer();
+                break;
+            case FAMILY:
+                lobby.nextPlayer();
+                break;
+            case HOUSE:
+                //not next player because is player has choice
+                break;
+            case CAREER:
+                lobby.nextPlayer();
+                break;
+            default:
+                log.error("Cell type unknown!");
+        }
+    }
+
+    private int spinWheel() {
+        return RANDOM.nextInt(10) + 1;
+    }
 }

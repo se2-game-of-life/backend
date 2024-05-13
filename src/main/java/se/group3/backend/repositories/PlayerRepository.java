@@ -1,7 +1,7 @@
-package se.group3.backend.repositories.player;
+package se.group3.backend.repositories;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import se.group3.backend.domain.player.Player;
+import se.group3.backend.domain.Player;
 
 /**
  * Repository to handle updates on the Player Object

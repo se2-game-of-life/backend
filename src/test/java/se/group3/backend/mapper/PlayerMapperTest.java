@@ -3,7 +3,7 @@ package se.group3.backend.mapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import se.group3.backend.domain.player.Player;
+import se.group3.backend.domain.Player;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.dto.mapper.PlayerMapper;
 
