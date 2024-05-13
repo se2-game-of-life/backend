@@ -13,7 +13,7 @@ public class WheelController {
 
     @MessageMapping("/app/spinWheel")
     public int spinWheel(@Payload String playerUsername) {
-        // Get the number of steps from the game
+        // Get the number of steps from the game's spinWheel method
         int steps = game.spinWheel();
         // Perform any additional logic here, such as updating player position, etc.
         return steps;
