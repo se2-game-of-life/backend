@@ -22,7 +22,7 @@ public abstract class Card {
         return id;
     }
     // Abstract method to perform the card's action
-    public abstract void performAction(Player player);
+    public abstract void performAction(Player player, String buttonClicked);
 }
 
 
