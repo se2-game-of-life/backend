@@ -35,7 +35,6 @@ public class Game {
 
     private int currentPlayerIndex;
     private Random spinnedNumber;
-    private Random spinner;
 
 
     @Autowired
@@ -90,6 +89,9 @@ public class Game {
         return players;
     }
 
+    public int spinWheel() {
+        return spinSpinner();
+    }
     private int spinSpinner() {
         // Simulate spinning the spinner to get a random number of steps
         return spinnedNumber.nextInt(10) + 1; // Generates a random number between 1 and 10
