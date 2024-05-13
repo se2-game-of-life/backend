@@ -32,7 +32,7 @@ public class CareerCard extends Card {
     }
 
     @Override
-    public void performAction(Player player) {
+    public void performAction(Player player, String buttonClicked) {
         // Get the career card deck
         Deck<CareerCard> deck = getCareerCardDeck();
 
