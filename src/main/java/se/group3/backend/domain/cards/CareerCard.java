@@ -46,14 +46,19 @@ public class CareerCard extends Card {
             return;
         }
 
-        System.out.println("You have drawn two career cards. Choose one to keep:");
-        System.out.println("1. " + drawnCard1);
-        System.out.println("2. " + drawnCard2);
+        CareerCard chosenCard;
+        CareerCard unchosenCard;
 
-        // Example: Let's assume the player always chooses the first card for simplicity
-        CareerCard chosenCard = drawnCard1;
-
-        // Here you can implement logic for the player's choice based on your game rules
+        if (buttonClicked.equals("Button One Clicked")) {
+            chosenCard = drawnCard1;
+            unchosenCard = drawnCard2;
+        } else if (buttonClicked.equals("Button Two Clicked")) {
+            chosenCard = drawnCard2;
+            unchosenCard = drawnCard1;
+        } else {
+            // Handle unexpected button clicks here
+            return;
+        }
 
         // Give the chosen card to the player
         player.assignCareerCard(chosenCard); // Assuming you have a method in Player class to assign career cards
