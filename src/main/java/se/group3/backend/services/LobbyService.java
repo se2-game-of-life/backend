@@ -8,13 +8,14 @@ import se.group3.backend.domain.player.Player;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.dto.mapper.LobbyMapper;
-import se.group3.backend.dto.mapper.PlayerMapper;
 import se.group3.backend.exceptions.SessionOperationException;
 import se.group3.backend.domain.lobby.Lobby;
 import se.group3.backend.util.SessionUtil;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static se.group3.backend.dto.mapper.PlayerMapper.mapDTOToPlayer;
 
 @Slf4j
 @Service
@@ -38,7 +39,7 @@ public class LobbyService {
         Long sessionLobbyID = SessionUtil.getLobbyID(headerAccessor);
         if(sessionLobbyID != null) throw new IllegalStateException("This player is already in another Lobby!");
 
-        Player host = PlayerMapper.toPlayerModel(player);
+        Player host = mapDTOToPlayer(player);
         long lobbyID = idGenerator.getAndIncrement();
         Lobby newLobby = new Lobby(lobbyID, host);
         SessionUtil.putSessionAttribute(headerAccessor, "lobbyID", newLobby.getId());
@@ -71,7 +72,7 @@ public class LobbyService {
         if(sessionLobbyID != null) throw new IllegalStateException("This player is already in another Lobby!");
 
         SessionUtil.putSessionAttribute(headerAccessor, "lobbyID", lobbyID);
-        Player player = PlayerMapper.toPlayerModel(playerDTO);
+        Player player = mapDTOToPlayer(playerDTO);
         lobby.addPlayer(player);
         return LobbyMapper.toLobbyDTO(lobby);
     }
@@ -105,5 +106,9 @@ public class LobbyService {
 
     public Lobby getLobby(long lobbyID) {
         return lobbyMap.get(lobbyID);
+    }
+
+    public void startGame(long uuid) {
+        throw new UnsupportedOperationException();
     }
 }
