@@ -16,7 +16,7 @@ public class LobbyMapper {
         return new LobbyDTO(
                 newLobby.getId(),
                 newLobby.getPlayers().stream().map(PlayerMapper::mapPlayerToDTO).toList(),
-                newLobby.getCurrentPlayer(),
+                PlayerMapper.mapPlayerToDTO(newLobby.getCurrentPlayer()),
                 newLobby.isHasDecision(),
                 newLobby.getCards(),
                 newLobby.getSpunNumber()

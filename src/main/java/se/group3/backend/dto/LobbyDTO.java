@@ -14,7 +14,7 @@ public class LobbyDTO {
 
     private final long lobbyID;
     private final List<PlayerDTO> players;
-    private final Player currentPlayer;
+    private final PlayerDTO currentPlayer;
     private final boolean hasDecision;
     private final List<Card> cards;
     private final int spunNumber;
@@ -22,7 +22,7 @@ public class LobbyDTO {
     @JsonCreator
     public LobbyDTO(@JsonProperty("lobbyID") long lobbyID,
                     @JsonProperty("players") List<PlayerDTO> players,
-                    @JsonProperty("currentPlayer") Player currentPlayer,
+                    @JsonProperty("currentPlayer") PlayerDTO currentPlayer,
                     @JsonProperty("hasDecision") boolean hasDecision,
                     @JsonProperty("cards") List<Card> cards,
                     @JsonProperty("spunNumber") int spunNumber
