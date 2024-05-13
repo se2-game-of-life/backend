@@ -12,11 +12,13 @@ import se.group3.backend.dto.BoardDTO;
 import se.group3.backend.dto.JoinLobbyRequest;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.exceptions.SessionOperationException;
+import se.group3.backend.repositories.LobbyRepository;
+import se.group3.backend.repositories.PlayerRepository;
 import se.group3.backend.services.*;
 
 @Slf4j
 @Controller
-public class GameOfLifeController {
+public class GameController {
 
     //services
     private final LobbyService lobbyService;
@@ -30,15 +32,19 @@ public class GameOfLifeController {
     private static final String ERROR_PATH = "/topic/errors/";
     private static final String LOBBIES_PATH = "/topic/lobbies/";
     private static final String BOARD_PATH = "/topic/board/";
+    private final PlayerRepository playerRepository;
+    private final LobbyRepository lobbyRepository;
 
     @Autowired
-    public GameOfLifeController(SimpMessagingTemplate template, LobbyService lobbyService, BoardService boardService, GameService gameService, SessionService sessionService, SerializationService serializationService) {
+    public GameController(SimpMessagingTemplate template, LobbyService lobbyService, BoardService boardService, GameService gameService, SessionService sessionService, SerializationService serializationService, PlayerRepository playerRepository, LobbyRepository lobbyRepository) {
         this.lobbyService = lobbyService;
         this.gameService = gameService;
         this.boardService = boardService;
         this.messagingTemplate = template;
         this.sessionService = sessionService;
         this.serializationService = serializationService;
+        this.playerRepository = playerRepository;
+        this.lobbyRepository = lobbyRepository;
     }
 
     @MessageMapping("/lobby/create")

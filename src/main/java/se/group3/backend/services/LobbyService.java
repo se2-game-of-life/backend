@@ -33,6 +33,10 @@ public class LobbyService {
 
         long lobbyID = idGenerator.incrementAndGet();
 
+        if (lobbyRepository.existsById(lobbyID)) {
+            lobbyRepository.deleteById(lobbyID);
+        }
+
         Player player = new Player(playerUUID, playerName);
         player.setLobbyID(lobbyID);
         Lobby lobby = new Lobby(lobbyID, player);

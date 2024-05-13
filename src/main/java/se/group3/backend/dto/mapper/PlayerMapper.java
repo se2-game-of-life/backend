@@ -1,12 +1,8 @@
 package se.group3.backend.dto.mapper;
 
-
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.domain.Player;
 
-/**
- * Class to map a PlayerDTO to a Player object and back
- */
 public class PlayerMapper {
 
     public static Player mapDTOToPlayer(PlayerDTO dto) {
@@ -20,16 +16,17 @@ public class PlayerMapper {
     }
 
     public static PlayerDTO mapPlayerToDTO(Player player) {
-        PlayerDTO dto = new PlayerDTO();
-        dto.setPlayerUUID(player.getPlayerUUID());
-        dto.setPlayerName(player.getPlayerName());
-        dto.setCurrentCellPosition(player.getCurrentCellPosition());
-        dto.setMoney(player.getMoney());
-        dto.setCareerCard(player.getCareerCard());
-
-        dto.setNumberOfPegs(player.getNumberOfPegs());
-
-        return dto;
+        return new PlayerDTO(
+                player.getPlayerUUID(),
+                player.getPlayerName(),
+                player.getLobbyID(),
+                player.getCurrentCellPosition(),
+                player.getMoney(),
+                player.getCareerCard(),
+                player.getNumberOfPegs(),
+                player.getHouses(),
+                player.isCollegeDegree()
+        );
     }
 
 }

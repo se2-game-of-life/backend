@@ -1,4 +1,4 @@
-package se.group3.backend.util;
+package se.group3.backend.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +10,7 @@ import se.group3.backend.exceptions.SessionOperationException;
 import java.util.HashMap;
 import java.util.Map;
 
-class SessionUtilTest {
+class SessionServiceTest {
 
     private SimpMessageHeaderAccessor headerAccessor;
 

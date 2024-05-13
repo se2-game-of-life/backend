@@ -1,4 +1,4 @@
-package se.group3.backend.util;
+package se.group3.backend.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Assertions;
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class SerializationUtilTests {
+class SerializationServiceTest {
 
     @Test
     void jsonStringFromClass() {
