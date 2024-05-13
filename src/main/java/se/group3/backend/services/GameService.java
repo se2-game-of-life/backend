@@ -67,6 +67,19 @@ public class GameService {
         throw new UnsupportedOperationException("Not implemented yet!");
     }
 
+    public LobbyDTO makeCollegeChoice(boolean chooseCollege, String uuid) {
+        Optional<Player> playerOptional = playerRepository.findById(uuid);
+        if(playerOptional.isEmpty()) throw new IllegalArgumentException("Player not found!");
+        Player player = playerOptional.get();
+
+        player.setCollegeDegree(chooseCollege);
+
+        Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
+        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
+        Lobby lobby = lobbyOptional.get();
+
+        return LobbyMapper.toLobbyDTO(lobby);
+    }
     private void makeMove(Lobby lobby, Player player) {
         Cell currentCell = cellRepository.findByNumber(player.getCurrentCellPosition());
         for(int i = 0; i < lobby.getSpunNumber(); i++) {
