@@ -28,6 +28,8 @@ public class GameService {
     private PlayerRepository playerRepository;
     private LobbyRepository lobbyRepository;
 
+    private static final Random RANDOM = new Random();
+
     @Autowired
     public GameService(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellRepository cellRepository, PlayerRepository playerRepository, LobbyRepository lobbyRepository){
         this.careerCardRepository = careerCardRepository;
@@ -98,6 +100,6 @@ public class GameService {
     }
 
     private int spinWheel() {
-        return new Random().nextInt(10) + 1;
+        return RANDOM.nextInt(10) + 1;
     }
 }
