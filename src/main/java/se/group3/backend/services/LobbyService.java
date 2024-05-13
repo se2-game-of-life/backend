@@ -28,8 +28,12 @@ public class LobbyService {
     }
 
     public LobbyDTO createLobby(String playerUUID, String playerName) throws IllegalStateException {
-        //todo: check if player already exists in the repository (if already exists delete, except if player in another lobby)
-        //todo: check that player not already in lobby, if in another lobby throw IllegalStateException
+
+        Optional<Player> playerOptional = playerRepository.findById(playerUUID);
+        if(playerOptional.isPresent()) {
+            if(playerOptional.get().getLobbyID() != null) throw new IllegalStateException("Player already in another lobby!");
+            playerRepository.deleteById(playerUUID);
+        }
 
         long lobbyID = idGenerator.incrementAndGet();
 
@@ -46,8 +50,11 @@ public class LobbyService {
     }
 
     public LobbyDTO joinLobby(long lobbyID, String playerUUID, String playerName) throws IllegalStateException {
-        //todo: check if player already exists in the repository (if already exists delete, except if player in another lobby)
-        //todo: check that player not already in a lobby, if in another lobby throw IllegalStateException
+        Optional<Player> playerOptional = playerRepository.findById(playerUUID);
+        if(playerOptional.isPresent()) {
+            if(playerOptional.get().getLobbyID() != null) throw new IllegalStateException("Player already in another lobby!");
+            playerRepository.deleteById(playerUUID);
+        }
 
         Player player = new Player(playerUUID, playerName.substring(1, playerName.length() - 1));
         Optional<Lobby> lobbyOptional = lobbyRepository.findById(lobbyID);

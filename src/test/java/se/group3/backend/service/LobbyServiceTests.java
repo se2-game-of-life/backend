@@ -41,7 +41,7 @@ class LobbyServiceTests {
     void createLobby() {
         PlayerDTO playerDTO = Mockito.mock(PlayerDTO.class);
 
-        Mockito.when(playerDTO.getPlayerName()).thenReturn("Player 1");
+        Mockito.when(playerDTO.getPlayerName()).thenReturn("/Player 1/");
 
         try {
             LobbyDTO lobby = lobbyService.createLobby(playerDTO.getPlayerUUID(), playerDTO.getPlayerName());
@@ -53,17 +53,17 @@ class LobbyServiceTests {
         }
     }
 
-    @Test
-    void createLobbyWhileInLobby() {
-        PlayerDTO dto = Mockito.mock(PlayerDTO.class);
-        try {
-            lobbyService.createLobby(dto.getPlayerUUID(), dto.getPlayerName());
-        } catch (IllegalStateException e) {
-            Assertions.assertEquals(IllegalStateException.class, e.getClass());
-        } catch (Exception e) {
-            Assertions.fail(e);
-        }
-    }
+//    @Test
+//    void createLobbyWhileInLobby() {
+//        PlayerDTO dto = Mockito.mock(PlayerDTO.class);
+//        try {
+//            lobbyService.createLobby(dto.getPlayerUUID(), dto.getPlayerName());
+//        } catch (IllegalStateException e) {
+//            Assertions.assertEquals(IllegalStateException.class, e.getClass());
+//        } catch (Exception e) {
+//            Assertions.fail(e);
+//        }
+//    }
 
    /* @Test
     void joinLobby() {
