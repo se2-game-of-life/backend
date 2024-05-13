@@ -14,8 +14,6 @@ import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.services.BoardService;
 import se.group3.backend.services.GameService;
 import se.group3.backend.services.LobbyService;
-import se.group3.backend.util.SerializationUtil;
-import se.group3.backend.util.SessionUtil;
 import se.group3.backend.exceptions.SessionOperationException;
 import se.group3.backend.repositories.LobbyRepository;
 import se.group3.backend.repositories.PlayerRepository;

@@ -8,8 +8,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import se.group3.backend.domain.Lobby;
+import se.group3.backend.domain.Player;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;
+import se.group3.backend.dto.mapper.LobbyMapper;
 import se.group3.backend.exceptions.SessionOperationException;
 import se.group3.backend.repositories.LobbyRepository;
 import se.group3.backend.repositories.PlayerRepository;
@@ -17,6 +20,7 @@ import se.group3.backend.services.LobbyService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,51 +43,41 @@ class LobbyServiceTests {
 
     @Test
     void createLobby() {
-        PlayerDTO playerDTO = Mockito.mock(PlayerDTO.class);
-
-        Mockito.when(playerDTO.getPlayerName()).thenReturn("/Player 1/");
-
         try {
-            LobbyDTO lobby = lobbyService.createLobby(playerDTO.getPlayerUUID(), playerDTO.getPlayerName());
+            LobbyDTO lobby = lobbyService.createLobby("Test UUID", "/Player 1/");
             Assertions.assertNotNull(lobby);
             Assertions.assertEquals(1, lobby.getLobbyID());
-            Assertions.assertEquals("Player 1", lobby.getPlayers().get(0).getPlayerName());
+            Assertions.assertEquals("Test UUID", lobby.getCurrentPlayer().getPlayerUUID());
+            Assertions.assertEquals("Player 1", lobby.getCurrentPlayer().getPlayerName());
         } catch (Exception e) {
             Assertions.fail(e);
         }
     }
 
-//    @Test
-//    void createLobbyWhileInLobby() {
-//        PlayerDTO dto = Mockito.mock(PlayerDTO.class);
-//        try {
-//            lobbyService.createLobby(dto.getPlayerUUID(), dto.getPlayerName());
-//        } catch (IllegalStateException e) {
-//            Assertions.assertEquals(IllegalStateException.class, e.getClass());
-//        } catch (Exception e) {
-//            Assertions.fail(e);
-//        }
-//    }
 
-   /* @Test
-    void joinLobby() {
-        PlayerDTO dto = Mockito.mock(PlayerDTO.class);
-        PlayerDTO player = Mockito.mock(PlayerDTO.class);
 
-        Mockito.when(dto.getPlayerName()).thenReturn("Player 1");
-        Mockito.when(player.getPlayerName()).thenReturn("Player 2");
-
+    @Test
+    void createLobbyWhileInLobby() {
         try {
-            lobbyService.createLobby(dto.getPlayerUUID(), dto.getPlayerName());
+            lobbyService.createLobby("Test UUID", "/Player 1/");
+            lobbyService.createLobby("Test UUID", "/Player 1/");
+        } catch (IllegalStateException e) {
+            Assertions.assertEquals(IllegalStateException.class, e.getClass());
         } catch (Exception e) {
             Assertions.fail(e);
         }
+    }
+
+    @Test
+    void joinLobby() {
+        Mockito.when(lobbyRepository.findById(1L)).thenReturn(Optional.of(new Lobby(1L, new Player("Test UUID1", "Player 1"))));
 
         try {
-            LobbyDTO lobby = lobbyService.joinLobby(0L, player.getPlayerUUID(), player.getPlayerName());
+            LobbyDTO lobby = lobbyService.joinLobby(1L, "Test UUID2","/Player 2/");
             Assertions.assertNotNull(lobby);
-            Assertions.assertEquals(0, lobby.getLobbyID());
-            Assertions.assertEquals("Player 1",lobby.getCurrentPlayer().getPlayerName());
+            Assertions.assertEquals(1, lobby.getLobbyID());
+            Assertions.assertEquals("Player 1", lobby.getCurrentPlayer().getPlayerName());
+            Assertions.assertEquals(2, lobby.getPlayers().size());
         } catch (Exception e) {
             Assertions.fail(e);
         }
@@ -91,92 +85,49 @@ class LobbyServiceTests {
 
     @Test
     void joinLobbyFull() {
-        PlayerDTO dto = Mockito.mock(PlayerDTO.class);
-        PlayerDTO player1 = Mockito.mock(PlayerDTO.class);
-        PlayerDTO player2 = Mockito.mock(PlayerDTO.class);
-        PlayerDTO player3 = Mockito.mock(PlayerDTO.class);
+        Lobby lobby = new Lobby(1L, new Player("Test UUID1", "Player 1"));
+        lobby.addPlayer(new Player("Test UUID2", "Player 2"));
+        lobby.addPlayer(new Player("Test UUID3", "Player 3"));
+        lobby.addPlayer(new Player("Test UUID4", "Player 4"));
+        Mockito.when(lobbyRepository.findById(1L)).thenReturn(Optional.of(lobby));
 
-        Mockito.when(dto.getPlayerName()).thenReturn("Host");
-
-        try {
-            lobbyService.createLobby(dto.getPlayerUUID(), dto.getPlayerName());
-        } catch (Exception e) {
-            Assertions.fail(e);
-        }
-
-        try {
-            LobbyDTO lobby = lobbyService.joinLobby(0L, player1.getPlayerUUID(), player1.getPlayerName());
-            Assertions.assertNotNull(lobby);
-            Assertions.assertEquals(0, lobby.getLobbyID());
-        } catch (Exception e) {
-            Assertions.fail(e);
-        }
-        try {
-            LobbyDTO lobby = lobbyService.joinLobby(0L, player2.getPlayerUUID(), player2.getPlayerName());
-            Assertions.assertNotNull(lobby);
-            Assertions.assertEquals(0, lobby.getLobbyID());
-        } catch (Exception e) {
-            Assertions.fail(e);
-        }
-
-        try {
-            lobbyService.joinLobby(0L, player3.getPlayerUUID(), player3.getPlayerName());
-        } catch (Exception e) {
-            Assertions.assertEquals(IllegalStateException.class, e.getClass());
-        }
-    }*/
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            lobbyService.joinLobby(lobby.getLobbyID(), "Test UUID5", "Player 5");
+        });
+    }
 
     @Test
     void joinLobbyNotFound() {
-        PlayerDTO playerDTO = Mockito.mock(PlayerDTO.class);
-
-        try {
-            lobbyService.joinLobby(1L, playerDTO.getPlayerUUID(), playerDTO.getPlayerName());
-        } catch (Exception e) {
-            Assertions.assertEquals(IllegalStateException.class, e.getClass());
-        }
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            lobbyService.joinLobby(1L, "Test UUID5", "Player 5");
+        });
     }
 
     @Test
     void joinLobbyWhileInLobby() {
-        PlayerDTO dto = Mockito.mock(PlayerDTO.class);
-        PlayerDTO playerDTO = Mockito.mock(PlayerDTO.class);
-
-        try {
-            lobbyService.createLobby(dto.getPlayerUUID(), playerDTO.getPlayerName());
-        } catch (Exception e) {
-            Assertions.fail(e);
-        }
-
-        try {
-            lobbyService.joinLobby(0L, dto.getPlayerUUID(), dto.getPlayerName());
-        } catch (Exception e) {
-            Assertions.assertEquals(IllegalStateException.class, e.getClass());
-        }
+        Player player = new Player("Test UUID1", "Player 1");
+        player.setLobbyID(1L);
+        Lobby lobby = new Lobby(1L, player);
+        Mockito.when(lobbyRepository.findById(1L)).thenReturn(Optional.of(lobby));
+        Mockito.when(playerRepository.findById("Test UUID1")).thenReturn(Optional.of(player));
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            lobbyService.joinLobby(lobby.getLobbyID(), "Test UUID1", "Player 1");
+        });
     }
 
-  /*  @Test
+    @Test
     void leaveLobby() {
-        PlayerDTO dto = Mockito.mock(PlayerDTO.class);
-
-        Mockito.when(dto.getPlayerName()).thenReturn("Player 1");
-
-        try {
-            LobbyDTO lobby = lobbyService.createLobby(dto.getPlayerUUID(), dto.getPlayerName());
-            Assertions.assertNotNull(lobby);
-            Assertions.assertEquals(1, lobby.getLobbyID());
-            Assertions.assertEquals("Player 1", lobby.getCurrentPlayer().getPlayerName());
-        } catch (Exception e) {
-            Assertions.fail(e);
-        }
+        Player player = new Player("Test UUID1", "Player 1");
+        player.setLobbyID(1L);
+        Lobby lobby = new Lobby(1L, player);
+        Mockito.when(lobbyRepository.findById(1L)).thenReturn(Optional.of(lobby));
+        Mockito.when(playerRepository.findById("Test UUID1")).thenReturn(Optional.of(player));
 
         try {
-            LobbyDTO lobbyDTO = lobbyService.leaveLobby(dto.getPlayerUUID());
-            Assertions.assertEquals(0, lobbyDTO.getLobbyID());
-        } catch (Exception e) {
+            LobbyDTO lobbyDTO = lobbyService.leaveLobby(player.getPlayerUUID());
+            Assertions.assertEquals(1, lobbyDTO.getLobbyID());
+        } catch (IllegalStateException e) {
             Assertions.fail(e);
         }
     }
-*/
-
 }
