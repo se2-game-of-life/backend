@@ -11,7 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import se.group3.backend.domain.Player;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;
-import se.group3.backend.repositories.player.PlayerRepository;
+import se.group3.backend.repositories.PlayerRepository;
 import se.group3.backend.services.GameService;
 
 import java.util.List;

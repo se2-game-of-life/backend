@@ -13,8 +13,8 @@ import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.Player;
 import se.group3.backend.dto.mapper.PlayerMapper;
-import se.group3.backend.repositories.player.PlayerRepository;
-import se.group3.backend.services.player.PlayerServiceImpl;
+import se.group3.backend.repositories.PlayerRepository;
+import se.group3.backend.services.PlayerServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

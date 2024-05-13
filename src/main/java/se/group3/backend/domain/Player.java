@@ -12,10 +12,6 @@ import se.group3.backend.domain.cards.HouseCard;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Player Class from the Database
- */
-
 @Document(collection = "player")
 @Getter
 @Setter

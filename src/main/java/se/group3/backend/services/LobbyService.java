@@ -8,7 +8,7 @@ import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.mapper.LobbyMapper;
 import se.group3.backend.domain.Lobby;
 import se.group3.backend.repositories.LobbyRepository;
-import se.group3.backend.repositories.player.PlayerRepository;
+import se.group3.backend.repositories.PlayerRepository;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -52,6 +52,8 @@ public class LobbyService {
             if(lobby.isFull()) throw new IllegalStateException("The lobby is full!");
             player.setLobbyID(lobbyID);
             lobby.addPlayer(player);
+            lobbyRepository.save(lobby);
+            playerRepository.insert(player);
             return LobbyMapper.toLobbyDTO(lobby);
         }
         throw new IllegalStateException("The lobby doesn't exist!");
@@ -66,6 +68,8 @@ public class LobbyService {
             if(lobbyOptional.isPresent()) {
                 Lobby lobby = lobbyOptional.get();
                 lobby.removePlayer(playerUUID);
+                lobbyRepository.save(lobby);
+                playerRepository.delete(player);
                 return LobbyMapper.toLobbyDTO(lobby);
             }
         }
@@ -75,6 +79,7 @@ public class LobbyService {
     public LobbyDTO startLobby(String playerUUID) throws IllegalStateException {
         //todo: start the game and return a game state update with the initial conditions
         //todo: might use lobby as the game state update
+        //todo: this method might not even be needed
         throw new UnsupportedOperationException();
     }
 }

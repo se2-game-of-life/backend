@@ -10,7 +10,7 @@ import se.group3.backend.domain.Player;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.mapper.LobbyMapper;
 import se.group3.backend.repositories.*;
-import se.group3.backend.repositories.player.PlayerRepository;
+import se.group3.backend.repositories.PlayerRepository;
 
 import java.util.List;
 import java.util.Objects;
@@ -29,7 +29,7 @@ public class GameService {
     private LobbyRepository lobbyRepository;
 
     @Autowired
-    public GameService(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellRepository cellRepository, PlayerRepository playerRepository, LobbyRepository lobbyRepository lobbyRepository){
+    public GameService(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellRepository cellRepository, PlayerRepository playerRepository, LobbyRepository lobbyRepository){
         this.careerCardRepository = careerCardRepository;
         this.actionCardRepository = actionCardRepository;
         this.houseCardRepository = houseCardRepository;
@@ -55,6 +55,8 @@ public class GameService {
 
         makeMove(lobby, player);
 
+        lobbyRepository.save(lobby);
+        playerRepository.save(player);
         return LobbyMapper.toLobbyDTO(lobby);
     }
 

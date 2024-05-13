@@ -1,10 +1,10 @@
-package se.group3.backend.services.player;
+package se.group3.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.group3.backend.domain.cards.HouseCard;
 import se.group3.backend.domain.Player;
-import se.group3.backend.repositories.player.PlayerRepository;
+import se.group3.backend.repositories.PlayerRepository;
 import se.group3.backend.domain.cards.CareerCard;
 
 @Service
