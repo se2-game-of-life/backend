@@ -2,19 +2,16 @@ package se.group3.backend.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
 import se.group3.backend.domain.player.Player;
 import se.group3.backend.dto.LobbyDTO;
-import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.dto.mapper.LobbyMapper;
-import se.group3.backend.exceptions.SessionOperationException;
 import se.group3.backend.domain.lobby.Lobby;
 import se.group3.backend.repositories.LobbyRepository;
+import se.group3.backend.repositories.player.PlayerRepository;
 
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-
-import static se.group3.backend.dto.mapper.PlayerMapper.mapDTOToPlayer;
 
 @Slf4j
 @Service
@@ -22,57 +19,57 @@ public class LobbyService {
 
     private final AtomicLong idGenerator = new AtomicLong();
     private final LobbyRepository lobbyRepository;
+    private final PlayerRepository playerRepository;
 
     @Autowired
-    public LobbyService(LobbyRepository lobbyRepository) {
+    public LobbyService(LobbyRepository lobbyRepository, PlayerRepository playerRepository) {
         this.lobbyRepository = lobbyRepository;
+        this.playerRepository = playerRepository;
     }
 
-    public LobbyDTO createLobby(PlayerDTO player) throws IllegalStateException {
-        Long sessionLobbyID = SessionUtil.getLobbyID(headerAccessor);
-        if(sessionLobbyID != null) throw new IllegalStateException("This player is already in another Lobby!");
+    public LobbyDTO createLobby(String playerUUID, String playerName) throws IllegalStateException {
+        //todo: check if player already exists in the repository (if already exists delete, except if player in another lobby)
+        //todo: check that player not already in lobby, if in another lobby throw IllegalStateException
 
-        Player host = mapDTOToPlayer(player);
-        long lobbyID = idGenerator.getAndIncrement();
-        Lobby newLobby = new Lobby(lobbyID, host);
-        SessionUtil.putSessionAttribute(headerAccessor, "lobbyID", newLobby.getId());
-        lobbyMap.put(lobbyID, newLobby);
-        new Thread(newLobby).start();
-        return LobbyMapper.toLobbyDTO(newLobby);
-    }
+        long lobbyID = idGenerator.incrementAndGet();
 
-    public LobbyDTO joinLobby(long lobbyID, PlayerDTO playerDTO) throws IllegalStateException {
-        Lobby lobby = lobbyMap.get(lobbyID);
-        if(lobby == null) throw new IllegalStateException("The lobby doesn't exist!");
-        if(lobby.isFull()) throw new IllegalStateException("The lobby is full!");
+        Player player = new Player(playerUUID, playerName);
+        player.setLobbyID(lobbyID);
+        Lobby lobby = new Lobby(lobbyID, player);
+        lobbyRepository.insert(lobby);
 
-        Long sessionLobbyID = SessionUtil.getLobbyID(headerAccessor);
-        if(sessionLobbyID != null) throw new IllegalStateException("This player is already in another Lobby!");
-
-        SessionUtil.putSessionAttribute(headerAccessor, "lobbyID", lobbyID);
-        Player player = mapDTOToPlayer(playerDTO);
-        lobby.addPlayer(player);
         return LobbyMapper.toLobbyDTO(lobby);
     }
 
-    public LobbyDTO leaveLobby(SimpMessageHeaderAccessor headerAccessor) throws IllegalStateException, SessionOperationException {
-        String uuid = SessionUtil.getUUID(headerAccessor);
-        Long lobbyID = SessionUtil.getLobbyID(headerAccessor);
+    public LobbyDTO joinLobby(long lobbyID, String playerUUID, String playerName) throws IllegalStateException {
+        //todo: check if player already exists in the repository (if already exists delete, except if player in another lobby)
+        //todo: check that player not already in a lobby, if in another lobby throw IllegalStateException
 
-        if(lobbyID == null) {
-            throw new IllegalStateException("Attempting to leave lobby, when player is not part of any lobby!");
+        Player player = new Player(playerUUID, playerName);
+        Optional<Lobby> lobbyOptional = lobbyRepository.findById(lobbyID);
+        if(lobbyOptional.isPresent()) {
+            Lobby lobby = lobbyOptional.get();
+            if(lobby.isFull()) throw new IllegalStateException("The lobby is full!");
+            player.setLobbyID(lobbyID);
+            lobby.addPlayer(player);
+            return LobbyMapper.toLobbyDTO(lobby);
         }
-        Lobby lobby = getLobby(lobbyID);
-        if(lobby == null) {
-            throw new IllegalStateException("Lobby associated with session connection does not exist!");
-        }
-
-        lobby.removePlayer(uuid);
-        return LobbyMapper.toLobbyDTO(lobby);
+        throw new IllegalStateException("The lobby doesn't exist!");
     }
 
-    public Lobby getLobby(long lobbyID) {
-        return lobbyMap.get(lobbyID);
+    public LobbyDTO leaveLobby(String playerUUID) throws IllegalStateException {
+        Optional<Player> playerOptional = playerRepository.findById(playerUUID);
+        if(playerOptional.isPresent()) {
+            Player player = playerOptional.get();
+            if(player.getLobbyID() == null) throw new IllegalStateException("Player is not part of any lobby!");
+            Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
+            if(lobbyOptional.isPresent()) {
+                Lobby lobby = lobbyOptional.get();
+                lobby.removePlayer(playerUUID);
+                return LobbyMapper.toLobbyDTO(lobby);
+            }
+        }
+        throw new IllegalStateException("The player doesn't exist!");
     }
 
     public void startLobby(long uuid) {

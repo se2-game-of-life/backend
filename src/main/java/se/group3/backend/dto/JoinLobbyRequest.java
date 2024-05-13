@@ -8,11 +8,11 @@ import lombok.Getter;
 public class JoinLobbyRequest {
 
     private long lobbyID;
-    private PlayerDTO player;
+    private String playerName;
 
     @JsonCreator
-    public JoinLobbyRequest(@JsonProperty("lobbyID") long lobbyID, @JsonProperty("player") PlayerDTO player) {
+    public JoinLobbyRequest(@JsonProperty("lobbyID") long lobbyID, @JsonProperty("playerName") String playerName) {
         this.lobbyID = lobbyID;
-        this.player = player;
+        this.playerName = playerName;
     }
 }

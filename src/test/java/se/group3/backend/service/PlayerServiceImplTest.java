@@ -41,7 +41,7 @@ class PlayerServiceImplTest {
 
         // Gemeinsame Testdaten für alle Tests
         player = new Player("player1");
-        player.setPlayerID("TestID");
+        player.setPlayerUUID("TestID");
 
         repository.save(player);
         dto = PlayerMapper.mapPlayerToDTO(player);

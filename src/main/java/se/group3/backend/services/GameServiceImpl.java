@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import se.group3.backend.domain.game.Game;
 import se.group3.backend.domain.player.Player;
-import se.group3.backend.domain.player.PlayerStatistic;
 import se.group3.backend.dto.CellDTO;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;

@@ -39,7 +39,7 @@ public class LobbyController {
      * @param headerAccessor The header accessor which contains session information.
      */
     @MessageMapping("/lobby/create")
-    public void createLobby(@Payload String playerDTO, SimpMessageHeaderAccessor headerAccessor) {
+    public void createLobby(@Payload String playerName, SimpMessageHeaderAccessor headerAccessor) {
         String uuid;
         try {
             uuid = SessionUtil.getUUID(headerAccessor);

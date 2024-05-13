@@ -11,7 +11,7 @@ public class PlayerMapper {
 
     public static Player mapDTOToPlayer(PlayerDTO dto) {
         Player player = new Player(dto.getPlayerName());
-        player.setPlayerID(dto.getPlayerID());
+        player.setPlayerUUID(dto.getPlayerID());
         player.setCurrentCellPosition(dto.getCurrentCellPosition());
         player.setMoney(dto.getMoney());
         player.setCareerCard(dto.getCareerCard());
@@ -22,7 +22,7 @@ public class PlayerMapper {
 
     public static PlayerDTO mapPlayerToDTO(Player player) {
         PlayerDTO dto = new PlayerDTO();
-        dto.setPlayerID(player.getPlayerID());
+        dto.setPlayerID(player.getPlayerUUID());
         dto.setPlayerName(player.getPlayerName());
         dto.setCurrentCellPosition(player.getCurrentCellPosition());
         dto.setMoney(player.getMoney());

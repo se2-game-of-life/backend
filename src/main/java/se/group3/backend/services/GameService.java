@@ -1,7 +1,6 @@
 package se.group3.backend.services;
 
 
-import se.group3.backend.domain.player.PlayerStatistic;
 import se.group3.backend.dto.CellDTO;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;

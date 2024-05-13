@@ -41,22 +41,20 @@ public class GameOfLifeController {
     }
 
     @MessageMapping("/lobby/create")
-    public void createLobby(@Payload String playerDTO, SimpMessageHeaderAccessor headerAccessor) {
+    public void createLobby(@Payload String playerName, SimpMessageHeaderAccessor headerAccessor) {
         try {
-            LobbyDTO lobby = lobbyService.createLobby((PlayerDTO) SerializationService.toObject(playerDTO, PlayerDTO.class));
+            LobbyDTO lobby = lobbyService.createLobby(getUUID(headerAccessor), playerName);
             messagingTemplate.convertAndSend(LOBBIES_PATH + getUUID(headerAccessor), SerializationService.jsonStringFromClass(lobby));
         } catch (IllegalStateException | JsonProcessingException | ClassCastException e) {
             messagingTemplate.convertAndSend(ERROR_PATH + getUUID(headerAccessor), e.getMessage());
         }
     }
 
-    //todo: store the UUID as the player primary key
-
     @MessageMapping("/lobby/join")
     public void joinLobby(@Payload String joinLobbyRequest, SimpMessageHeaderAccessor headerAccessor) {
         try{
             JoinLobbyRequest request = (JoinLobbyRequest) SerializationService.toObject(joinLobbyRequest, JoinLobbyRequest.class);
-            LobbyDTO lobby = lobbyService.joinLobby(request.getLobbyID(), request.getPlayer());
+            LobbyDTO lobby = lobbyService.joinLobby(request.getLobbyID(), getUUID(headerAccessor), request.getPlayerName());
             messagingTemplate.convertAndSend(LOBBIES_PATH + lobby.getLobbyID(), SerializationService.jsonStringFromClass(lobby));
         } catch (JsonProcessingException | ClassCastException | IllegalStateException e) {
             log.error(e.getMessage());
@@ -64,7 +62,14 @@ public class GameOfLifeController {
     }
 
     @MessageMapping("/lobby/leave")
-    public void leaveLobby() {}
+    public void leaveLobby(SimpMessageHeaderAccessor headerAccessor) {
+        try {
+            LobbyDTO lobby = lobbyService.leaveLobby(getUUID(headerAccessor));
+            messagingTemplate.convertAndSend(LOBBIES_PATH + lobby.getLobbyID(), SerializationService.jsonStringFromClass(lobby));
+        } catch (JsonProcessingException | IllegalStateException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @MessageMapping("/lobby/start")
     public void startLobby() {}
