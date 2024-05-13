@@ -38,7 +38,7 @@ public class HouseCard extends Card {
         HouseCard card2 = deck.drawCard();
 
         if (card1 == null || card2 == null) {
-            System.out.println("No more career cards available.");
+            System.out.println("No more house cards available.");
             return;
         }
         HouseCard chosenCard;
