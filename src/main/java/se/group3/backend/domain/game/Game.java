@@ -35,6 +35,7 @@ public class Game {
 
     private int currentPlayerIndex;
     private Random spinnedNumber;
+    private Random spinner;
 
 
     @Autowired
