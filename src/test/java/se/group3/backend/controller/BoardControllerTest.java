@@ -6,7 +6,7 @@ import org.mockito.Mockito;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import se.group3.backend.domain.game.Cell;
+import se.group3.backend.domain.Cell;
 import se.group3.backend.dto.BoardDTO;
 import se.group3.backend.services.BoardService;
 

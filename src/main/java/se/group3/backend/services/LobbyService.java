@@ -3,11 +3,11 @@ package se.group3.backend.services;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.group3.backend.domain.player.Player;
+import se.group3.backend.domain.Player;
 import se.group3.backend.dto.GameStateUpdate;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.mapper.LobbyMapper;
-import se.group3.backend.domain.lobby.Lobby;
+import se.group3.backend.domain.Lobby;
 import se.group3.backend.repositories.LobbyRepository;
 import se.group3.backend.repositories.player.PlayerRepository;
 
@@ -73,8 +73,9 @@ public class LobbyService {
         throw new IllegalStateException("The player doesn't exist!");
     }
 
-    public GameStateUpdate startLobby(String playerUUID) {
+    public GameStateUpdate startLobby(String playerUUID) throws IllegalStateException {
         //todo: start the game and return a game state update with the initial conditions
+        //todo: might use lobby as the game state update
         throw new UnsupportedOperationException();
     }
 }

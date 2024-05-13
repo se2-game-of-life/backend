@@ -1,12 +1,7 @@
 package se.group3.backend.dto.mapper;
 
 import se.group3.backend.dto.LobbyDTO;
-import se.group3.backend.domain.lobby.Lobby;
-import se.group3.backend.dto.PlayerDTO;
-
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import se.group3.backend.domain.Lobby;
 
 public class LobbyMapper {
 

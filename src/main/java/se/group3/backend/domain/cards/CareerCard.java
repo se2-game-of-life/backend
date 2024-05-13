@@ -1,6 +1,6 @@
 package se.group3.backend.domain.cards;
 
-import se.group3.backend.domain.player.Player;
+import se.group3.backend.domain.Player;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "CareerCards")

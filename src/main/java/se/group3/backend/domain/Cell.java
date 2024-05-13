@@ -1,4 +1,4 @@
-package se.group3.backend.domain.game;
+package se.group3.backend.domain;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.Id;

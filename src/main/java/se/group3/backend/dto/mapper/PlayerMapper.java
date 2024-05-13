@@ -2,7 +2,7 @@ package se.group3.backend.dto.mapper;
 
 
 import se.group3.backend.dto.PlayerDTO;
-import se.group3.backend.domain.player.Player;
+import se.group3.backend.domain.Player;
 
 /**
  * Class to map a PlayerDTO to a Player object and back

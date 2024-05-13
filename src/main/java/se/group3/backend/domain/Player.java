@@ -1,4 +1,4 @@
-package se.group3.backend.domain.player;
+package se.group3.backend.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

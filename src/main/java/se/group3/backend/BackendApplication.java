@@ -3,7 +3,6 @@ package se.group3.backend;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import se.group3.backend.domain.game.Game;
 
 @SpringBootApplication
 public class BackendApplication {

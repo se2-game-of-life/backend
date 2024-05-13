@@ -84,10 +84,14 @@ public class GameOfLifeController {
     }
 
     @MessageMapping("/lobby/turn")
-    public void handlePlayerTurn() {}
+    public void handlePlayerTurn() {
+
+    }
 
     @MessageMapping("/lobby/choice")
-    public void makeChoice() {}
+    public void makeChoice() {
+
+    }
 
     @MessageMapping("/board/fetch")
     public void fetchBoard(SimpMessageHeaderAccessor headerAccessor) {

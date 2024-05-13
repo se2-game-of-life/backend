@@ -1,8 +1,7 @@
-package se.group3.backend.domain.lobby;
+package se.group3.backend.domain;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import se.group3.backend.domain.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;

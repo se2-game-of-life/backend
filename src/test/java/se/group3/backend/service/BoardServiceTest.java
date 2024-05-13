@@ -3,7 +3,7 @@ package se.group3.backend.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import se.group3.backend.domain.game.Cell;
+import se.group3.backend.domain.Cell;
 import se.group3.backend.dto.BoardDTO;
 import se.group3.backend.repositories.CellRepository;
 import se.group3.backend.services.BoardService;
