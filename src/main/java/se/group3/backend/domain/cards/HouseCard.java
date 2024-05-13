@@ -30,20 +30,24 @@ public class HouseCard extends Card {
     }
 
     @Override
-    public void performAction(Player player) {
+    public void performAction(Player player, String buttonClicked) {
         // Implement the action specific to HouseCard
         // You need to implement the logic for the player to choose between two cards here
         Deck<HouseCard> deck = getHouseCardDeck(); // Assuming you have a method to get the house card deck
         HouseCard card1 = deck.drawCard();
         HouseCard card2 = deck.drawCard();
-
-        System.out.println("Choose a house to buy:");
-        System.out.println("1. " + card1.getName());
-        System.out.println("2. " + card2.getName());
-
-        // Example: Let's assume the player always chooses the first card for simplicity
-        HouseCard chosenCard = card1;
-        HouseCard unchosenCard = card2;
+        HouseCard chosenCard;
+        HouseCard unchosenCard;
+        if (buttonClicked.equals("Button One Clicked")) {
+            chosenCard = card1;
+            unchosenCard = card2;
+        } else if (buttonClicked.equals("Button Two Clicked")) {
+            chosenCard = card2;
+            unchosenCard = card1;
+        } else {
+            // Handle unexpected button clicks here
+            return;
+        }
 
         if (player.getMoney() >= chosenCard.getPurchasePrice()) {
             player.setMoney(player.getMoney() - chosenCard.getPurchasePrice());
