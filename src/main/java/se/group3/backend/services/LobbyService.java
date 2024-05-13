@@ -37,7 +37,7 @@ public class LobbyService {
             lobbyRepository.deleteById(lobbyID);
         }
 
-        Player player = new Player(playerUUID, playerName);
+        Player player = new Player(playerUUID, playerName.substring(1, playerName.length() - 1));
         player.setLobbyID(lobbyID);
         Lobby lobby = new Lobby(lobbyID, player);
         lobbyRepository.insert(lobby);
@@ -49,7 +49,7 @@ public class LobbyService {
         //todo: check if player already exists in the repository (if already exists delete, except if player in another lobby)
         //todo: check that player not already in a lobby, if in another lobby throw IllegalStateException
 
-        Player player = new Player(playerUUID, playerName);
+        Player player = new Player(playerUUID, playerName.substring(1, playerName.length() - 1));
         Optional<Lobby> lobbyOptional = lobbyRepository.findById(lobbyID);
         if(lobbyOptional.isPresent()) {
             Lobby lobby = lobbyOptional.get();
