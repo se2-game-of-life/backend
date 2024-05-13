@@ -39,22 +39,20 @@ class PlayerServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(PlayerRepository.class);
 
-        // Gemeinsame Testdaten für alle Tests
-        player = new Player("player1");
-        player.setPlayerUUID("TestID");
+        player = new Player("TestID","player1");
 
         repository.save(player);
         dto = PlayerMapper.mapPlayerToDTO(player);
 
 
-        lenient().when(repository.findById(dto.getPlayerID())).thenReturn(Optional.ofNullable(player));
+        lenient().when(repository.findById(dto.getPlayerUUID())).thenReturn(Optional.ofNullable(player));
     }
 
     @Test
     void increaseNumberOfPegs_increasesPegs() {
         int initialPegs = player.getNumberOfPegs();
 
-        service.increaseNumberOfPegs(dto.getPlayerID());
+        service.increaseNumberOfPegs(dto.getPlayerUUID());
 
         verify(repository, atLeastOnce()).save(player);
         assertEquals(initialPegs + 1, player.getNumberOfPegs());
@@ -66,7 +64,7 @@ class PlayerServiceImplTest {
         player.setCareerCard(careerCard);
         int initialMoney = player.getMoney();
 
-        service.getSalary(dto.getPlayerID());
+        service.getSalary(dto.getPlayerUUID());
 
         verify(repository, atLeastOnce()).save(player);
         assertEquals(initialMoney + careerCard.getSalary(), player.getMoney());
@@ -78,7 +76,7 @@ class PlayerServiceImplTest {
         player.setCareerCard(careerCard);
         int initialMoney = player.getMoney();
 
-        service.getSalaryWithBonus(dto.getPlayerID());
+        service.getSalaryWithBonus(dto.getPlayerUUID());
 
         verify(repository, atLeastOnce()).save(player);
         assertEquals(initialMoney + careerCard.getBonus(), player.getMoney());
@@ -87,8 +85,8 @@ class PlayerServiceImplTest {
     @Test
     void setCareer_withExistingPlayer_updatesCareerCard() {
         CareerCard newCareerCard = new CareerCard("Engineer", 100000, 15000, false);
-        when(repository.findById(dto.getPlayerID())).thenReturn(Optional.of(player));
-        service.setCareer(dto.getPlayerID(), newCareerCard);
+        when(repository.findById(dto.getPlayerUUID())).thenReturn(Optional.of(player));
+        service.setCareer(dto.getPlayerUUID(), newCareerCard);
 
         verify(repository, times(2)).save(player);
         Assertions.assertEquals(newCareerCard, player.getCareerCard());
@@ -96,32 +94,26 @@ class PlayerServiceImplTest {
 
     @Test
     void addHouse_withExistingPlayer_addsHouse() {
-        // Setup
-        HouseCard houseCard = new HouseCard("Beach House", 500000, 450000, 550000); // Constructing a HouseCard with purchase, red sell, and black sell prices
+        HouseCard houseCard = new HouseCard("Beach House", 500000, 450000, 550000);
         List<HouseCard> houses = new ArrayList<>();
-        player.setHouses(houses); // Assuming Player has a method to set houses if not use getHouses().clear() to ensure it's empty initially
+        player.setHouses(houses);
 
         when(repository.findById("TestID")).thenReturn(Optional.of(player));
 
-        // Execution
         service.addHouse("TestID", houseCard);
 
-        // Verification
         assertTrue(player.getHouses().contains(houseCard), "The house card should be added to the player's houses.");
-        verify(repository, atLeastOnce()).save(player); // Verify that save was called once
+        verify(repository, atLeastOnce()).save(player);
     }
 
     @Test
     void addHouse_withNonExistentPlayer_doesNotAddHouse() {
-        // Setup
         HouseCard houseCard = new HouseCard("Beach House", 500000, 450000, 550000);
         when(repository.findById("NonExistentID")).thenReturn(Optional.empty());
 
-        // Execution
         service.addHouse("NonExistentID", houseCard);
 
-        // Verification
-        verify(repository, times(1)).save(any(Player.class)); // Ensure no player is saved
+        verify(repository, times(1)).save(any(Player.class));
     }
 
 }
