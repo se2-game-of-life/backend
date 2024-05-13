@@ -36,6 +36,11 @@ public class HouseCard extends Card {
         Deck<HouseCard> deck = getHouseCardDeck(); // Assuming you have a method to get the house card deck
         HouseCard card1 = deck.drawCard();
         HouseCard card2 = deck.drawCard();
+
+        if (card1 == null || card2 == null) {
+            System.out.println("No more career cards available.");
+            return;
+        }
         HouseCard chosenCard;
         HouseCard unchosenCard;
         if (buttonClicked.equals("Button One Clicked")) {
