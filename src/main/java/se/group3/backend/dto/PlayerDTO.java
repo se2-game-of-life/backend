@@ -12,6 +12,7 @@ import se.group3.backend.domain.cards.HouseCard;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class PlayerDTO {
 
