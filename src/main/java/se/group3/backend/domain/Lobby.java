@@ -1,8 +1,12 @@
 package se.group3.backend.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import se.group3.backend.domain.cards.Card;
 
 import java.util.ArrayList;
@@ -11,27 +15,29 @@ import java.util.List;
 @Slf4j
 @Getter
 @Setter
+@Document(collection = "lobby")
 public class Lobby {
 
-    private final long lobbyID;
+    @Id
+    private long lobbyID;
     private static final Short MAXIMUM_PLAYER_COUNT = 4;
-    private final List<Player> players;
+    private List<Player> players;
     private Player currentPlayer;
     private boolean hasDecision;
     private List<Card> cards;
     private int spunNumber;
     private boolean hasStarted;
 
-    public Lobby(long lobbyID, Player host) {
+    public Lobby(Long lobbyID, Player currentPlayer) {
         this.lobbyID = lobbyID;
+        this.currentPlayer = currentPlayer;
         players = new ArrayList<>(MAXIMUM_PLAYER_COUNT);
-        currentPlayer = host;
         cards = new ArrayList<>(2);
         hasStarted = false;
         hasDecision = false;
         spunNumber = 0;
 
-        addPlayer(host);
+        addPlayer(currentPlayer);
     }
 
     public void addPlayer(Player player) {
