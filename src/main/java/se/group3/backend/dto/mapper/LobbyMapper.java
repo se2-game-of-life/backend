@@ -19,7 +19,8 @@ public class LobbyMapper {
                 PlayerMapper.mapPlayerToDTO(newLobby.getCurrentPlayer()),
                 newLobby.isHasDecision(),
                 newLobby.getCards(),
-                newLobby.getSpunNumber()
+                newLobby.getSpunNumber(),
+                newLobby.isHasStarted()
         );
     }
 }

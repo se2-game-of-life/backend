@@ -15,16 +15,23 @@ public class Lobby {
 
     private final long id;
     private static final Short MAXIMUM_PLAYER_COUNT = 4;
-    private final List<Player> players = new ArrayList<>(MAXIMUM_PLAYER_COUNT);
+    private final List<Player> players;
     private Player currentPlayer;
     private boolean hasDecision;
     private List<Card> cards;
     private int spunNumber;
+    private boolean hasStarted;
 
     public Lobby(long lobbyID, Player host) {
         this.id = lobbyID;
-        addPlayer(host);
+        players = new ArrayList<>(MAXIMUM_PLAYER_COUNT);
         currentPlayer = host;
+        cards = new ArrayList<>(2);
+        hasStarted = false;
+        hasDecision = false;
+        spunNumber = 0;
+
+        addPlayer(host);
     }
 
     public void addPlayer(Player player) {

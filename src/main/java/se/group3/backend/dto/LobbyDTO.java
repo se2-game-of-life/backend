@@ -18,6 +18,7 @@ public class LobbyDTO {
     private final boolean hasDecision;
     private final List<Card> cards;
     private final int spunNumber;
+    private final boolean hasStarted;
 
     @JsonCreator
     public LobbyDTO(@JsonProperty("lobbyID") long lobbyID,
@@ -25,7 +26,8 @@ public class LobbyDTO {
                     @JsonProperty("currentPlayer") PlayerDTO currentPlayer,
                     @JsonProperty("hasDecision") boolean hasDecision,
                     @JsonProperty("cards") List<Card> cards,
-                    @JsonProperty("spunNumber") int spunNumber
+                    @JsonProperty("spunNumber") int spunNumber,
+                    @JsonProperty("hasStarted") boolean hasStarted
     ) {
         this.lobbyID = lobbyID;
         this.players = players;
@@ -33,6 +35,7 @@ public class LobbyDTO {
         this.hasDecision = hasDecision;
         this.cards = cards;
         this.spunNumber = spunNumber;
+        this.hasStarted = hasStarted;
     }
 
 }
