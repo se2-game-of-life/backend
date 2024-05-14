@@ -93,6 +93,7 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             case FAMILY:
+                player.setNumberOfPegs(player.getNumberOfPegs()+1);
                 lobby.nextPlayer();
                 break;
             case HOUSE:
