@@ -94,6 +94,9 @@ public class GameService {
                 throw new UnsupportedOperationException("Not implemented yet!");
             default:
                 if(player.getCurrentCellPosition() == 0){
+                    if(chooseLeft){
+                        player.setMoney(150000);
+                    }
                     player.setCollegeDegree(chooseLeft);
                 }
         }
