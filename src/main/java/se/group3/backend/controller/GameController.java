@@ -101,15 +101,7 @@ public class GameController {
         }
     }
 
-    @MessageMapping("/lobby/collegeChoice")
-    public void makeCollegeChoice(@Payload boolean chooseCollege, SimpMessageHeaderAccessor headerAccessor) {
-        try {
-            LobbyDTO lobby = gameService.makeChoice(chooseCollege, getUUID(headerAccessor));
-            messagingTemplate.convertAndSend(LOBBIES_PATH + lobby.getLobbyID(), serializationService.jsonStringFromClass(lobby));
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-    }
+
 
     @MessageMapping("/lobby/choice")
     public void makeChoice(@Payload boolean chooseLeft, SimpMessageHeaderAccessor headerAccessor) {
