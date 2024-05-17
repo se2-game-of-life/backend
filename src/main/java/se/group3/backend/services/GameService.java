@@ -90,6 +90,8 @@ public class GameService {
                 throw new UnsupportedOperationException("Not implemented yet!");
             case RETIRE_EARLY:
                 throw new UnsupportedOperationException("Not implemented yet!");
+            case HOUSE:
+                throw new UnsupportedOperationException("Not implemented yet!");
             default:
                 if(player.getCurrentCellPosition() == 0){
                     player.setCollegeDegree(chooseLeft);
@@ -136,6 +138,21 @@ public class GameService {
             case CAREER:
                 lobby.nextPlayer();
                 break;
+            case GRADUATE:
+                //todo: send decision to player
+                throw new UnsupportedOperationException("Not implemented yet!");
+            case MARRY:
+                //todo: send decision to player
+                throw new UnsupportedOperationException("Not implemented yet!");
+            case GROW_FAMILY:
+                //todo: send decision to player
+                throw new UnsupportedOperationException("Not implemented yet!");
+            case MID_LIFE:
+                //todo: send decision to player
+                throw new UnsupportedOperationException("Not implemented yet!");
+            case RETIRE_EARLY:
+                //todo: send decision to player
+                throw new UnsupportedOperationException("Not implemented yet!");
             default:
                 log.error("Cell type unknown!");
         }
