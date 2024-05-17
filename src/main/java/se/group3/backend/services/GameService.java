@@ -80,8 +80,6 @@ public class GameService {
         Cell cell = cellRepository.findByNumber(player.getCurrentCellPosition());
 
         switch(cell.getType()){
-            case GRADUATE:
-                throw new UnsupportedOperationException("Not implemented yet!");
             case MARRY:
                 throw new UnsupportedOperationException("Not implemented yet!");
             case GROW_FAMILY:
@@ -142,8 +140,8 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             case GRADUATE:
-                //todo: send decision to player
-                throw new UnsupportedOperationException("Not implemented yet!");
+                player.setCollegeDegree(spinWheel() % 2 == 0);
+                lobby.nextPlayer();
             case MARRY:
                 //todo: send decision to player
                 throw new UnsupportedOperationException("Not implemented yet!");
