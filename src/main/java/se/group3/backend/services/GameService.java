@@ -95,8 +95,6 @@ public class GameService {
                 }
                 //todo: select next cell
                 break;
-            case MID_LIFE:
-                throw new UnsupportedOperationException("Not implemented yet!");
             case RETIRE_EARLY:
                 throw new UnsupportedOperationException("Not implemented yet!");
             case HOUSE:
@@ -154,13 +152,14 @@ public class GameService {
                 player.setCollegeDegree(spinWheel() % 2 == 0);
                 lobby.nextPlayer();
                 break;
+            case MID_LIFE:
+                player.setCollegeDegree(spinWheel() % 2 != 0);
+                lobby.nextPlayer();
+                break;
             case MARRY:
                 //todo: send decision to player
                 throw new UnsupportedOperationException("Not implemented yet!");
             case GROW_FAMILY:
-                //todo: send decision to player
-                throw new UnsupportedOperationException("Not implemented yet!");
-            case MID_LIFE:
                 //todo: send decision to player
                 throw new UnsupportedOperationException("Not implemented yet!");
             case RETIRE_EARLY:
