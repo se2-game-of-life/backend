@@ -63,8 +63,41 @@ public class GameService {
     }
 
     public LobbyDTO makeChoice(boolean chooseLeft, String uuid) {
-        //todo: implement choices
-        throw new UnsupportedOperationException("Not implemented yet!");
+        Optional<Player> playerOptional = playerRepository.findById(uuid);
+        if(playerOptional.isEmpty()) throw new IllegalArgumentException("Player not found!");
+        Player player = playerOptional.get();
+
+        Long lobbyID = player.getLobbyID();
+        if(lobbyID == null) throw new IllegalArgumentException("Player not in lobby!");
+
+        Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
+        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
+        Lobby lobby = lobbyOptional.get();
+
+        if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), uuid)) throw new IllegalArgumentException("It's not the player's turn!");
+
+
+        Cell cell = cellRepository.findByNumber(player.getCurrentCellPosition());
+
+        switch(cell.getType()){
+            case GRADUATE:
+                throw new UnsupportedOperationException("Not implemented yet!");
+            case MARRY:
+                throw new UnsupportedOperationException("Not implemented yet!");
+            case GROW_FAMILY:
+                throw new UnsupportedOperationException("Not implemented yet!");
+            case MID_LIFE:
+                throw new UnsupportedOperationException("Not implemented yet!");
+            case RETIRE_EARLY:
+                throw new UnsupportedOperationException("Not implemented yet!");
+            default:
+                if(player.getCurrentCellPosition() == 0){
+                    player.setCollegeDegree(chooseLeft);
+                }
+        }
+        lobbyRepository.save(lobby);
+        playerRepository.save(player);
+        return LobbyMapper.toLobbyDTO(lobby);
     }
 
 
