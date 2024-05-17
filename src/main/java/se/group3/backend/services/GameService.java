@@ -82,33 +82,41 @@ public class GameService {
     }
     private void makeMove(Lobby lobby, Player player) {
         Cell currentCell = cellRepository.findByNumber(player.getCurrentCellPosition());
-        for(int i = 0; i < lobby.getSpunNumber(); i++) {
+        for(int i = 0; i < lobby.getSpunNumber() - 1; i++) {
             List<Integer> nextCellNumbers = currentCell.getNextCells();
             if(nextCellNumbers.size() > 1) {
                 //todo: handle stop cell
             }
             //todo: handle final stop cell
             currentCell = cellRepository.findByNumber(nextCellNumbers.get(0)); //get next cell
-            if(currentCell.getType() == CellType.CASH) { //todo: put correct string for cash cell type
+            if(currentCell.getType() == CellType.CASH) {
                 player.setMoney(player.getMoney() + player.getCareerCard().getSalary());
             }
-            if(i == lobby.getSpunNumber() - 1) { //cell you land on
-                if(currentCell.getType() == CellType.CASH) {
-                    player.setMoney(player.getMoney() + player.getCareerCard().getSalary() + player.getCareerCard().getBonus());
-                }
-                if(currentCell.getType() == CellType.ACTION) { //todo: put correct string for cash cell type
-                    //todo: do action
-                }
-                if(currentCell.getType() == CellType.FAMILY) { //todo: put correct string for cash cell type
-                    //todo: do action
-                }
-                if(currentCell.getType() == CellType.CAREER) { //todo: put correct string for cash cell type
-                    //todo: do action
-                }
-                if(currentCell.getType() == CellType.HOUSE) { //todo: put correct string for cash cell type
-                    //todo: do action
-                }
-            }
+        }
+        handleCell(lobby, player, currentCell);
+    }
+
+    private void handleCell(Lobby lobby, Player player, Cell cell) {
+        switch(cell.getType()) {
+            case CASH:
+                player.setMoney(player.getMoney() + player.getCareerCard().getBonus());
+                lobby.nextPlayer();
+                break;
+            case ACTION:
+                lobby.nextPlayer();
+                break;
+            case FAMILY:
+                player.setNumberOfPegs(player.getNumberOfPegs()+1);
+                lobby.nextPlayer();
+                break;
+            case HOUSE:
+                //not next player because is player has choice
+                break;
+            case CAREER:
+                lobby.nextPlayer();
+                break;
+            default:
+                log.error("Cell type unknown!");
         }
     }
 
