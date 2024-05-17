@@ -142,6 +142,7 @@ public class GameService {
             case GRADUATE:
                 player.setCollegeDegree(spinWheel() % 2 == 0);
                 lobby.nextPlayer();
+                break;
             case MARRY:
                 //todo: send decision to player
                 throw new UnsupportedOperationException("Not implemented yet!");
