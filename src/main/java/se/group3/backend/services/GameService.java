@@ -27,6 +27,7 @@ public class GameService {
     private CellRepository cellRepository;
     private PlayerRepository playerRepository;
     private LobbyRepository lobbyRepository;
+    private final int INVESTMENT = 50000;
 
     private static final Random RANDOM = new Random();
 
@@ -81,9 +82,19 @@ public class GameService {
 
         switch(cell.getType()){
             case MARRY:
-                throw new UnsupportedOperationException("Not implemented yet!");
+                if(chooseLeft){
+                    player.setMoney(player.getMoney()-INVESTMENT);
+                    player.setNumberOfPegs(player.getNumberOfPegs() + 1);
+                }
+                //todo: select next cell
+                break;
             case GROW_FAMILY:
-                throw new UnsupportedOperationException("Not implemented yet!");
+                if(chooseLeft){
+                    player.setMoney(player.getMoney()-INVESTMENT);
+                    player.setNumberOfPegs(player.getNumberOfPegs() + 1);
+                }
+                //todo: select next cell
+                break;
             case MID_LIFE:
                 throw new UnsupportedOperationException("Not implemented yet!");
             case RETIRE_EARLY:
