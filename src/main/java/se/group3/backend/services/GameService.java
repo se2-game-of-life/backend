@@ -81,15 +81,7 @@ public class GameService {
         Cell cell = cellRepository.findByNumber(player.getCurrentCellPosition());
 
         switch(cell.getType()){
-            case MARRY:
-                if(chooseLeft){
-                    player.setMoney(player.getMoney()- INVESTMENT_MARRY_OR_FAMILY);
-                    player.setNumberOfPegs(player.getNumberOfPegs() + 1);
-                }
-                //todo: select next cell
-                lobby.nextPlayer();
-                break;
-            case GROW_FAMILY:
+            case MARRY, GROW_FAMILY:
                 if(chooseLeft){
                     player.setMoney(player.getMoney()- INVESTMENT_MARRY_OR_FAMILY);
                     player.setNumberOfPegs(player.getNumberOfPegs() + 1);
