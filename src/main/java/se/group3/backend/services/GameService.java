@@ -96,10 +96,12 @@ public class GameService {
                 //todo: select next cell
                 break;
             case RETIRE_EARLY:
+                //todo: select next cell
                 throw new UnsupportedOperationException("Not implemented yet!");
             case HOUSE:
                 throw new UnsupportedOperationException("Not implemented yet!");
             default:
+                //college or career path
                 if(player.getCurrentCellPosition() == 0){
                     if(chooseLeft){
                         player.setMoney(150000);
