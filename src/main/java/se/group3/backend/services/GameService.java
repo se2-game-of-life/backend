@@ -163,6 +163,7 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             case ACTION:
+                lobby.setCards(List.of(actionCardRepository.findRandomActionCard()));
                 lobby.nextPlayer();
                 break;
             case FAMILY:
