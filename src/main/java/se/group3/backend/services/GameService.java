@@ -27,7 +27,7 @@ public class GameService {
     private CellRepository cellRepository;
     private PlayerRepository playerRepository;
     private LobbyRepository lobbyRepository;
-    private final int INVESTMENT = 50000;
+    private final int INVESTMENT_MARRY_OR_FAMILY = 50000;
 
     private static final Random RANDOM = new Random();
 
@@ -83,14 +83,14 @@ public class GameService {
         switch(cell.getType()){
             case MARRY:
                 if(chooseLeft){
-                    player.setMoney(player.getMoney()-INVESTMENT);
+                    player.setMoney(player.getMoney()- INVESTMENT_MARRY_OR_FAMILY);
                     player.setNumberOfPegs(player.getNumberOfPegs() + 1);
                 }
                 //todo: select next cell
                 break;
             case GROW_FAMILY:
                 if(chooseLeft){
-                    player.setMoney(player.getMoney()-INVESTMENT);
+                    player.setMoney(player.getMoney()- INVESTMENT_MARRY_OR_FAMILY);
                     player.setNumberOfPegs(player.getNumberOfPegs() + 1);
                 }
                 //todo: select next cell
