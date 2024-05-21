@@ -99,8 +99,28 @@ public class GameService {
                 //todo: select next cell
                 throw new UnsupportedOperationException("Not implemented yet!");
             case HOUSE:
-
-                throw new UnsupportedOperationException("Not implemented yet!");
+                List<Card> houseCardList = lobby.getCards();
+                HouseCard houseCard;
+                if(chooseLeft){
+                    houseCard = (HouseCard) houseCardList.get(0);
+                } else{
+                    houseCard = (HouseCard) houseCardList.get(1);
+                }
+                List<HouseCard> playerHouseCards = player.getHouses();
+                playerHouseCards.add(houseCard);
+                lobby.nextPlayer();
+                break;
+            case CAREER:
+                List<Card> careerCardList = lobby.getCards();
+                CareerCard careerCard;
+                if(chooseLeft){
+                    careerCard = (CareerCard) careerCardList.get(0);
+                } else{
+                    careerCard = (CareerCard) careerCardList.get(1);
+                }
+                player.setCareerCard(careerCard);
+                lobby.nextPlayer();
+                break;
             default:
                 //college or career path
                 if(player.getCurrentCellPosition() == 0){
