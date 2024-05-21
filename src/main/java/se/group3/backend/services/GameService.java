@@ -198,13 +198,7 @@ public class GameService {
                 player.setCollegeDegree(spinWheel() % 2 != 0);
                 lobby.nextPlayer();
                 break;
-            case MARRY:
-                lobby.setHasDecision(true);
-                break;
-            case GROW_FAMILY:
-                lobby.setHasDecision(true);
-                break;
-            case RETIRE_EARLY:
+            case MARRY, GROW_FAMILY, RETIRE_EARLY:
                 lobby.setHasDecision(true);
                 break;
             default:
