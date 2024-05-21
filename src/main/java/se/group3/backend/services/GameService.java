@@ -116,17 +116,20 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             default:
-                //college or career path
-                if(player.getCurrentCellPosition() == 0){
-                    if(chooseLeft){
-                        player.setMoney(150000);
-                    }
-                    player.setCollegeDegree(chooseLeft);
-                }
+                careerOrCollegeChoice(player, chooseLeft);
         }
         lobbyRepository.save(lobby);
         playerRepository.save(player);
         return LobbyMapper.toLobbyDTO(lobby);
+    }
+
+    private void careerOrCollegeChoice(Player player, boolean chooseLeft){
+        if(player.getCurrentCellPosition() == 0){
+            if(chooseLeft){
+                player.setMoney(150000);
+            }
+            player.setCollegeDegree(chooseLeft);
+        }
     }
 
 
