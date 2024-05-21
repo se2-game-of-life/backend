@@ -143,10 +143,11 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             case HOUSE:
+                lobby.setHasDecision(true);
                 //not next player because is player has choice
                 break;
             case CAREER:
-                lobby.nextPlayer();
+                lobby.setHasDecision(true);
                 break;
             case GRADUATE:
                 player.setCollegeDegree(spinWheel() % 2 == 0);
@@ -157,14 +158,14 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             case MARRY:
-                //todo: send decision to player
-                throw new UnsupportedOperationException("Not implemented yet!");
+                lobby.setHasDecision(true);
+                break;
             case GROW_FAMILY:
-                //todo: send decision to player
-                throw new UnsupportedOperationException("Not implemented yet!");
+                lobby.setHasDecision(true);
+                break;
             case RETIRE_EARLY:
-                //todo: send decision to player
-                throw new UnsupportedOperationException("Not implemented yet!");
+                lobby.setHasDecision(true);
+                break;
             default:
                 log.error("Cell type unknown!");
         }
