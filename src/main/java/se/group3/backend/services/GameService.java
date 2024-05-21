@@ -7,15 +7,15 @@ import se.group3.backend.domain.Cell;
 import se.group3.backend.domain.CellType;
 import se.group3.backend.domain.Lobby;
 import se.group3.backend.domain.Player;
+import se.group3.backend.domain.cards.Card;
+import se.group3.backend.domain.cards.CareerCard;
+import se.group3.backend.domain.cards.HouseCard;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.mapper.LobbyMapper;
 import se.group3.backend.repositories.*;
 import se.group3.backend.repositories.PlayerRepository;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -99,6 +99,7 @@ public class GameService {
                 //todo: select next cell
                 throw new UnsupportedOperationException("Not implemented yet!");
             case HOUSE:
+
                 throw new UnsupportedOperationException("Not implemented yet!");
             default:
                 //college or career path
@@ -149,10 +150,25 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             case HOUSE:
+                List<Card> houseCards = new ArrayList<>();
+                houseCards.add(houseCardRepository.findRandomHouseCard());
+                houseCards.add(houseCardRepository.findRandomHouseCard());
+                lobby.setCards(houseCards);
                 lobby.setHasDecision(true);
-                //not next player because is player has choice
                 break;
             case CAREER:
+                List<Card> careerCards = new ArrayList<>();
+                if(player.isCollegeDegree()){
+                    careerCards.add(careerCardRepository.findRandomCareerCard());
+                    careerCards.add(careerCardRepository.findRandomCareerCard());
+                } else{
+                    while(careerCards.size() < 2){
+                        CareerCard card = careerCardRepository.findRandomCareerCard();
+                        if(!card.needsDiploma()){
+                            careerCards.add(card);
+                        }
+                    }
+                }
                 lobby.setHasDecision(true);
                 break;
             case GRADUATE:
