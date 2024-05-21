@@ -28,6 +28,7 @@ public class GameService {
     private PlayerRepository playerRepository;
     private LobbyRepository lobbyRepository;
     private final int INVESTMENT_MARRY_OR_FAMILY = 50000;
+    private final int INVESTMENT_COLLEGE = 100000;
 
     private static final Random RANDOM = new Random();
 
@@ -126,7 +127,7 @@ public class GameService {
     private void careerOrCollegeChoice(Player player, boolean chooseLeft){
         if(player.getCurrentCellPosition() == 0){
             if(chooseLeft){
-                player.setMoney(150000);
+                player.setMoney(player.getMoney()-INVESTMENT_COLLEGE);
             }
             player.setCollegeDegree(chooseLeft);
         }
