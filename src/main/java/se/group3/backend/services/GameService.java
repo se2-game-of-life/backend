@@ -87,6 +87,7 @@ public class GameService {
                     player.setNumberOfPegs(player.getNumberOfPegs() + 1);
                 }
                 //todo: select next cell
+                lobby.nextPlayer();
                 break;
             case GROW_FAMILY:
                 if(chooseLeft){
@@ -94,6 +95,7 @@ public class GameService {
                     player.setNumberOfPegs(player.getNumberOfPegs() + 1);
                 }
                 //todo: select next cell
+                lobby.nextPlayer();
                 break;
             case RETIRE_EARLY:
                 //todo: select next cell
