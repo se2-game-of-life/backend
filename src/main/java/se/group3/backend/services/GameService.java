@@ -116,8 +116,11 @@ public class GameService {
                 player.setCareerCard(careerCard);
                 lobby.nextPlayer();
                 break;
-            default:
+            case START:
                 careerOrCollegeChoice(player, chooseLeft);
+                break;
+            default:
+                throw new IllegalStateException("Unknown cell type.");
         }
         lobbyRepository.save(lobby);
         playerRepository.save(player);
