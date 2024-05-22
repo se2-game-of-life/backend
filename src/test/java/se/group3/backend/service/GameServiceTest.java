@@ -6,15 +6,22 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.group3.backend.domain.Cell;
+import se.group3.backend.domain.CellType;
+import se.group3.backend.domain.Lobby;
 import se.group3.backend.domain.Player;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;
+import se.group3.backend.repositories.CellRepository;
+import se.group3.backend.repositories.LobbyRepository;
 import se.group3.backend.repositories.PlayerRepository;
 import se.group3.backend.services.GameService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,16 +30,19 @@ class GameServiceTest {
     private final List<PlayerDTO> playersMock = new ArrayList<>(2);
     private LobbyDTO lobbyDTOMock;
     private GameService gameService;
-
-    @Mock
     private PlayerRepository playerRepository;
+    private LobbyRepository lobbyRepository;
+    private CellRepository cellRepository;
 
 
     @BeforeEach
     void setUp() {
         this.playerDTOMock = mock(PlayerDTO.class);
         this.lobbyDTOMock = mock(LobbyDTO.class);
-        this.gameService = new GameService(null, null, null, null, playerRepository, null);
+        this.playerRepository = mock(PlayerRepository.class);
+        this.lobbyRepository = mock(LobbyRepository.class);
+        this.cellRepository = mock(CellRepository.class);
+        this.gameService = new GameService(null, null, null, cellRepository, playerRepository, lobbyRepository);
     }
 
 
@@ -55,6 +65,54 @@ class GameServiceTest {
         verify(playerDTOMock, atMostOnce()).getMoney();
         verify(playerDTOMock, atMostOnce()).getNumberOfPegs();
         verify(playerDTOMock, atMostOnce()).getPlayerName();
+    }
+
+    @Test
+    void testCareerOrCollegeChoice_CollegePath(){
+        Player player = new Player();
+        player.setCurrentCellPosition(0);
+        player.setMoney(250000);
+        assertFalse(player.isCollegeDegree());
+        player.setLobbyID(1L);
+        player.setPlayerUUID("UUID");
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+
+        Lobby lobby = new Lobby(1L, player);
+        lobby.setCurrentPlayer(player);
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
+
+        Cell startCell = mock(Cell.class);
+        when(startCell.getType()).thenReturn(CellType.START);
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+
+
+        gameService.makeChoice(true, "UUID");
+        assertEquals(150000, player.getMoney());
+        assertTrue(player.isCollegeDegree());
+    }
+
+    @Test
+    void testCareerOrCollegeChoice_CareerPath(){
+        Player player = new Player();
+        player.setCurrentCellPosition(0);
+        player.setMoney(250000);
+        assertFalse(player.isCollegeDegree());
+        player.setLobbyID(1L);
+        player.setPlayerUUID("UUID");
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+
+        Lobby lobby = new Lobby(1L, player);
+        lobby.setCurrentPlayer(player);
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
+
+        Cell startCell = mock(Cell.class);
+        when(startCell.getType()).thenReturn(CellType.START);
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+
+
+        gameService.makeChoice(false, "UUID");
+        assertEquals(250000, player.getMoney());
+        assertFalse(player.isCollegeDegree());
     }
 
 
