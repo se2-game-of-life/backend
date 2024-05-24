@@ -102,9 +102,14 @@ public class GameService {
                     houseCard = (HouseCard) houseCardList.get(1);
                 }
                 player.setMoney(player.getMoney()-houseCard.getPurchasePrice());
-                List<HouseCard> playerHouseCards = player.getHouses();
-                playerHouseCards.add(houseCard);
-                player.setHouses(playerHouseCards);
+                if(player.getHouses() != null){
+                    List<HouseCard> playerHouseCards = player.getHouses();
+                    playerHouseCards.add(houseCard);
+                    player.setHouses(playerHouseCards);
+                } else{
+                    player.setHouses(List.of(houseCard));
+                }
+
                 lobby.nextPlayer();
                 break;
             case CAREER:
