@@ -101,6 +101,7 @@ public class GameService {
                 } else{
                     houseCard = (HouseCard) houseCardList.get(1);
                 }
+                player.setMoney(player.getMoney()-houseCard.getPurchasePrice());
                 List<HouseCard> playerHouseCards = player.getHouses();
                 playerHouseCards.add(houseCard);
                 lobby.nextPlayer();
