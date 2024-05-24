@@ -173,10 +173,26 @@ public class GameService {
                 break;
             case HOUSE:
                 List<Card> houseCards = new ArrayList<>();
-                houseCards.add(houseCardRepository.findRandomHouseCard());
-                houseCards.add(houseCardRepository.findRandomHouseCard());
-                lobby.setCards(houseCards);
-                lobby.setHasDecision(true);
+                HouseCard houseCard1 = houseCardRepository.findRandomHouseCard();
+                HouseCard houseCard2 = houseCardRepository.findRandomHouseCard();
+                //todo: check purchase price of cheapest houses
+                if(player.getMoney() >= 100000){
+                    while (player.getMoney() < houseCard1.getPurchasePrice() || player.getMoney() < houseCard2.getPurchasePrice()){
+                        if(player.getMoney() < houseCard1.getPurchasePrice()){
+                            houseCard1 = houseCardRepository.findRandomHouseCard();
+                        }
+                        if(player.getMoney() < houseCard2.getPurchasePrice()){
+                            houseCard2 = houseCardRepository.findRandomHouseCard();
+                        }
+                    }
+                    houseCards.add(houseCard1);
+                    houseCards.add(houseCard2);
+                    lobby.setCards(houseCards);
+                    lobby.setHasDecision(true);
+                } else{
+                    lobby.nextPlayer();
+                    throw new IllegalArgumentException("Player has not enough money to buy a house.");
+                }
                 break;
             case CAREER:
                 List<Card> careerCards = new ArrayList<>();
