@@ -11,6 +11,7 @@ import se.group3.backend.domain.Cell;
 import se.group3.backend.domain.CellType;
 import se.group3.backend.domain.Lobby;
 import se.group3.backend.domain.Player;
+import se.group3.backend.domain.cards.HouseCard;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.repositories.CellRepository;
@@ -34,6 +35,9 @@ class GameServiceTest {
     private PlayerRepository playerRepository;
     private LobbyRepository lobbyRepository;
     private CellRepository cellRepository;
+
+    private final HouseCard houseCard1 = new HouseCard("House1", 50000,0,0);
+    private final HouseCard houseCard2 = new HouseCard("House2", 10000,0,0);
 
 
     @BeforeEach
@@ -165,6 +169,58 @@ class GameServiceTest {
         assertEquals(250000, player.getMoney());
         assertEquals(0, player.getNumberOfPegs());
     }
+
+    @Test
+    void testMakeChoice_Houses_true(){
+        Player player = new Player();
+        player.setCurrentCellPosition(0);
+        player.setMoney(250000);
+        player.setLobbyID(1L);
+        player.setPlayerUUID("UUID");
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+
+        Lobby lobby = new Lobby(1L, player);
+        lobby.setCurrentPlayer(player);
+        lobby.setCards(List.of(houseCard1, houseCard2));
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
+
+        Cell startCell = mock(Cell.class);
+        when(startCell.getType()).thenReturn(CellType.HOUSE);
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+
+
+        gameService.makeChoice(true, "UUID");
+        assertEquals(200000, player.getMoney());
+        assertEquals(List.of(houseCard1), player.getHouses());
+    }
+
+    @Test
+    void testMakeChoice_Houses_false(){
+        Player player = new Player();
+        player.setCurrentCellPosition(0);
+        player.setMoney(250000);
+        player.setLobbyID(1L);
+        player.setPlayerUUID("UUID");
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+
+        Lobby lobby = new Lobby(1L, player);
+        lobby.setCurrentPlayer(player);
+        lobby.setCards(List.of(houseCard1, houseCard2));
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
+
+        Cell startCell = mock(Cell.class);
+        when(startCell.getType()).thenReturn(CellType.HOUSE);
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+
+
+        gameService.makeChoice(false, "UUID");
+        assertEquals(240000, player.getMoney());
+        assertEquals(List.of(houseCard2), player.getHouses());
+    }
+
+
+
+
 
 
     @AfterEach
