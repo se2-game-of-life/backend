@@ -4,7 +4,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.group3.backend.domain.Cell;
 import se.group3.backend.domain.CellType;
@@ -115,8 +116,9 @@ class GameServiceTest {
         assertFalse(player.isCollegeDegree());
     }
 
-    @Test
-    void makeChoice_Marry_or_GrowFamily_true(){
+    @ParameterizedTest
+    @EnumSource(value = CellType.class, names = { "MARRY", "GROW_FAMILY" })
+    void makeChoice_Marry_or_GrowFamily_true(CellType type){
         Player player = new Player();
         player.setMoney(250000);
         assertFalse(player.isCollegeDegree());
@@ -130,7 +132,7 @@ class GameServiceTest {
         when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
 
         Cell startCell = mock(Cell.class);
-        when(startCell.getType()).thenReturn(CellType.MARRY);
+        when(startCell.getType()).thenReturn(type);
         when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
 
 
@@ -139,8 +141,9 @@ class GameServiceTest {
         assertEquals(1, player.getNumberOfPegs());
     }
 
-    @Test
-    void makeChoice_Marry_or_GrowFamily_false(){
+    @ParameterizedTest
+    @EnumSource(value = CellType.class, names = { "MARRY", "GROW_FAMILY" })
+    void makeChoice_Marry_or_GrowFamily_false(CellType type){
         Player player = new Player();
         player.setMoney(250000);
         assertFalse(player.isCollegeDegree());
@@ -154,7 +157,7 @@ class GameServiceTest {
         when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
 
         Cell startCell = mock(Cell.class);
-        when(startCell.getType()).thenReturn(CellType.MARRY);
+        when(startCell.getType()).thenReturn(type);
         when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
 
 
