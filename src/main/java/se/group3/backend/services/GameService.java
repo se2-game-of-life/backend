@@ -104,6 +104,7 @@ public class GameService {
                 player.setMoney(player.getMoney()-houseCard.getPurchasePrice());
                 List<HouseCard> playerHouseCards = player.getHouses();
                 playerHouseCards.add(houseCard);
+                player.setHouses(playerHouseCards);
                 lobby.nextPlayer();
                 break;
             case CAREER:
