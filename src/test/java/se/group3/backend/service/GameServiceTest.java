@@ -15,14 +15,12 @@ import se.group3.backend.domain.Lobby;
 import se.group3.backend.domain.Player;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cards.HouseCard;
-import se.group3.backend.dto.LobbyDTO;
-import se.group3.backend.dto.PlayerDTO;
+
 import se.group3.backend.repositories.CellRepository;
 import se.group3.backend.repositories.LobbyRepository;
 import se.group3.backend.repositories.PlayerRepository;
 import se.group3.backend.services.GameService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -32,9 +30,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GameServiceTest {
-    private PlayerDTO playerDTOMock;
-    private final List<PlayerDTO> playersMock = new ArrayList<>(2);
-    private LobbyDTO lobbyDTOMock;
     private GameService gameService;
     private PlayerRepository playerRepository;
     private LobbyRepository lobbyRepository;
@@ -48,8 +43,6 @@ class GameServiceTest {
 
     @BeforeEach
     void setUp() {
-        this.playerDTOMock = mock(PlayerDTO.class);
-        this.lobbyDTOMock = mock(LobbyDTO.class);
         this.playerRepository = mock(PlayerRepository.class);
         this.lobbyRepository = mock(LobbyRepository.class);
         this.cellRepository = mock(CellRepository.class);
@@ -57,26 +50,6 @@ class GameServiceTest {
     }
 
 
-    @Test
-    void testPlayerStats() {
-        playersMock.add(playerDTOMock);
-        playersMock.add(playerDTOMock);
-        Player player1 = new Player();
-        player1.setPlayerUUID("ID");
-        player1.setPlayerName("Player1");
-        player1.setMoney(150);
-        player1.setNumberOfPegs(2);
-
-        lenient().when(lobbyDTOMock.getPlayers()).thenReturn(playersMock);
-        lenient().when(playerDTOMock.getPlayerName()).thenReturn("Player1");
-        lenient().when(playerDTOMock.getMoney()).thenReturn(150);
-        lenient().when(playerDTOMock.getNumberOfPegs()).thenReturn(2);
-
-        verify(lobbyDTOMock, atMostOnce()).getPlayers();
-        verify(playerDTOMock, atMostOnce()).getMoney();
-        verify(playerDTOMock, atMostOnce()).getNumberOfPegs();
-        verify(playerDTOMock, atMostOnce()).getPlayerName();
-    }
 
     @Test
     void testCareerOrCollegeChoice_CollegePath(){
@@ -257,15 +230,11 @@ class GameServiceTest {
 
 
 
-
-
-
-
-
     @AfterEach
     void breakDown() {
-        this.playerDTOMock = null;
-        this.lobbyDTOMock = null;
+        this.playerRepository = null;
+        this.lobbyRepository = null;
+        this.cellRepository = null;
         this.gameService = null;
     }
 }
