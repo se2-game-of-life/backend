@@ -146,19 +146,15 @@ public class GameService {
 
     private void makeMove(Lobby lobby, Player player) {
         Cell currentCell = cellRepository.findByNumber(player.getCurrentCellPosition());
-        boolean stopCell = false;
         for(int i = 0; i < lobby.getSpunNumber() - 1; i++) {
             List<Integer> nextCellNumbers = currentCell.getNextCells();
             if(nextCellNumbers.size() > 1) {
-                stopCell = true;
+                break;
             }
             //todo: handle final stop cell
             currentCell = cellRepository.findByNumber(nextCellNumbers.get(0)); //get next cell
             if(currentCell.getType() == CellType.CASH) {
                 player.setMoney(player.getMoney() + player.getCareerCard().getSalary());
-            }
-            if (stopCell){
-                break;
             }
         }
         handleCell(lobby, player, currentCell);
