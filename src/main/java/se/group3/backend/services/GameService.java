@@ -177,7 +177,7 @@ public class GameService {
             case HOUSE:
                 //todo: check purchase price of cheapest houses
                 if(player.getMoney() >= 100000){
-                    List<Card> houseCards = searchAffordableHousesForPlayer(player);
+                    List<Card> houseCards = houseCardRepository.searchAffordableHousesForPlayer(player, this);
                     lobby.setCards(houseCards);
                     lobby.setHasDecision(true);
                 } else{
@@ -214,23 +214,6 @@ public class GameService {
             default:
                 log.error("Cell type unknown!");
         }
-    }
-
-    private List<Card> searchAffordableHousesForPlayer(Player player){
-        List<Card> houseCards = new ArrayList<>();
-        HouseCard houseCard1 = houseCardRepository.findRandomHouseCard();
-        HouseCard houseCard2 = houseCardRepository.findRandomHouseCard();
-        while (player.getMoney() < houseCard1.getPurchasePrice() || player.getMoney() < houseCard2.getPurchasePrice()){
-            if(player.getMoney() < houseCard1.getPurchasePrice()){
-                houseCard1 = houseCardRepository.findRandomHouseCard();
-            }
-            if(player.getMoney() < houseCard2.getPurchasePrice()){
-                houseCard2 = houseCardRepository.findRandomHouseCard();
-            }
-        }
-        houseCards.add(houseCard1);
-        houseCards.add(houseCard2);
-        return houseCards;
     }
 
     private int spinWheel() {
