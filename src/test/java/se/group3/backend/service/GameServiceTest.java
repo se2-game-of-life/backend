@@ -115,6 +115,54 @@ class GameServiceTest {
         assertFalse(player.isCollegeDegree());
     }
 
+    @Test
+    void makeChoice_Marry_or_GrowFamily_true(){
+        Player player = new Player();
+        player.setMoney(250000);
+        assertFalse(player.isCollegeDegree());
+        player.setLobbyID(1L);
+        player.setNumberOfPegs(0);
+        player.setPlayerUUID("UUID");
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+
+        Lobby lobby = new Lobby(1L, player);
+        lobby.setCurrentPlayer(player);
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
+
+        Cell startCell = mock(Cell.class);
+        when(startCell.getType()).thenReturn(CellType.MARRY);
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+
+
+        gameService.makeChoice(true, "UUID");
+        assertEquals(200000, player.getMoney());
+        assertEquals(1, player.getNumberOfPegs());
+    }
+
+    @Test
+    void makeChoice_Marry_or_GrowFamily_false(){
+        Player player = new Player();
+        player.setMoney(250000);
+        assertFalse(player.isCollegeDegree());
+        player.setLobbyID(1L);
+        player.setNumberOfPegs(0);
+        player.setPlayerUUID("UUID");
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+
+        Lobby lobby = new Lobby(1L, player);
+        lobby.setCurrentPlayer(player);
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
+
+        Cell startCell = mock(Cell.class);
+        when(startCell.getType()).thenReturn(CellType.MARRY);
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+
+
+        gameService.makeChoice(false, "UUID");
+        assertEquals(250000, player.getMoney());
+        assertEquals(0, player.getNumberOfPegs());
+    }
+
 
     @AfterEach
     void breakDown() {
