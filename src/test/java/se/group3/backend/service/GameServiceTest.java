@@ -34,6 +34,8 @@ class GameServiceTest {
     private PlayerRepository playerRepository;
     private LobbyRepository lobbyRepository;
     private CellRepository cellRepository;
+    private Player player;
+    private Lobby lobby;
 
     private final HouseCard houseCard1 = new HouseCard("House1", 50000,0,0);
     private final HouseCard houseCard2 = new HouseCard("House2", 10000,0,0);
@@ -47,25 +49,26 @@ class GameServiceTest {
         this.lobbyRepository = mock(LobbyRepository.class);
         this.cellRepository = mock(CellRepository.class);
         this.gameService = new GameService(null, null, null, cellRepository, playerRepository, lobbyRepository);
+        player = new Player();
+        player.setCurrentCellPosition(0);
+        player.setMoney(250000);
+        player.setLobbyID(1L);
+        player.setPlayerUUID("UUID");
+        lobby = new Lobby(1L, player);
+        lobby.setCurrentPlayer(player);
     }
 
 
 
     @Test
     void testCareerOrCollegeChoice_CollegePath(){
-        Player player = new Player();
-        player.setCurrentCellPosition(0);
-        player.setMoney(250000);
         assertFalse(player.isCollegeDegree());
-        player.setLobbyID(1L);
-        player.setPlayerUUID("UUID");
-        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
 
-        Lobby lobby = new Lobby(1L, player);
-        lobby.setCurrentPlayer(player);
-        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
 
         Cell startCell = mock(Cell.class);
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
+
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
         when(startCell.getType()).thenReturn(CellType.START);
         when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
 
@@ -77,19 +80,13 @@ class GameServiceTest {
 
     @Test
     void testCareerOrCollegeChoice_CareerPath(){
-        Player player = new Player();
-        player.setCurrentCellPosition(0);
-        player.setMoney(250000);
         assertFalse(player.isCollegeDegree());
-        player.setLobbyID(1L);
-        player.setPlayerUUID("UUID");
-        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
 
-        Lobby lobby = new Lobby(1L, player);
-        lobby.setCurrentPlayer(player);
-        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
 
         Cell startCell = mock(Cell.class);
+
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
         when(startCell.getType()).thenReturn(CellType.START);
         when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
 
@@ -102,19 +99,13 @@ class GameServiceTest {
     @ParameterizedTest
     @EnumSource(value = CellType.class, names = { "MARRY", "GROW_FAMILY" })
     void makeChoice_Marry_or_GrowFamily_true(CellType type){
-        Player player = new Player();
-        player.setMoney(250000);
         assertFalse(player.isCollegeDegree());
-        player.setLobbyID(1L);
         player.setNumberOfPegs(0);
-        player.setPlayerUUID("UUID");
-        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
-
-        Lobby lobby = new Lobby(1L, player);
-        lobby.setCurrentPlayer(player);
-        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
 
         Cell startCell = mock(Cell.class);
+
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
         when(startCell.getType()).thenReturn(type);
         when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
 
@@ -127,19 +118,14 @@ class GameServiceTest {
     @ParameterizedTest
     @EnumSource(value = CellType.class, names = { "MARRY", "GROW_FAMILY" })
     void makeChoice_Marry_or_GrowFamily_false(CellType type){
-        Player player = new Player();
-        player.setMoney(250000);
         assertFalse(player.isCollegeDegree());
-        player.setLobbyID(1L);
-        player.setNumberOfPegs(0);
-        player.setPlayerUUID("UUID");
-        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
 
-        Lobby lobby = new Lobby(1L, player);
-        lobby.setCurrentPlayer(player);
-        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
+        player.setNumberOfPegs(0);
 
         Cell startCell = mock(Cell.class);
+
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
         when(startCell.getType()).thenReturn(type);
         when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
 
@@ -151,19 +137,12 @@ class GameServiceTest {
 
     @Test
     void testMakeChoice_Houses_true(){
-        Player player = new Player();
-        player.setCurrentCellPosition(0);
-        player.setMoney(250000);
-        player.setLobbyID(1L);
-        player.setPlayerUUID("UUID");
-        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
 
-        Lobby lobby = new Lobby(1L, player);
-        lobby.setCurrentPlayer(player);
         lobby.setCards(List.of(houseCard1, houseCard2));
-        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
-
         Cell startCell = mock(Cell.class);
+
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
         when(startCell.getType()).thenReturn(CellType.HOUSE);
         when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
 
@@ -175,19 +154,12 @@ class GameServiceTest {
 
     @Test
     void testMakeChoice_Houses_false(){
-        Player player = new Player();
-        player.setCurrentCellPosition(0);
-        player.setMoney(250000);
-        player.setLobbyID(1L);
-        player.setPlayerUUID("UUID");
-        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
-
-        Lobby lobby = new Lobby(1L, player);
-        lobby.setCurrentPlayer(player);
         lobby.setCards(List.of(houseCard1, houseCard2));
-        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
-
         Cell startCell = mock(Cell.class);
+
+
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
         when(startCell.getType()).thenReturn(CellType.HOUSE);
         when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
 
@@ -200,25 +172,20 @@ class GameServiceTest {
     @ParameterizedTest
     @MethodSource("testMakeChoiceCAREER_Input")
     void testMakeChoice_Career(boolean chooseLeft, CareerCard card){
-        Player player = new Player();
-        player.setCurrentCellPosition(0);
-        player.setMoney(250000);
-        player.setLobbyID(1L);
-        player.setPlayerUUID("UUID");
-        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
 
-        Lobby lobby = new Lobby(1L, player);
-        lobby.setCurrentPlayer(player);
         lobby.setCards(List.of(careerCard1, careerCard2));
-        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
-
         Cell startCell = mock(Cell.class);
+
+
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
         when(startCell.getType()).thenReturn(CellType.CAREER);
         when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
 
         gameService.makeChoice(chooseLeft, "UUID");
         assertEquals(card, player.getCareerCard());
     }
+
 
     static Stream<Arguments> testMakeChoiceCAREER_Input() {
         return Stream.of(
@@ -236,5 +203,7 @@ class GameServiceTest {
         this.lobbyRepository = null;
         this.cellRepository = null;
         this.gameService = null;
+        this.player = null;
+        this.lobby = null;
     }
 }
