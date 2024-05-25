@@ -17,20 +17,15 @@ public interface HouseCardRepository extends MongoRepository<HouseCard, String> 
     HouseCard findRandomHouseCard();
 
     default List<Card> searchAffordableHousesForPlayer(int availableMoney){
-        List<Card> houseCards = new ArrayList<>();
-        HouseCard houseCard1 = findRandomHouseCard();
-        HouseCard houseCard2 = findRandomHouseCard();
-        while (availableMoney < houseCard1.getPurchasePrice() || availableMoney < houseCard2.getPurchasePrice()){
-            if(availableMoney < houseCard1.getPurchasePrice()){
-                houseCard1 = findRandomHouseCard();
-            }
-            if(availableMoney < houseCard2.getPurchasePrice()){
-                houseCard2 = findRandomHouseCard();
+        List<Card> affordableHouses= new ArrayList<>();
+        List<HouseCard> houses = findAll();
+
+        for(HouseCard house : houses){
+            if(house.getPurchasePrice() <= availableMoney){
+                affordableHouses.add(house);
             }
         }
-        houseCards.add(houseCard1);
-        houseCards.add(houseCard2);
-        return houseCards;
+        return affordableHouses;
     }
 
     /*
