@@ -209,9 +209,54 @@ public class GameService {
             case MARRY, GROW_FAMILY, RETIRE_EARLY:
                 lobby.setHasDecision(true);
                 break;
+            case RETIREMENT:
+                retire(player, lobby);
+                lobby.nextPlayer();
+                break;
             default:
                 lobby.nextPlayer();
         }
+    }
+
+    private void retire(Player player, Lobby lobby){
+        List<Player> players = lobby.getPlayers();
+        int counter = 0;
+        for(Player p : players){
+            Cell currentCell = cellRepository.findByNumber(p.getCurrentCellPosition());
+            if(currentCell.getType() == CellType.RETIREMENT){
+                counter++;
+            }
+        }
+
+        switch (counter){
+            case(1):
+                player.setMoney(player.getMoney()+200000);
+                break;
+            case(2):
+                player.setMoney(player.getMoney()+100000);
+                break;
+            case(3):
+                player.setMoney(player.getMoney()+50000);
+                break;
+            case(4):
+                player.setMoney(player.getMoney()+10000);
+                break;
+            default:
+        }
+
+        List<HouseCard> playerHouses = player.getHouses();
+        for(HouseCard h : playerHouses){
+            if(spinWheel()%2 == 0){
+                player.setMoney(player.getMoney()+h.getBlackSellPrice());
+            } else{
+                player.setMoney(player.getMoney()+h.getRedSellPrice());
+            }
+        }
+        playerHouses.clear();
+        player.setHouses(playerHouses);
+
+        player.setMoney(player.getMoney()+(player.getNumberOfPegs()*50000));
+
     }
 
 
