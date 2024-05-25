@@ -86,11 +86,11 @@ public class GameService {
                     player.setMoney(player.getMoney()- INVESTMENT_MARRY_OR_FAMILY);
                     player.setNumberOfPegs(player.getNumberOfPegs() + 1);
                 }
-                player.setCurrentCellPosition(cell.getNextCells().getFirst());
+                player.setCurrentCellPosition(cell.getNextCells().get(0));
                 break;
             case RETIRE_EARLY:
                 if(chooseLeft) {
-                    player.setCurrentCellPosition(cell.getNextCells().getFirst());
+                    player.setCurrentCellPosition(cell.getNextCells().get(0));
                 }
             case HOUSE:
                 List<Card> houseCardList = lobby.getCards();
