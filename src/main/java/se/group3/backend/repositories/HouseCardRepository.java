@@ -16,15 +16,15 @@ public interface HouseCardRepository extends MongoRepository<HouseCard, String> 
     @Query(value = "{'$sample': {'size': 1}}")
     HouseCard findRandomHouseCard();
 
-    default List<Card> searchAffordableHousesForPlayer(Player player, GameService gameService){
+    default List<Card> searchAffordableHousesForPlayer(int availableMoney){
         List<Card> houseCards = new ArrayList<>();
         HouseCard houseCard1 = findRandomHouseCard();
         HouseCard houseCard2 = findRandomHouseCard();
-        while (player.getMoney() < houseCard1.getPurchasePrice() || player.getMoney() < houseCard2.getPurchasePrice()){
-            if(player.getMoney() < houseCard1.getPurchasePrice()){
+        while (availableMoney < houseCard1.getPurchasePrice() || availableMoney < houseCard2.getPurchasePrice()){
+            if(availableMoney < houseCard1.getPurchasePrice()){
                 houseCard1 = findRandomHouseCard();
             }
-            if(player.getMoney() < houseCard2.getPurchasePrice()){
+            if(availableMoney < houseCard2.getPurchasePrice()){
                 houseCard2 = findRandomHouseCard();
             }
         }

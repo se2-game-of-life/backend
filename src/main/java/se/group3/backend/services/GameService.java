@@ -177,7 +177,7 @@ public class GameService {
             case HOUSE:
                 //todo: check purchase price of cheapest houses
                 if(player.getMoney() >= 100000){
-                    List<Card> houseCards = houseCardRepository.searchAffordableHousesForPlayer(player, this);
+                    List<Card> houseCards = houseCardRepository.searchAffordableHousesForPlayer(player.getMoney());
                     lobby.setCards(houseCards);
                     lobby.setHasDecision(true);
                 } else{
