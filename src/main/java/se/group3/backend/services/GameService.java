@@ -78,7 +78,6 @@ public class GameService {
 
         if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), uuid)) throw new IllegalArgumentException("It's not the player's turn!");
 
-
         Cell cell = cellRepository.findByNumber(player.getCurrentCellPosition());
 
         switch(cell.getType()){
@@ -87,12 +86,12 @@ public class GameService {
                     player.setMoney(player.getMoney()- INVESTMENT_MARRY_OR_FAMILY);
                     player.setNumberOfPegs(player.getNumberOfPegs() + 1);
                 }
-                //todo: select next cell
-                lobby.nextPlayer();
+                player.setCurrentCellPosition(cell.getNextCells().getFirst());
                 break;
             case RETIRE_EARLY:
-                //todo: select next cell
-                throw new UnsupportedOperationException("Not implemented yet!");
+                if(chooseLeft) {
+                    player.setCurrentCellPosition(cell.getNextCells().getFirst());
+                }
             case HOUSE:
                 List<Card> houseCardList = lobby.getCards();
                 HouseCard houseCard;
@@ -109,8 +108,6 @@ public class GameService {
                 } else{
                     player.setHouses(List.of(houseCard));
                 }
-
-                lobby.nextPlayer();
                 break;
             case CAREER:
                 List<Card> careerCardList = lobby.getCards();
@@ -121,7 +118,6 @@ public class GameService {
                     careerCard = (CareerCard) careerCardList.get(1);
                 }
                 player.setCareerCard(careerCard);
-                lobby.nextPlayer();
                 break;
             case START:
                 careerOrCollegeChoice(player, chooseLeft);
@@ -129,6 +125,9 @@ public class GameService {
             default:
                 throw new IllegalStateException("Unknown cell type.");
         }
+
+        lobby.nextPlayer();
+        lobby.setHasDecision(false);
         lobbyRepository.save(lobby);
         playerRepository.save(player);
         return LobbyMapper.toLobbyDTO(lobby);
@@ -143,18 +142,19 @@ public class GameService {
         }
     }
 
-
     private void makeMove(Lobby lobby, Player player) {
         Cell currentCell = cellRepository.findByNumber(player.getCurrentCellPosition());
         for(int i = 0; i < lobby.getSpunNumber() - 1; i++) {
             List<Integer> nextCellNumbers = currentCell.getNextCells();
-            if(nextCellNumbers.size() > 1) {
+            if(nextCellNumbers.size() != 1) {
                 break;
             }
-            //todo: handle final stop cell
-            currentCell = cellRepository.findByNumber(nextCellNumbers.get(0)); //get next cell
+            currentCell = cellRepository.findByNumber(nextCellNumbers.getFirst());
             if(currentCell.getType() == CellType.CASH) {
                 player.setMoney(player.getMoney() + player.getCareerCard().getSalary());
+            } else if(currentCell.getType() == CellType.GRADUATE) {
+                if (spinWheel() <= 2) player.setCollegeDegree(false);
+                break;
             }
         }
         handleCell(lobby, player, currentCell);
@@ -168,6 +168,7 @@ public class GameService {
                 break;
             case ACTION:
                 lobby.setCards(List.of(actionCardRepository.findRandomActionCard()));
+                //todo: do what action card says
                 lobby.nextPlayer();
                 break;
             case FAMILY:
@@ -175,15 +176,12 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             case HOUSE:
-                //todo: check purchase price of cheapest houses
-                if(player.getMoney() >= 100000){
-                    List<Card> houseCards = houseCardRepository.searchAffordableHousesForPlayer(player.getMoney());
-                    lobby.setCards(houseCards);
-                    lobby.setHasDecision(true);
-                } else{
-                    lobby.nextPlayer();
-                    throw new IllegalArgumentException("Player has not enough money to buy a house.");
+                List<Card> houseCards = houseCardRepository.searchAffordableHousesForPlayer(player.getMoney());
+                if(houseCards.size() != 2) {
+                    break;
                 }
+                lobby.setCards(houseCards);
+                lobby.setHasDecision(true);
                 break;
             case CAREER:
                 List<Card> careerCards = new ArrayList<>();
@@ -200,19 +198,19 @@ public class GameService {
                 }
                 lobby.setHasDecision(true);
                 break;
-            case GRADUATE:
-                player.setCollegeDegree(spinWheel() % 2 == 0);
-                lobby.nextPlayer();
-                break;
             case MID_LIFE:
-                player.setCollegeDegree(spinWheel() % 2 != 0);
+                if(spinWheel() > 2) {
+                    player.setCurrentCellPosition(cell.getNextCells().getFirst());
+                } else {
+                    player.setCurrentCellPosition(cell.getNextCells().getLast());
+                }
                 lobby.nextPlayer();
                 break;
             case MARRY, GROW_FAMILY, RETIRE_EARLY:
                 lobby.setHasDecision(true);
                 break;
             default:
-                log.error("Cell type unknown!");
+                lobby.nextPlayer();
         }
     }
 
