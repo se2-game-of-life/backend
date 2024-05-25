@@ -149,7 +149,7 @@ public class GameService {
             if(nextCellNumbers.size() != 1) {
                 break;
             }
-            currentCell = cellRepository.findByNumber(nextCellNumbers.getFirst());
+            currentCell = cellRepository.findByNumber(nextCellNumbers.get(0));
             if(currentCell.getType() == CellType.CASH) {
                 player.setMoney(player.getMoney() + player.getCareerCard().getSalary());
             } else if(currentCell.getType() == CellType.GRADUATE) {
@@ -200,9 +200,9 @@ public class GameService {
                 break;
             case MID_LIFE:
                 if(spinWheel() > 2) {
-                    player.setCurrentCellPosition(cell.getNextCells().getFirst());
+                    player.setCurrentCellPosition(cell.getNextCells().get(0));
                 } else {
-                    player.setCurrentCellPosition(cell.getNextCells().getLast());
+                    player.setCurrentCellPosition(cell.getNextCells().get(0));
                 }
                 lobby.nextPlayer();
                 break;
