@@ -202,7 +202,7 @@ public class GameService {
                 if(spinWheel() > 2) {
                     player.setCurrentCellPosition(cell.getNextCells().get(0));
                 } else {
-                    player.setCurrentCellPosition(cell.getNextCells().get(0));
+                    player.setCurrentCellPosition(cell.getNextCells().get(1));
                 }
                 lobby.nextPlayer();
                 break;
