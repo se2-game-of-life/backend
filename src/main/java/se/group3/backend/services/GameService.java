@@ -266,6 +266,7 @@ public class GameService {
             }
         }
         lobby.setQueue(newQueue);
+        //todo before queue is empty --> last player has to end the game
     }
 
 
