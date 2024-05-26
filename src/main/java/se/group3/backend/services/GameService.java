@@ -7,15 +7,16 @@ import se.group3.backend.domain.Cell;
 import se.group3.backend.domain.CellType;
 import se.group3.backend.domain.Lobby;
 import se.group3.backend.domain.Player;
+import se.group3.backend.domain.cards.ActionCard;
+import se.group3.backend.domain.cards.Card;
+import se.group3.backend.domain.cards.CareerCard;
+import se.group3.backend.domain.cards.HouseCard;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.mapper.LobbyMapper;
 import se.group3.backend.repositories.*;
 import se.group3.backend.repositories.PlayerRepository;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -27,6 +28,8 @@ public class GameService {
     private CellRepository cellRepository;
     private PlayerRepository playerRepository;
     private LobbyRepository lobbyRepository;
+    private final int INVESTMENT_MARRY_OR_FAMILY = 50000;
+    private final int INVESTMENT_COLLEGE = 100000;
 
     private static final Random RANDOM = new Random();
 
@@ -63,21 +66,96 @@ public class GameService {
     }
 
     public LobbyDTO makeChoice(boolean chooseLeft, String uuid) {
-        //todo: implement choices
-        throw new UnsupportedOperationException("Not implemented yet!");
+        Optional<Player> playerOptional = playerRepository.findById(uuid);
+        if(playerOptional.isEmpty()) throw new IllegalArgumentException("Player not found!");
+        Player player = playerOptional.get();
+
+        Long lobbyID = player.getLobbyID();
+        if(lobbyID == null) throw new IllegalArgumentException("Player not in lobby!");
+
+        Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
+        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
+        Lobby lobby = lobbyOptional.get();
+
+        if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), uuid)) throw new IllegalArgumentException("It's not the player's turn!");
+
+        Cell cell = cellRepository.findByNumber(player.getCurrentCellPosition());
+
+        switch(cell.getType()){
+            case MARRY, GROW_FAMILY:
+                if(chooseLeft){
+                    player.setMoney(player.getMoney()- INVESTMENT_MARRY_OR_FAMILY);
+                    player.setNumberOfPegs(player.getNumberOfPegs() + 1);
+                }
+                player.setCurrentCellPosition(cell.getNextCells().get(0));
+                break;
+            case RETIRE_EARLY:
+                if(chooseLeft) {
+                    player.setCurrentCellPosition(cell.getNextCells().get(0));
+                }
+            case HOUSE:
+                List<Card> houseCardList = lobby.getCards();
+                HouseCard houseCard;
+                if(chooseLeft){
+                    houseCard = (HouseCard) houseCardList.get(0);
+                } else{
+                    houseCard = (HouseCard) houseCardList.get(1);
+                }
+                player.setMoney(player.getMoney()-houseCard.getPurchasePrice());
+                if(player.getHouses() != null){
+                    List<HouseCard> playerHouseCards = player.getHouses();
+                    playerHouseCards.add(houseCard);
+                    player.setHouses(playerHouseCards);
+                } else{
+                    player.setHouses(List.of(houseCard));
+                }
+                break;
+            case CAREER:
+                List<Card> careerCardList = lobby.getCards();
+                CareerCard careerCard;
+                if(chooseLeft){
+                    careerCard = (CareerCard) careerCardList.get(0);
+                } else{
+                    careerCard = (CareerCard) careerCardList.get(1);
+                }
+                player.setCareerCard(careerCard);
+                break;
+            case START:
+                careerOrCollegeChoice(player, chooseLeft);
+                break;
+            default:
+                throw new IllegalStateException("Unknown cell type.");
+        }
+
+        lobby.nextPlayer();
+        lobby.setHasDecision(false);
+        lobbyRepository.save(lobby);
+        playerRepository.save(player);
+        return LobbyMapper.toLobbyDTO(lobby);
+    }
+
+    private void careerOrCollegeChoice(Player player, boolean chooseLeft){
+        if(player.getCurrentCellPosition() == 0){
+            if(chooseLeft){
+                player.setMoney(player.getMoney()-INVESTMENT_COLLEGE);
+            }
+            player.setCollegeDegree(chooseLeft);
+        }
     }
 
     private void makeMove(Lobby lobby, Player player) {
         Cell currentCell = cellRepository.findByNumber(player.getCurrentCellPosition());
         for(int i = 0; i < lobby.getSpunNumber() - 1; i++) {
             List<Integer> nextCellNumbers = currentCell.getNextCells();
-            if(nextCellNumbers.size() > 1) {
-                //todo: handle stop cell
+            if(nextCellNumbers.size() != 1) {
+                break;
             }
-            //todo: handle final stop cell
-            currentCell = cellRepository.findByNumber(nextCellNumbers.get(0)); //get next cell
+            currentCell = cellRepository.findByNumber(nextCellNumbers.get(0));
             if(currentCell.getType() == CellType.CASH) {
                 player.setMoney(player.getMoney() + player.getCareerCard().getSalary());
+            } else if(currentCell.getType() == CellType.GRADUATE) {
+                if (spinWheel() <= 2) player.setCollegeDegree(false);
+                break;
             }
         }
         handleCell(lobby, player, currentCell);
@@ -90,6 +168,7 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             case ACTION:
+                actionCardRepository.findRandomActionCard().performAction(player);
                 lobby.nextPlayer();
                 break;
             case FAMILY:
@@ -97,15 +176,99 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             case HOUSE:
-                //not next player because is player has choice
+                List<Card> houseCards = houseCardRepository.searchAffordableHousesForPlayer(player.getMoney());
+                if(houseCards.size() != 2) {
+                    break;
+                }
+                lobby.setCards(houseCards);
+                lobby.setHasDecision(true);
                 break;
             case CAREER:
+                List<Card> careerCards = new ArrayList<>();
+                if(player.isCollegeDegree()){
+                    careerCards.add(careerCardRepository.findRandomCareerCard());
+                    careerCards.add(careerCardRepository.findRandomCareerCard());
+                } else{
+                    while(careerCards.size() < 2){
+                        CareerCard card = careerCardRepository.findRandomCareerCard();
+                        if(!card.needsDiploma()){
+                            careerCards.add(card);
+                        }
+                    }
+                }
+                lobby.setHasDecision(true);
+                break;
+            case MID_LIFE:
+                if(spinWheel() > 2) {
+                    player.setCurrentCellPosition(cell.getNextCells().get(0));
+                } else {
+                    player.setCurrentCellPosition(cell.getNextCells().get(1));
+                }
+                lobby.nextPlayer();
+                break;
+            case MARRY, GROW_FAMILY, RETIRE_EARLY:
+                lobby.setHasDecision(true);
+                break;
+            case RETIREMENT:
+                retire(player, lobby);
                 lobby.nextPlayer();
                 break;
             default:
-                log.error("Cell type unknown!");
+                lobby.nextPlayer();
         }
     }
+
+    private void retire(Player player, Lobby lobby){
+        List<Player> players = lobby.getPlayers();
+        int counter = 0;
+        for(Player p : players){
+            Cell currentCell = cellRepository.findByNumber(p.getCurrentCellPosition());
+            if(currentCell.getType() == CellType.RETIREMENT){
+                counter++;
+            }
+        }
+
+        switch (counter){
+            case(1):
+                player.setMoney(player.getMoney()+200000);
+                break;
+            case(2):
+                player.setMoney(player.getMoney()+100000);
+                break;
+            case(3):
+                player.setMoney(player.getMoney()+50000);
+                break;
+            case(4):
+                player.setMoney(player.getMoney()+10000);
+                break;
+            default:
+        }
+
+        List<HouseCard> playerHouses = player.getHouses();
+        for(HouseCard h : playerHouses){
+            if(spinWheel()%2 == 0){
+                player.setMoney(player.getMoney()+h.getBlackSellPrice());
+            } else{
+                player.setMoney(player.getMoney()+h.getRedSellPrice());
+            }
+        }
+        playerHouses.clear();
+        player.setHouses(playerHouses);
+
+        player.setMoney(player.getMoney()+(player.getNumberOfPegs()*50000));
+
+        List<Player> queue = lobby.getQueue();
+        ArrayList<Player> newQueue = new ArrayList<>();
+        for(Player p: queue){
+            Cell currentCell = cellRepository.findByNumber(p.getCurrentCellPosition());
+            if(currentCell.getType() != CellType.RETIREMENT){
+                newQueue.add(p);
+            }
+        }
+        lobby.setQueue(newQueue);
+        //todo before queue is empty --> last player has to end the game
+    }
+
 
     private int spinWheel() {
         return RANDOM.nextInt(10) + 1;

@@ -101,6 +101,8 @@ public class GameController {
         }
     }
 
+
+
     @MessageMapping("/lobby/choice")
     public void makeChoice(@Payload boolean chooseLeft, SimpMessageHeaderAccessor headerAccessor) {
         try {
