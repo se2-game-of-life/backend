@@ -15,8 +15,6 @@ import se.group3.backend.services.BoardService;
 import se.group3.backend.services.GameService;
 import se.group3.backend.services.LobbyService;
 import se.group3.backend.exceptions.SessionOperationException;
-import se.group3.backend.repositories.LobbyRepository;
-import se.group3.backend.repositories.PlayerRepository;
 import se.group3.backend.services.*;
 
 @Slf4j
@@ -30,24 +28,22 @@ public class GameController {
     private final SimpMessagingTemplate messagingTemplate;
     private final SessionService sessionService;
     private final SerializationService serializationService;
+    private final CheatingService cheatingService;
 
     //path definitions
     private static final String ERROR_PATH = "/topic/errors/";
     private static final String LOBBIES_PATH = "/topic/lobbies/";
     private static final String BOARD_PATH = "/topic/board/";
-    private final PlayerRepository playerRepository;
-    private final LobbyRepository lobbyRepository;
 
     @Autowired
-    public GameController(SimpMessagingTemplate template, LobbyService lobbyService, BoardService boardService, GameService gameService, SessionService sessionService, SerializationService serializationService, PlayerRepository playerRepository, LobbyRepository lobbyRepository) {
+    public GameController(SimpMessagingTemplate template, LobbyService lobbyService, BoardService boardService, GameService gameService, SessionService sessionService, SerializationService serializationService, CheatingService cheatingService) {
         this.lobbyService = lobbyService;
         this.gameService = gameService;
         this.boardService = boardService;
         this.messagingTemplate = template;
         this.sessionService = sessionService;
         this.serializationService = serializationService;
-        this.playerRepository = playerRepository;
-        this.lobbyRepository = lobbyRepository;
+        this.cheatingService = cheatingService;
     }
 
     @MessageMapping("/lobby/create")
@@ -101,8 +97,6 @@ public class GameController {
         }
     }
 
-
-
     @MessageMapping("/lobby/choice")
     public void makeChoice(@Payload boolean chooseLeft, SimpMessageHeaderAccessor headerAccessor) {
         try {
@@ -129,6 +123,27 @@ public class GameController {
         try {
             sessionService.putUUID(headerAccessor,  playerIdentifier.substring(1, playerIdentifier.length() - 1));
         } catch (SessionOperationException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    @MessageMapping("/cheat")
+    public void cheat(SimpMessageHeaderAccessor headerAccessor) {
+        try {
+            LobbyDTO lobbyDTO = cheatingService.cheat(getUUID(headerAccessor));
+            messagingTemplate.convertAndSend(LOBBIES_PATH + lobbyDTO.getLobbyID(), serializationService.jsonStringFromClass(lobbyDTO));
+            messagingTemplate.convertAndSend(LOBBIES_PATH + lobbyDTO.getLobbyID() + "/buzz");
+        } catch (IllegalStateException | JsonProcessingException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    @MessageMapping("/report")
+    public void cheat(@Payload String reportPlayerUUID, SimpMessageHeaderAccessor headerAccessor) {
+        try {
+            LobbyDTO lobbyDTO = cheatingService.report(getUUID(headerAccessor), reportPlayerUUID.substring(1, reportPlayerUUID.length() - 1));
+            messagingTemplate.convertAndSend(LOBBIES_PATH + lobbyDTO.getLobbyID(), serializationService.jsonStringFromClass(lobbyDTO));
+        } catch (IllegalStateException | JsonProcessingException e) {
             log.error(e.getMessage());
         }
     }
