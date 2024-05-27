@@ -45,6 +45,7 @@ public class LobbyService {
         player.setLobbyID(lobbyID);
         Lobby lobby = new Lobby(lobbyID, player);
         lobbyRepository.insert(lobby);
+        playerRepository.insert(player);
 
         return LobbyMapper.toLobbyDTO(lobby);
     }
