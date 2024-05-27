@@ -80,67 +80,81 @@ public class GameService {
         if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), uuid)) throw new IllegalArgumentException("It's not the player's turn!");
 
         Cell cell = cellRepository.findByNumber(player.getCurrentCellPosition());
-
-        switch(cell.getType()){
-            case MARRY, GROW_FAMILY:
-                if(chooseLeft){
-                    player.setMoney(player.getMoney()- INVESTMENT_MARRY_OR_FAMILY);
-                    player.setNumberOfPegs(player.getNumberOfPegs() + 1);
-                }
-                player.setCurrentCellPosition(cell.getNextCells().get(0));
-                break;
-            case RETIRE_EARLY:
-                if(chooseLeft) {
+        if(cell == null){
+            careerOrCollegeChoice(player, chooseLeft);
+        } else{
+            switch(cell.getType()){
+                case MARRY, GROW_FAMILY:
+                    if(chooseLeft){
+                        player.setMoney(player.getMoney()- INVESTMENT_MARRY_OR_FAMILY);
+                        player.setNumberOfPegs(player.getNumberOfPegs() + 1);
+                    }
                     player.setCurrentCellPosition(cell.getNextCells().get(0));
-                }
-            case HOUSE:
-                List<Card> houseCardList = lobby.getCards();
-                HouseCard houseCard;
-                if(chooseLeft){
-                    houseCard = (HouseCard) houseCardList.get(0);
-                } else{
-                    houseCard = (HouseCard) houseCardList.get(1);
-                }
-                player.setMoney(player.getMoney()-houseCard.getPurchasePrice());
-                if(player.getHouses() != null){
-                    List<HouseCard> playerHouseCards = player.getHouses();
-                    playerHouseCards.add(houseCard);
-                    player.setHouses(playerHouseCards);
-                } else{
-                    player.setHouses(List.of(houseCard));
-                }
-                break;
-            case CAREER:
-                List<Card> careerCardList = lobby.getCards();
-                CareerCard careerCard;
-                if(chooseLeft){
-                    careerCard = (CareerCard) careerCardList.get(0);
-                } else{
-                    careerCard = (CareerCard) careerCardList.get(1);
-                }
-                player.setCareerCard(careerCard);
-                break;
-            case START:
-                careerOrCollegeChoice(player, chooseLeft);
-                break;
-            default:
-                throw new IllegalStateException("Unknown cell type.");
+                    break;
+                case RETIRE_EARLY:
+                    if(chooseLeft) {
+                        player.setCurrentCellPosition(cell.getNextCells().get(0));
+                    }
+                    break;
+                case HOUSE:
+                    List<Card> houseCardList = lobby.getCards();
+                    HouseCard houseCard;
+                    if(chooseLeft){
+                        houseCard = (HouseCard) houseCardList.get(0);
+                    } else{
+                        houseCard = (HouseCard) houseCardList.get(1);
+                    }
+                    player.setMoney(player.getMoney()-houseCard.getPurchasePrice());
+                    if(player.getHouses() != null){
+                        List<HouseCard> playerHouseCards = player.getHouses();
+                        playerHouseCards.add(houseCard);
+                        player.setHouses(playerHouseCards);
+                    } else{
+                        player.setHouses(List.of(houseCard));
+                    }
+                    break;
+                case CAREER:
+                    List<Card> careerCardList = lobby.getCards();
+                    CareerCard careerCard;
+                    if(chooseLeft){
+                        careerCard = (CareerCard) careerCardList.get(0);
+                    } else{
+                        careerCard = (CareerCard) careerCardList.get(1);
+                    }
+                    player.setCareerCard(careerCard);
+                    break;
+                default:
+                    throw new IllegalStateException("Unknown cell type.");
+            }
         }
 
         lobby.nextPlayer();
         lobby.setHasDecision(false);
+        updatePlayerInLobby(lobby, player);
         lobbyRepository.save(lobby);
         playerRepository.save(player);
         return LobbyMapper.toLobbyDTO(lobby);
     }
 
+    private void updatePlayerInLobby(Lobby lobby, Player player){
+        List<Player> players = lobby.getPlayers();
+
+        for(int i = 0; i < players.size(); i++){
+            if(players.get(i).getPlayerUUID().equals(player.getPlayerUUID())){
+                players.set(i, player);
+            }
+        }
+        lobby.setPlayers(players);
+    }
+
     private void careerOrCollegeChoice(Player player, boolean chooseLeft){
-        if(player.getCurrentCellPosition() == 0){
-            if(chooseLeft){
-                player.setMoney(player.getMoney()-INVESTMENT_COLLEGE);
+            if(chooseLeft) {
+                player.setMoney(player.getMoney() - INVESTMENT_COLLEGE);
+                player.setCurrentCellPosition(2);
+            } else {
+                player.setCurrentCellPosition(12);
             }
             player.setCollegeDegree(chooseLeft);
-        }
     }
 
     private void makeMove(Lobby lobby, Player player) {

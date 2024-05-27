@@ -69,8 +69,7 @@ class GameServiceTest {
         when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
 
         when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
-        when(startCell.getType()).thenReturn(CellType.START);
-        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(null);
 
 
         gameService.makeChoice(true, "UUID");
@@ -87,8 +86,7 @@ class GameServiceTest {
 
         when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
         when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
-        when(startCell.getType()).thenReturn(CellType.START);
-        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(null);
 
 
         gameService.makeChoice(false, "UUID");
