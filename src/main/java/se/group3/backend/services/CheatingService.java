@@ -46,7 +46,7 @@ public class CheatingService {
 
         for(Player playerInLobby : lobby.getPlayers()) {
             if(playerInLobby.getPlayerUUID().equals(playerUUID)) {
-                playerInLobby.setMoney(player.getMoney() + CHEATING_MONEY);
+                playerInLobby.setMoney(playerInLobby.getMoney() + CHEATING_MONEY);
                 break;
             }
         }
@@ -56,9 +56,8 @@ public class CheatingService {
             cheatingQueue.remove(playerUUID);
         }, MAX_REPORT_TIME, TimeUnit.SECONDS);
 
-        playerRepository.save(player);
         lobbyRepository.save(lobby);
-        return LobbyMapper.toLobbyDTO(lobbyRepository.findById(player.getLobbyID()).orElse(lobby));
+        return LobbyMapper.toLobbyDTO(lobby);
     }
 
     public LobbyDTO report(String playerUUID, String reportUUID) throws IllegalArgumentException {
@@ -69,15 +68,22 @@ public class CheatingService {
         if(lobby == null) throw new IllegalStateException("Lobby not found in repository: " + player.getLobbyID());
 
         if(cheatingQueue.contains(reportedPlayer.getPlayerUUID())) {
-            reportedPlayer.setMoney(reportedPlayer.getMoney() - CHEATING_COUGHT_PENALTY);
+            for(Player playerInLobby : lobby.getPlayers()) {
+                if(playerInLobby.getPlayerUUID().equals(reportedPlayer.getPlayerUUID())) {
+                    playerInLobby.setMoney(playerInLobby.getMoney() - CHEATING_COUGHT_PENALTY);
+                    break;
+                }
+            }
             cheatingQueue.remove(reportedPlayer.getPlayerUUID());
         } else {
-            player.setMoney(player.getMoney() + FALSE_REPORT_PENALTY);
+            for(Player playerInLobby : lobby.getPlayers()) {
+                if(playerInLobby.getPlayerUUID().equals(player.getPlayerUUID())) {
+                    playerInLobby.setMoney(player.getMoney() + FALSE_REPORT_PENALTY);
+                    break;
+                }
+            }
         }
-
-        playerRepository.save(player);
-        playerRepository.save(reportedPlayer);
         lobbyRepository.save(lobby);
-        return LobbyMapper.toLobbyDTO(lobbyRepository.findById(player.getLobbyID()).orElse(lobby));
+        return LobbyMapper.toLobbyDTO(lobby);
     }
 }
