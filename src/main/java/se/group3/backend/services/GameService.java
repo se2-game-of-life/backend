@@ -130,9 +130,21 @@ public class GameService {
 
         lobby.nextPlayer();
         lobby.setHasDecision(false);
+        updatePlayerInLobby(lobby, player);
         lobbyRepository.save(lobby);
         playerRepository.save(player);
         return LobbyMapper.toLobbyDTO(lobby);
+    }
+
+    private void updatePlayerInLobby(Lobby lobby, Player player){
+        List<Player> players = lobby.getPlayers();
+
+        for(int i = 0; i < players.size(); i++){
+            if(players.get(i).getPlayerUUID().equals(player.getPlayerUUID())){
+                players.set(i, player);
+            }
+        }
+        lobby.setPlayers(players);
     }
 
     private void careerOrCollegeChoice(Player player, boolean chooseLeft){
