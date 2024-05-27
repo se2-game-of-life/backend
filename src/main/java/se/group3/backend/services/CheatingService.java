@@ -32,7 +32,7 @@ public class CheatingService {
     private final ScheduledExecutorService scheduler;
 
     @Autowired
-    public CheatingService(LobbyRepository lobbyRepository, PlayerRepository playerRepository, SimpleAsyncTaskScheduler taskScheduler) {
+    public CheatingService(LobbyRepository lobbyRepository, PlayerRepository playerRepository) {
         this.lobbyRepository = lobbyRepository;
         this.playerRepository = playerRepository;
         this.cheatingQueue = ConcurrentHashMap.newKeySet();
