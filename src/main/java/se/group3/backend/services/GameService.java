@@ -148,12 +148,13 @@ public class GameService {
     }
 
     private void careerOrCollegeChoice(Player player, boolean chooseLeft){
-        if(player.getCurrentCellPosition() == 0){
-            if(chooseLeft){
-                player.setMoney(player.getMoney()-INVESTMENT_COLLEGE);
+            if(chooseLeft) {
+                player.setMoney(player.getMoney() - INVESTMENT_COLLEGE);
+                player.setCurrentCellPosition(2);
+            } else {
+                player.setCurrentCellPosition(12);
             }
             player.setCollegeDegree(chooseLeft);
-        }
     }
 
     private void makeMove(Lobby lobby, Player player) {
