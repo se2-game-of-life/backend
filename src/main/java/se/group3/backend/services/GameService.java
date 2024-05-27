@@ -95,6 +95,7 @@ public class GameService {
                     if(chooseLeft) {
                         player.setCurrentCellPosition(cell.getNextCells().get(0));
                     }
+                    break;
                 case HOUSE:
                     List<Card> houseCardList = lobby.getCards();
                     HouseCard houseCard;
