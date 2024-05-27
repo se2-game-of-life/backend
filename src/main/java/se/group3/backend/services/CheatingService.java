@@ -2,7 +2,6 @@ package se.group3.backend.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.SimpleAsyncTaskScheduler;
 import org.springframework.stereotype.Service;
 import se.group3.backend.domain.Lobby;
 import se.group3.backend.domain.Player;
@@ -59,7 +58,7 @@ public class CheatingService {
 
         playerRepository.save(player);
         lobbyRepository.save(lobby);
-        return LobbyMapper.toLobbyDTO(lobby);
+        return LobbyMapper.toLobbyDTO(lobbyRepository.findById(player.getLobbyID()).orElse(lobby));
     }
 
     public LobbyDTO report(String playerUUID, String reportUUID) throws IllegalArgumentException {
@@ -79,6 +78,6 @@ public class CheatingService {
         playerRepository.save(player);
         playerRepository.save(reportedPlayer);
         lobbyRepository.save(lobby);
-        return LobbyMapper.toLobbyDTO(lobby);
+        return LobbyMapper.toLobbyDTO(lobbyRepository.findById(player.getLobbyID()).orElse(lobby));
     }
 }
