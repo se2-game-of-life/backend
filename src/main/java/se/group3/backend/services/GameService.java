@@ -77,12 +77,11 @@ public class GameService {
         if(lobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
         Lobby lobby = lobbyOptional.get();
 
-        if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), uuid)) throw new IllegalArgumentException("It's not the player's turn!");
-
         Cell cell = cellRepository.findByNumber(player.getCurrentCellPosition());
         if(cell == null){
             careerOrCollegeChoice(player, chooseLeft);
         } else{
+            if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), uuid)) throw new IllegalArgumentException("It's not the player's turn!");
             switch(cell.getType()){
                 case MARRY, GROW_FAMILY:
                     if(chooseLeft){
