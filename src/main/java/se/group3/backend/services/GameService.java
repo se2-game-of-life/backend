@@ -62,6 +62,7 @@ public class GameService {
 
         lobbyRepository.save(lobby);
         playerRepository.save(player);
+        updatePlayerInLobby(lobby, player);
         return LobbyMapper.toLobbyDTO(lobby);
     }
 
