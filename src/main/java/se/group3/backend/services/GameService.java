@@ -85,43 +85,20 @@ public class GameService {
             if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), uuid)) throw new IllegalArgumentException("It's not the player's turn!");
             switch(cell.getType()){
                 case MARRY, GROW_FAMILY:
-                    if(chooseLeft){
-                        player.setMoney(player.getMoney()- INVESTMENT_MARRY_OR_FAMILY);
-                        player.setNumberOfPegs(player.getNumberOfPegs() + 1);
-                    }
-                    player.setCurrentCellPosition(cell.getNextCells().get(0));
+                    marryAndFamilyPathChoice(player, chooseLeft, cell);
                     break;
                 case RETIRE_EARLY:
                     if(chooseLeft) {
                         player.setCurrentCellPosition(cell.getNextCells().get(0));
+                    } else {
+                        player.setCurrentCellPosition(cell.getNextCells().get(1));
                     }
                     break;
                 case HOUSE:
-                    List<Card> houseCardList = lobby.getCards();
-                    HouseCard houseCard;
-                    if(chooseLeft){
-                        houseCard = (HouseCard) houseCardList.get(0);
-                    } else{
-                        houseCard = (HouseCard) houseCardList.get(1);
-                    }
-                    player.setMoney(player.getMoney()-houseCard.getPurchasePrice());
-                    if(player.getHouses() != null){
-                        List<HouseCard> playerHouseCards = player.getHouses();
-                        playerHouseCards.add(houseCard);
-                        player.setHouses(playerHouseCards);
-                    } else{
-                        player.setHouses(List.of(houseCard));
-                    }
+                    houseChoice(player, lobby, chooseLeft);
                     break;
                 case CAREER:
-                    List<Card> careerCardList = lobby.getCards();
-                    CareerCard careerCard;
-                    if(chooseLeft){
-                        careerCard = (CareerCard) careerCardList.get(0);
-                    } else{
-                        careerCard = (CareerCard) careerCardList.get(1);
-                    }
-                    player.setCareerCard(careerCard);
+                    careerChoice(player, lobby, chooseLeft);
                     break;
                 default:
                     throw new IllegalStateException("Unknown cell type.");
@@ -156,6 +133,45 @@ public class GameService {
             }
             player.setCollegeDegree(chooseLeft);
     }
+
+    private void marryAndFamilyPathChoice(Player player, boolean chooseLeft, Cell cell){
+        if(chooseLeft){
+            player.setMoney(player.getMoney()- INVESTMENT_MARRY_OR_FAMILY);
+            player.setNumberOfPegs(player.getNumberOfPegs() + 1);
+        }
+        player.setCurrentCellPosition(cell.getNextCells().get(0));
+    }
+
+    private void houseChoice(Player player, Lobby lobby, boolean chooseLeft){
+        List<Card> houseCardList = lobby.getCards();
+        HouseCard houseCard;
+        if(chooseLeft){
+            houseCard = (HouseCard) houseCardList.get(0);
+        } else{
+            houseCard = (HouseCard) houseCardList.get(1);
+        }
+        player.setMoney(player.getMoney()-houseCard.getPurchasePrice());
+        if(player.getHouses() != null){
+            List<HouseCard> playerHouseCards = player.getHouses();
+            playerHouseCards.add(houseCard);
+            player.setHouses(playerHouseCards);
+        } else{
+            player.setHouses(List.of(houseCard));
+        }
+    }
+
+    private void careerChoice(Player player, Lobby lobby, boolean chooseLeft){
+        List<Card> careerCardList = lobby.getCards();
+        CareerCard careerCard;
+        if(chooseLeft){
+            careerCard = (CareerCard) careerCardList.get(0);
+        } else{
+            careerCard = (CareerCard) careerCardList.get(1);
+        }
+        player.setCareerCard(careerCard);
+    }
+
+
 
     private void makeMove(Lobby lobby, Player player) {
         Cell currentCell = cellRepository.findByNumber(player.getCurrentCellPosition());
