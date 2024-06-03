@@ -81,7 +81,7 @@ public class GameController {
     public void startLobby(SimpMessageHeaderAccessor headerAccessor) {
         try {
             LobbyDTO lobby = lobbyService.startLobby(getUUID(headerAccessor));
-            messagingTemplate.convertAndSend(LOBBIES_PATH + lobby.getLobbyID() + "/game", serializationService.jsonStringFromClass(lobby));
+            messagingTemplate.convertAndSend(LOBBIES_PATH + lobby.getLobbyID(), serializationService.jsonStringFromClass(lobby));
         } catch (Exception e) {
             log.error(e.getMessage());
         }
