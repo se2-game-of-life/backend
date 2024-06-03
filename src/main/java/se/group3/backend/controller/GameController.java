@@ -113,7 +113,7 @@ public class GameController {
         }
     }
 
-    @MessageMapping("/board/fetch")
+    @MessageMapping("/fetch")
     public void fetchBoard(SimpMessageHeaderAccessor headerAccessor) {
         try {
             BoardDTO boardDTO = boardService.fetchBoardData();
