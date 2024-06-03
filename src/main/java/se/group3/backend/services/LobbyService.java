@@ -57,7 +57,7 @@ public class LobbyService {
             playerRepository.deleteById(playerUUID);
         }
 
-        Player player = new Player(playerUUID, playerName.substring(1, playerName.length() - 1));
+        Player player = new Player(playerUUID, playerName);
         Optional<Lobby> lobbyOptional = lobbyRepository.findById(lobbyID);
         if(lobbyOptional.isPresent()) {
             Lobby lobby = lobbyOptional.get();
@@ -89,9 +89,19 @@ public class LobbyService {
     }
 
     public LobbyDTO startLobby(String playerUUID) throws IllegalStateException {
-        //todo: start the game and return a game state update with the initial conditions
-        //todo: might use lobby as the game state update
-        //todo: this method might not even be needed
-        throw new UnsupportedOperationException();
+        Optional<Player> playerOptional = playerRepository.findById(playerUUID);
+        if(playerOptional.isEmpty()) throw new IllegalStateException("Player doesn't exist!");
+        Optional<Lobby> lobbyOptional = lobbyRepository.findById(playerOptional.get().getLobbyID());
+        if(lobbyOptional.isEmpty()) throw new IllegalStateException("The lobby doesn't exist!");
+
+        //todo: add check for < 2 player
+
+        Lobby lobby = lobbyOptional.get();
+        lobby.setHasStarted(true);
+        lobby.setHasDecision(false);
+        lobby.setCards(null);
+
+        lobbyRepository.save(lobby);
+        return LobbyMapper.toLobbyDTO(lobby);
     }
 }
