@@ -114,7 +114,7 @@ public class GameController {
     }
 
     @MessageMapping("/fetch")
-    public void fetchBoard(@Payload String asdf, SimpMessageHeaderAccessor headerAccessor) {
+    public void fetchBoard(SimpMessageHeaderAccessor headerAccessor) {
         try {
             BoardDTO boardDTO = boardService.fetchBoardData();
             String jsonBoardDTO = serializationService.jsonStringFromClass(boardDTO);
