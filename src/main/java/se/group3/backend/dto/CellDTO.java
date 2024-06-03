@@ -3,10 +3,8 @@ package se.group3.backend.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import se.group3.backend.domain.CellType;
 
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 public class CellDTO {
@@ -23,8 +21,8 @@ public class CellDTO {
                    @JsonProperty("number") int number,
                    @JsonProperty("type") String type,
                    @JsonProperty("nextCells")List<Integer> nextCells,
-                   @JsonProperty int row,
-                   @JsonProperty int col)  {
+                   @JsonProperty("row") int row,
+                   @JsonProperty("col") int col)  {
         this.id = id;
         this.number = number;
         this.type = type;
