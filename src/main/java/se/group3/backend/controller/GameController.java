@@ -87,7 +87,7 @@ public class GameController {
         }
     }
 
-    @MessageMapping("/lobby/turn")
+    @MessageMapping("/lobby/spin")
     public void handlePlayerTurn(SimpMessageHeaderAccessor headerAccessor) {
         try {
             LobbyDTO lobby = gameService.handleTurn(getUUID(headerAccessor));
