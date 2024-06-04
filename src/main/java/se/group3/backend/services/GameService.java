@@ -17,6 +17,7 @@ import se.group3.backend.repositories.PlayerRepository;
 
 import java.util.*;
 
+// fixme avoid making this class a god class
 @Slf4j
 @Service
 public class GameService {
