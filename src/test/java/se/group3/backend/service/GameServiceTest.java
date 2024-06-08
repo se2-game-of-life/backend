@@ -63,17 +63,47 @@ class GameServiceTest {
         lobby.setCurrentPlayer(player);
     }
 
+
+    @Test
+    void testMakeChoice_PlayerNotFound_Exception(){
+
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.makeChoice(true, player.getPlayerUUID()));
+
+        assertEquals("Player not found!", e.getMessage());
+    }
+
+    @Test
+    void testMakeChoice_PlayerNotInLobby_Exception(){
+
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        player.setLobbyID(null);
+
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.makeChoice(true, player.getPlayerUUID()));
+
+        assertEquals("Player not in lobby!", e.getMessage());
+    }
+
+    @Test
+    void testMakeChoice_LobbyNotFound_Exception(){
+
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.makeChoice(true, player.getPlayerUUID()));
+
+        assertEquals("Lobby not found!", e.getMessage());
+    }
+
     @Test
     void testCareerOrCollegeChoice_CollegePath(){
         assertFalse(player.isCollegeDegree());
 
-
-        Cell startCell = mock(Cell.class);
         when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
 
         when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
         when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(null);
-
 
         gameService.makeChoice(true, "UUID");
         assertEquals(150000, player.getMoney());
@@ -84,13 +114,9 @@ class GameServiceTest {
     void testCareerOrCollegeChoice_CareerPath(){
         assertFalse(player.isCollegeDegree());
 
-
-        Cell startCell = mock(Cell.class);
-
         when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
         when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
         when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(null);
-
 
         gameService.makeChoice(false, "UUID");
         assertEquals(250000, player.getMoney());
