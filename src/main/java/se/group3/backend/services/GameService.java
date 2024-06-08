@@ -62,7 +62,10 @@ public class GameService {
 
         lobbyRepository.save(lobby);
         playerRepository.save(player);
-        return LobbyMapper.toLobbyDTO(lobbyRepository.findById(player.getLobbyID()).get());
+        Optional<Lobby> updatedLobbyOptional = lobbyRepository.findById(player.getLobbyID());
+        if(updatedLobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
+        Lobby upatedLobby = lobbyOptional.get();
+        return LobbyMapper.toLobbyDTO(upatedLobby);
     }
 
     public LobbyDTO makeChoice(boolean chooseLeft, String uuid) {
