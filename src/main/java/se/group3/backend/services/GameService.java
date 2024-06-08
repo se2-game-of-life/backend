@@ -57,6 +57,7 @@ public class GameService {
         if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), playerUUID)) throw new IllegalArgumentException("It's not the player's turn!");
         lobby.setSpunNumber(spinWheel());
 
+        lobby.setCards(new ArrayList<>());
         makeMove(lobby, player);
 
         lobbyRepository.save(lobby);
