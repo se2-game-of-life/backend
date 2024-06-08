@@ -226,6 +226,7 @@ public class GameService {
                         }
                     }
                 }
+                lobby.setCards(careerCards);
                 lobby.setHasDecision(true);
                 break;
             case MID_LIFE:
