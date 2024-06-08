@@ -62,8 +62,7 @@ public class GameService {
 
         lobbyRepository.save(lobby);
         playerRepository.save(player);
-        updatePlayerInLobby(lobby, player);
-        return LobbyMapper.toLobbyDTO(lobby);
+        return LobbyMapper.toLobbyDTO(lobbyRepository.findById(player.getLobbyID()).get());
     }
 
     public LobbyDTO makeChoice(boolean chooseLeft, String uuid) {
@@ -283,8 +282,7 @@ public class GameService {
                 player.setMoney(player.getMoney()+h.getRedSellPrice());
             }
         }
-        playerHouses.clear();
-        player.setHouses(playerHouses);
+        player.setHouses(new ArrayList<>());
 
         player.setMoney(player.getMoney()+(player.getNumberOfPegs()*50000));
 
