@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @EqualsAndHashCode
-public class ActionCardDTO {
+public class ActionCardDTO implements CardDTO {
 
     private String id;
 
