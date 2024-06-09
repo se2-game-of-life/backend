@@ -1,12 +1,10 @@
 package se.group3.backend.domain;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 import se.group3.backend.domain.cards.Card;
 
 import java.util.*;
@@ -59,5 +57,9 @@ public class Lobby {
 
     public boolean isFull() {
         return players.size() >= MAXIMUM_PLAYER_COUNT;
+    }
+
+    public void addCard(Card card) {
+        cards.add(card);
     }
 }
