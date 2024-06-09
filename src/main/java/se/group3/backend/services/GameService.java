@@ -57,12 +57,15 @@ public class GameService {
         if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), playerUUID)) throw new IllegalArgumentException("It's not the player's turn!");
         lobby.setSpunNumber(spinWheel());
 
+        lobby.setCards(new ArrayList<>());
         makeMove(lobby, player);
 
         lobbyRepository.save(lobby);
         playerRepository.save(player);
-        updatePlayerInLobby(lobby, player);
-        return LobbyMapper.toLobbyDTO(lobby);
+        Optional<Lobby> updatedLobbyOptional = lobbyRepository.findById(player.getLobbyID());
+        if(updatedLobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
+        Lobby upatedLobby = lobbyOptional.get();
+        return LobbyMapper.toLobbyDTO(upatedLobby);
     }
 
     public LobbyDTO makeChoice(boolean chooseLeft, String uuid) {
@@ -225,6 +228,7 @@ public class GameService {
                         }
                     }
                 }
+                lobby.setCards(careerCards);
                 lobby.setHasDecision(true);
                 break;
             case MID_LIFE:
@@ -281,8 +285,7 @@ public class GameService {
                 player.setMoney(player.getMoney()+h.getRedSellPrice());
             }
         }
-        playerHouses.clear();
-        player.setHouses(playerHouses);
+        player.setHouses(new ArrayList<>());
 
         player.setMoney(player.getMoney()+(player.getNumberOfPegs()*50000));
 
