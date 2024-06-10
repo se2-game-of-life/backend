@@ -63,10 +63,8 @@ public class GameService {
 
         lobbyRepository.save(lobby);
         playerRepository.save(player);
-        Optional<Lobby> updatedLobbyOptional = lobbyRepository.findById(player.getLobbyID());
-        if(updatedLobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
-        Lobby upatedLobby = lobbyOptional.get();
-        return LobbyMapper.toLobbyDTO(upatedLobby);
+        updatePlayerInLobby(lobby, player);
+        return LobbyMapper.toLobbyDTO(lobby);
     }
 
     public LobbyDTO makeChoice(boolean chooseLeft, String uuid) {
@@ -179,9 +177,11 @@ public class GameService {
 
     private void makeMove(Lobby lobby, Player player) {
         Cell currentCell = cellRepository.findByNumber(player.getCurrentCellPosition());
+        int spunNumber = lobby.getSpunNumber();
         for(int i = 0; i < lobby.getSpunNumber() - 1; i++) {
             List<Integer> nextCellNumbers = currentCell.getNextCells();
             if(nextCellNumbers.size() != 1) {
+                spunNumber = i+1;
                 break;
             }
             currentCell = cellRepository.findByNumber(nextCellNumbers.get(0));
@@ -192,6 +192,9 @@ public class GameService {
                 break;
             }
         }
+        player.setCurrentCellPosition(player.getCurrentCellPosition()+spunNumber);
+        playerRepository.save(player);
+        lobbyRepository.save(lobby);
         handleCell(lobby, player, currentCell);
     }
 
@@ -256,6 +259,8 @@ public class GameService {
             default:
                 lobby.nextPlayer();
         }
+        playerRepository.save(player);
+        lobbyRepository.save(lobby);
     }
 
     private void retire(Player player, Lobby lobby){
