@@ -250,7 +250,10 @@ public class GameService {
                 retire(player, lobby);
                 lobby.nextPlayer();
                 break;
-            case NOTHING, default:
+            case NOTHING:
+                lobby.nextPlayer();
+                break;
+            default:
                 lobby.nextPlayer();
         }
     }
