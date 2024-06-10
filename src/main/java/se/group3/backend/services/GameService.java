@@ -249,7 +249,7 @@ public class GameService {
                 retire(player, lobby);
                 lobby.nextPlayer();
                 break;
-            default:
+            case NOTHING, default:
                 lobby.nextPlayer();
         }
     }
