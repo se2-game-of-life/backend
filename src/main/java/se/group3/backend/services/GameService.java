@@ -130,9 +130,9 @@ public class GameService {
     private void careerOrCollegeChoice(Player player, boolean chooseLeft){
             if(chooseLeft) {
                 player.setMoney(player.getMoney() - INVESTMENT_COLLEGE);
-                player.setCurrentCellPosition(2);
+                player.setCurrentCellPosition(1);
             } else {
-                player.setCurrentCellPosition(12);
+                player.setCurrentCellPosition(14);
             }
             player.setCollegeDegree(chooseLeft);
     }
@@ -141,8 +141,9 @@ public class GameService {
         if(chooseLeft){
             player.setMoney(player.getMoney()- INVESTMENT_MARRY_OR_FAMILY);
             player.setNumberOfPegs(player.getNumberOfPegs() + 1);
+            player.setCurrentCellPosition(cell.getNextCells().get(0));
         }
-        player.setCurrentCellPosition(cell.getNextCells().get(0));
+        player.setCurrentCellPosition(cell.getNextCells().get(1));
     }
 
     private void houseChoice(Player player, Lobby lobby, boolean chooseLeft){
