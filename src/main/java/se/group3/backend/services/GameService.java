@@ -115,13 +115,15 @@ public class GameService {
 
     private void updatePlayerInLobby(Lobby lobby, Player player){
         List<Player> players = lobby.getPlayers();
-
+        List<Player> updatesPlayers = new ArrayList<>();
         for(int i = 0; i < players.size(); i++){
             if(players.get(i).getPlayerUUID().equals(player.getPlayerUUID())){
-                players.set(i, player);
+                updatesPlayers.add(i, player);
+            } else{
+                updatesPlayers.add(i, players.get(i));
             }
         }
-        lobby.setPlayers(players);
+        lobby.setPlayers(updatesPlayers);
     }
 
     private void careerOrCollegeChoice(Player player, boolean chooseLeft){
@@ -248,7 +250,6 @@ public class GameService {
                 break;
             case RETIREMENT:
                 retire(player, lobby);
-                lobby.nextPlayer();
                 break;
             case NOTHING:
                 lobby.nextPlayer();
