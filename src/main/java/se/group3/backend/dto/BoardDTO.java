@@ -12,7 +12,7 @@ public class BoardDTO {
     @JsonCreator
     public BoardDTO(@JsonProperty("cells") List<CellDTO> cells) {
         // Initialize the board with dimensions 17x33
-        this.cells = new CellDTO[17][33];
+        this.cells = new CellDTO[18][33];
 
         // Place cells on the board
         for (CellDTO cell : cells) {
