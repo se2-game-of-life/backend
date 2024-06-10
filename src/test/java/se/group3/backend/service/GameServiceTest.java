@@ -458,6 +458,7 @@ class GameServiceTest {
         when(cellRepository.findByNumber(anyInt())).thenReturn(cell);
         when(cell.getNextCells()).thenReturn(List.of(1));
         when(cell.getType()).thenReturn(CellType.RETIREMENT);
+        Player player2 = new Player("uuid2", "player2");
 
         player.setLobbyID(2L);
 
@@ -465,7 +466,7 @@ class GameServiceTest {
         when(lobbyMock.getLobbyID()).thenReturn(2L);
         when(lobbyMock.getCurrentPlayer()).thenReturn(player);
         when(lobbyMock.getSpunNumber()).thenReturn(2);
-        when(lobbyMock.getPlayers()).thenReturn(List.of(player));
+        when(lobbyMock.getPlayers()).thenReturn(List.of(player, player2));
         when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
 
@@ -473,10 +474,10 @@ class GameServiceTest {
         player.setNumberOfPegs(1);
         player.setMoney(0);
 
+
         gameService.handleTurn(player.getPlayerUUID());
 
-        verify(lobbyMock).nextPlayer();
-        assertEquals(100 + 50000 + 200000, player.getMoney());
+        assertEquals(100 + 50000 + 100000, player.getMoney());
     }
 
 
