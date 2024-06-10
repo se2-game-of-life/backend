@@ -52,7 +52,7 @@ public class BoardServiceTest {
         BoardDTO boardDTO = boardService.fetchBoardData();
 
         // Assert
-        assertEquals(17, boardDTO.getCells().length);
+        assertEquals(18, boardDTO.getCells().length);
         assertEquals(33, boardDTO.getCells()[0].length);
         assertEquals(CellType.CASH.toString(), boardDTO.getCells()[0][0].getType());
         assertEquals(CellType.ACTION.toString(), boardDTO.getCells()[0][1].getType());
