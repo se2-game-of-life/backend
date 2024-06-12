@@ -26,7 +26,6 @@ public class Lobby {
     private List<Card> cards;
     private int spunNumber;
     private boolean hasStarted;
-    private int playersTurnCounter;
 
     private ArrayList<Player> queue;
 
@@ -39,7 +38,6 @@ public class Lobby {
         hasStarted = false;
         hasDecision = false;
         spunNumber = 0;
-        playersTurnCounter = 0;
         addPlayer(currentPlayer);
     }
 
@@ -54,8 +52,7 @@ public class Lobby {
 
     public void nextPlayer() {
         queue.remove(0);
-        updateCounter();
-        queue.add(players.get(playersTurnCounter));
+        queue.add(currentPlayer);
         currentPlayer = queue.get(0);
     }
 
@@ -63,12 +60,4 @@ public class Lobby {
         return players.size() >= MAXIMUM_PLAYER_COUNT;
     }
 
-    private void updateCounter(){
-        if(playersTurnCounter < players.size()-1){
-            playersTurnCounter++;
-        } else{
-            playersTurnCounter = 0;
-        }
-
-    }
 }
