@@ -100,6 +100,8 @@ public class GameService {
                 case CAREER:
                     careerChoice(player, lobby, chooseLeft);
                     break;
+                case NOTHING:
+                    lobby.nextPlayer();
                 default:
                     throw new IllegalStateException("Unknown cell type.");
             }
@@ -135,6 +137,7 @@ public class GameService {
                 player.setCurrentCellPosition(1);
             } else {
                 player.setCurrentCellPosition(14);
+                player.setCareerCard(new CareerCard("Vet", 100,100, false));
             }
             player.setCollegeDegree(chooseLeft);
     }
@@ -144,8 +147,9 @@ public class GameService {
             player.setMoney(player.getMoney()- INVESTMENT_MARRY_OR_FAMILY);
             player.setNumberOfPegs(player.getNumberOfPegs() + 1);
             player.setCurrentCellPosition(cell.getNextCells().get(0));
+        } else{
+            player.setCurrentCellPosition(cell.getNextCells().get(1));
         }
-        player.setCurrentCellPosition(cell.getNextCells().get(1));
     }
 
     private void houseChoice(Player player, Lobby lobby, boolean chooseLeft){
@@ -207,7 +211,7 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             case ACTION:
-                actionCardRepository.findRandomActionCard().performAction(player);
+                //actionCardRepository.findRandomActionCard().performAction(player);
                 lobby.nextPlayer();
                 break;
             case FAMILY:
