@@ -102,6 +102,12 @@ public class GameService {
                 case CAREER:
                     careerChoice(player, lobby, chooseLeft);
                     break;
+                case TELEPORT:
+                    if (chooseLeft) {
+                        int newPosition = player.getCurrentCellPosition() + 2;
+                        player.setCurrentCellPosition(newPosition);
+                    }
+                    break;
                 default:
                     throw new IllegalStateException("Unknown cell type.");
             }
