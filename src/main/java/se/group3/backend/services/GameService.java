@@ -196,7 +196,7 @@ public class GameService {
                 break;
             }
         }
-        player.setCurrentCellPosition(player.getCurrentCellPosition()+spunNumber);
+        player.setCurrentCellPosition(currentCell.getNumber());
         playerRepository.save(player);
         lobbyRepository.save(lobby);
         handleCell(lobby, player, currentCell);
