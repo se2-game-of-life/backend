@@ -209,7 +209,7 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             case ACTION:
-                //actionCardRepository.findRandomActionCard().performAction(player);
+                actionCardRepository.findRandomActionCard().performAction(player);
                 lobby.nextPlayer();
                 break;
             case FAMILY:
