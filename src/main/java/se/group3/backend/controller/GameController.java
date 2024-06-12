@@ -131,8 +131,7 @@ public class GameController {
     public void cheat(SimpMessageHeaderAccessor headerAccessor) {
         try {
             LobbyDTO lobbyDTO = cheatingService.cheat(getUUID(headerAccessor));
-            messagingTemplate.convertAndSend(LOBBIES_PATH + lobbyDTO.getLobbyID(), serializationService.jsonStringFromClass(lobbyDTO));
-            messagingTemplate.convertAndSend(LOBBIES_PATH + lobbyDTO.getLobbyID() + "/vibrate", "vibrate-event");
+            messagingTemplate.convertAndSend(LOBBIES_PATH + lobbyDTO.getLobbyID() + "/vibrate", serializationService.jsonStringFromClass(lobbyDTO));
         } catch (IllegalStateException | JsonProcessingException e) {
             log.error(e.getMessage());
         }
