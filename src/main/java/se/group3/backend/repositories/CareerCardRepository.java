@@ -36,4 +36,6 @@ public interface CareerCardRepository extends MongoRepository<CareerCard, String
 
         return careerCard;
     }
+
+
 }

@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import se.group3.backend.domain.cards.CareerCard;
-import se.group3.backend.domain.cards.HouseCard;
 
 import java.util.List;
 
@@ -22,9 +20,9 @@ public class PlayerDTO {
                      @JsonProperty("lobbyID") Long lobbyID,
                      @JsonProperty("currentCellPosition") int currentCellPosition,
                      @JsonProperty("money") int money,
-                     @JsonProperty("careerCard") CareerCard careerCard,
+                     @JsonProperty("careerCard") CareerCardDTO careerCard,
                      @JsonProperty("numberOfPegs") int numberOfPegs,
-                     @JsonProperty("houses") List<HouseCard> houses,
+                     @JsonProperty("houses") List<HouseCardDTO> houses,
                      @JsonProperty("collageDegree") boolean collegeDegree
     ) {
         this.playerUUID = playerUUID;
@@ -43,8 +41,8 @@ public class PlayerDTO {
     private String playerName;
     private int currentCellPosition;
     private int money;
-    private CareerCard careerCard;
+    private CareerCardDTO careerCard;
     private int numberOfPegs;
-    private List<HouseCard> houses;
+    private List<HouseCardDTO> houses;
     private boolean collegeDegree;
 }

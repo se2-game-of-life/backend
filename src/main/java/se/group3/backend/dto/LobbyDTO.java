@@ -3,10 +3,8 @@ package se.group3.backend.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import se.group3.backend.domain.Player;
-import se.group3.backend.domain.cards.Card;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 @Getter
@@ -16,7 +14,7 @@ public class LobbyDTO {
     private final List<PlayerDTO> players;
     private final PlayerDTO currentPlayer;
     private final boolean hasDecision;
-    private final List<Card> cards;
+    private final List<CardDTO> cards;
     private final int spunNumber;
     private final boolean hasStarted;
 
@@ -25,7 +23,7 @@ public class LobbyDTO {
                     @JsonProperty("players") List<PlayerDTO> players,
                     @JsonProperty("currentPlayer") PlayerDTO currentPlayer,
                     @JsonProperty("hasDecision") boolean hasDecision,
-                    @JsonProperty("cards") List<Card> cards,
+                    @JsonProperty("cards") List<CardDTO> cards,
                     @JsonProperty("spunNumber") int spunNumber,
                     @JsonProperty("hasStarted") boolean hasStarted
     ) {
