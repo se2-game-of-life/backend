@@ -132,6 +132,7 @@ public class GameController {
         try {
             LobbyDTO lobbyDTO = cheatingService.cheat(getUUID(headerAccessor));
             messagingTemplate.convertAndSend(LOBBIES_PATH + lobbyDTO.getLobbyID(), serializationService.jsonStringFromClass(lobbyDTO));
+            messagingTemplate.convertAndSend(LOBBIES_PATH + lobbyDTO.getLobbyID() + "/vibrate", "vibrate-event");
         } catch (IllegalStateException | JsonProcessingException e) {
             log.error(e.getMessage());
         }
