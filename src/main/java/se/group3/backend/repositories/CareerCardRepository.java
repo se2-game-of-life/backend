@@ -23,4 +23,17 @@ public interface CareerCardRepository extends MongoRepository<CareerCard, String
 
         return careerCard;
     }
+
+    default CareerCard findCareerCardDiploma(){
+        List<CareerCard> cardList = findAll();
+        CareerCard careerCard = findRandomCareerCard();
+
+        for (CareerCard card : cardList){
+            if (card.needsDiploma()){
+                careerCard = card;
+            }
+        }
+
+        return careerCard;
+    }
 }
