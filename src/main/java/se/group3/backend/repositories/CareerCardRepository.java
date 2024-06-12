@@ -2,7 +2,6 @@ package se.group3.backend.repositories;
 
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
 import se.group3.backend.domain.cards.CareerCard;
 
 import java.util.List;
