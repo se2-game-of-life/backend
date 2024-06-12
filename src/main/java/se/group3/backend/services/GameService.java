@@ -232,7 +232,6 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             case HOUSE:
-                System.out.println("HOUSE case begins");
                 List<Card> houseCards = houseCardRepository.searchAffordableHousesForPlayer(player.getMoney());
                 if(houseCards.size() != 2) {
                     lobby.setHasDecision(false);
@@ -241,7 +240,6 @@ public class GameService {
                     lobby.setCards(houseCards);
                     lobby.setHasDecision(true);
                 }
-                System.out.println("After House Case");
                 break;
             case CAREER:
                 List<Card> careerCards = new ArrayList<>();
