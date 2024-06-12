@@ -4,12 +4,18 @@ import se.group3.backend.domain.Player;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "HouseCards")
-public class HouseCard extends Card {
+public class HouseCard implements Card {
+
+    private String id;
+    private String name;
     private int purchasePrice;
     private int redSellPrice;
     private int blackSellPrice;
-    public HouseCard(String name, int purchasePrice, int redSellPrice, int blackSellPrice) {
-        super(name);
+
+
+    public HouseCard(String id, String name, int purchasePrice, int redSellPrice, int blackSellPrice) {
+        this.id = id;
+        this.name = name;
         this.purchasePrice = purchasePrice;
         this.redSellPrice = redSellPrice;
         this.blackSellPrice = blackSellPrice;
@@ -27,7 +33,24 @@ public class HouseCard extends Card {
         return blackSellPrice;
     }
 
-    @Override
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+    /*    @Override
     public void performAction(Player player) {
         // Implement action specific to house cards
     }
@@ -38,5 +61,5 @@ public class HouseCard extends Card {
                 "id='" + getId() + '\'' +
                 "name='" + getName() + '\'' +
                 '}';
-    }
+    }*/
 }

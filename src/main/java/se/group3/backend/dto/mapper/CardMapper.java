@@ -45,8 +45,7 @@ public class CardMapper {
 
     public static ActionCardDTO toActionCardDTO(ActionCard actionCard) {
         if(actionCard == null) return null;
-        return new ActionCardDTO(
-                actionCard.getId(),
+        ActionCardDTO dto = new ActionCardDTO(
                 actionCard.getName(),
                 actionCard.getDescription(),
                 actionCard.isAffectOnePlayer(),
@@ -54,11 +53,14 @@ public class CardMapper {
                 actionCard.isAffectBank(),
                 actionCard.getMoneyAmount()
         );
+        dto.setId(actionCard.getId());
+        return dto;
     }
 
     public static ActionCard toActionCard(ActionCardDTO actionCardDTO) {
         if(actionCardDTO == null) return null;
         return new ActionCard(
+                actionCardDTO.getId(),
                 actionCardDTO.getName(),
                 actionCardDTO.getDescription(),
                 actionCardDTO.isAffectOnePlayer(),
@@ -70,18 +72,20 @@ public class CardMapper {
 
     public static HouseCardDTO toHouseCardDTO(HouseCard houseCard) {
         if(houseCard == null) return null;
-        return new HouseCardDTO(
-                houseCard.getId(),
+        HouseCardDTO dto =  new HouseCardDTO(
                 houseCard.getName(),
                 houseCard.getPurchasePrice(),
                 houseCard.getRedSellPrice(),
                 houseCard.getBlackSellPrice()
         );
+        dto.setId(houseCard.getId());
+        return dto;
     }
 
     public static HouseCard toHouseCard(HouseCardDTO houseCardDTO) {
         if(houseCardDTO == null) return null;
         return new HouseCard(
+                houseCardDTO.getId(),
                 houseCardDTO.getName(),
                 houseCardDTO.getPurchasePrice(),
                 houseCardDTO.getRedSellPrice(),
@@ -90,18 +94,20 @@ public class CardMapper {
 
     public static CareerCardDTO toCareerCardDTO(CareerCard careerCard) {
         if(careerCard == null) return null;
-        return new CareerCardDTO(
-                careerCard.getId(),
+        CareerCardDTO dto = new CareerCardDTO(
                 careerCard.getName(),
                 careerCard.getSalary(),
                 careerCard.getBonus(),
                 careerCard.needsDiploma()
         );
+        dto.setId(careerCard.getId());
+        return dto;
     }
 
     public static CareerCard toCareerCard(CareerCardDTO careerCardDTO) {
         if(careerCardDTO == null) return null;
         return new CareerCard(
+                careerCardDTO.getId(),
                 careerCardDTO.getName(),
                 careerCardDTO.getSalary(),
                 careerCardDTO.getBonus(),

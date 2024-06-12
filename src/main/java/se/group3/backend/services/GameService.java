@@ -221,7 +221,7 @@ public class GameService {
                 break;
             case ACTION:
                 ActionCard randomActionCard = actionCardRepository.findRandomActionCard();
-                randomActionCard.performAction(player);
+                doAction(player, randomActionCard);
                 List<Card> cardList = lobby.getCards();
                 cardList.add(randomActionCard);
                 lobby.setCards(cardList);
@@ -331,6 +331,18 @@ public class GameService {
         //todo before queue is empty --> last player has to end the game
     }
 
+    private void doAction(Player player, ActionCard actionCard) {
+        if(actionCard.isAffectOnePlayer()) {
+            player.setMoney(player.getMoney() + actionCard.getMoneyAmount());
+        } else if(actionCard.isAffectAllPlayers()) {
+            List<Player> players = playerRepository.findAll();
+            for(Player p : players) {
+                p.setMoney(p.getMoney() + actionCard.getMoneyAmount());
+            }
+        } else if(actionCard.isAffectBank()) {
+            player.setMoney(player.getMoney() + actionCard.getMoneyAmount());
+        }
+    }
 
     private int spinWheel() {
         return RANDOM.nextInt(10) + 1;

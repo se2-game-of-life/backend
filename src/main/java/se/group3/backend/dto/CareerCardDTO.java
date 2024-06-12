@@ -14,12 +14,12 @@ public class CareerCardDTO implements CardDTO {
     private int bonus;
     private boolean needsDiploma;
 
-    public CareerCardDTO(@JsonProperty("id") String id,
+    public CareerCardDTO(
                          @JsonProperty("name") String name,
                          @JsonProperty("salary") int salary,
                          @JsonProperty("bonus") int bonus,
                          @JsonProperty("needsDiploma") boolean needsDiploma) {
-        this.id = id;
+
         this.name = name;
         this.salary = salary;
         this.bonus = bonus;

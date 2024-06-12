@@ -3,8 +3,8 @@ import org.springframework.data.annotation.Id;
 import se.group3.backend.domain.Player;
 
 
-public abstract class Card {
-    @Id
+public interface Card {
+/*    @Id
     protected String id;
     private final String name;
 
@@ -21,7 +21,7 @@ public abstract class Card {
         return id;
     }
     // Abstract method to perform the card's action
-    public abstract void performAction(Player player);
+   // public abstract void performAction(Player player);*/
 }
 
 

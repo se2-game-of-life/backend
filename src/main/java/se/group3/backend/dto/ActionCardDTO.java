@@ -22,14 +22,13 @@ public class ActionCardDTO implements CardDTO {
 
     private int moneyAmount;
 
-    public ActionCardDTO(@JsonProperty("id") String id,
+    public ActionCardDTO(
                          @JsonProperty("name") String name,
                          @JsonProperty("description") String description,
                          @JsonProperty("affectOnePlayer") boolean affectOnePlayer,
                          @JsonProperty("affectAllPlayers") boolean affectAllPlayers,
                          @JsonProperty("affectBank") boolean affectBank,
                          @JsonProperty("moneyAmount") int moneyAmount) {
-        this.id = id;
         this.name = name;
         this.description = description;
         this.affectOnePlayer = affectOnePlayer;

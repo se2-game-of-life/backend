@@ -1,18 +1,23 @@
 package se.group3.backend.domain.cards;
 
+import org.springframework.data.annotation.Id;
 import se.group3.backend.domain.Player;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "ActionCards")
-public class ActionCard extends Card {
+public class ActionCard implements Card {
+    @Id
+    private String id;
+    private String name;
     private String description;
     private boolean affectOnePlayer;
     private boolean affectAllPlayers;
     private boolean affectBank;
     private int moneyAmount;
 
-    public ActionCard(String name, String description, boolean affectOnePlayer, boolean affectAllPlayers, boolean affectBank, int moneyAmount) {
-        super(name);
+    public ActionCard(String id, String name, String description, boolean affectOnePlayer, boolean affectAllPlayers, boolean affectBank, int moneyAmount) {
+        this.id = id;
+        this.name = name;
         this.description = description;
         this.affectOnePlayer = affectOnePlayer;
         this.affectAllPlayers = affectAllPlayers;
@@ -40,16 +45,32 @@ public class ActionCard extends Card {
         return moneyAmount;
     }
 
-    @Override
-    public void performAction(Player player) {
-        // Implement action specific to action cards
+    public String getId() {
+        return id;
     }
 
-    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /*   @Override
+    public void performAction(Player player) {
+        // Implement action specific to action cards
+    }*/
+
+/*    @Override
     public String toString() {
         return "ActionCard{" +
                 "id='" + getId() + '\'' +
                 "name='" + getName() + '\'' +
                 '}';
-    }
+    }*/
 }

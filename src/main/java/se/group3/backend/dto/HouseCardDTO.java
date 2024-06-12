@@ -14,12 +14,12 @@ public class HouseCardDTO implements CardDTO {
     private int redSellPrice;
     private int blackSellPrice;
 
-    public HouseCardDTO(@JsonProperty("id") String id,
+    public HouseCardDTO(
                         @JsonProperty("name") String name,
                         @JsonProperty("purchasePrice") int purchasePrice,
                         @JsonProperty("redSellPrice") int redSellPrice,
                         @JsonProperty("blackSellPrice") int blackSellPrice) {
-        this.id = id;
+
         this.name = name;
         this.purchasePrice = purchasePrice;
         this.redSellPrice = redSellPrice;
