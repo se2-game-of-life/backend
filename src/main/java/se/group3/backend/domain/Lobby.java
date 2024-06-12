@@ -1,10 +1,12 @@
 package se.group3.backend.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import se.group3.backend.domain.cards.Card;
 
 import java.util.*;
@@ -24,6 +26,7 @@ public class Lobby {
     private List<Card> cards;
     private int spunNumber;
     private boolean hasStarted;
+    private int playersTurnCounter;
 
     private ArrayList<Player> queue;
 
@@ -36,7 +39,7 @@ public class Lobby {
         hasStarted = false;
         hasDecision = false;
         spunNumber = 0;
-
+        playersTurnCounter = 0;
         addPlayer(currentPlayer);
     }
 
@@ -51,12 +54,22 @@ public class Lobby {
 
     public void nextPlayer() {
         queue.remove(0);
-        queue.add(currentPlayer);
+        updateCounter();
+        queue.add(players.get(playersTurnCounter));
         currentPlayer = queue.get(0);
     }
 
     public boolean isFull() {
         return players.size() >= MAXIMUM_PLAYER_COUNT;
+    }
+
+    private void updateCounter(){
+        if(playersTurnCounter < players.size()-1){
+            playersTurnCounter++;
+        } else{
+            playersTurnCounter = 0;
+        }
+
     }
 
     public void addCard(Card card) {

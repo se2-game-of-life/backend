@@ -123,6 +123,9 @@ public class GameService {
             } else{
                 updatesPlayers.add(i, players.get(i));
             }
+            if(updatesPlayers.get(i).getPlayerUUID().equals(lobby.getCurrentPlayer().getPlayerUUID())){
+                lobby.setCurrentPlayer(updatesPlayers.get(i));
+            }
         }
         lobby.setPlayers(updatesPlayers);
     }
