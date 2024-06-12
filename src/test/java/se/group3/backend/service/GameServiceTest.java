@@ -408,7 +408,7 @@ class GameServiceTest {
     void testHandleTurn_MID_LIFE(){
         Cell cell = mock(Cell.class);
         when(cellRepository.findByNumber(anyInt())).thenReturn(cell);
-        when(cell.getNextCells()).thenReturn(List.of(1));
+        when(cell.getNextCells()).thenReturn(List.of(1, 2));
         when(cell.getType()).thenReturn(CellType.MID_LIFE);
 
         player.setLobbyID(2L);
