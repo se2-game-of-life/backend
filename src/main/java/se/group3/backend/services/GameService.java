@@ -62,10 +62,8 @@ public class GameService {
 
         lobbyRepository.save(lobby);
         playerRepository.save(player);
-        Optional<Lobby> updatedLobbyOptional = lobbyRepository.findById(player.getLobbyID());
-        if(updatedLobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
-        Lobby upatedLobby = lobbyOptional.get();
-        return LobbyMapper.toLobbyDTO(upatedLobby);
+        updatePlayerInLobby(lobby, player);
+        return LobbyMapper.toLobbyDTO(lobby);
     }
 
     public LobbyDTO makeChoice(boolean chooseLeft, String uuid) {
@@ -117,13 +115,18 @@ public class GameService {
 
     private void updatePlayerInLobby(Lobby lobby, Player player){
         List<Player> players = lobby.getPlayers();
-
+        List<Player> updatesPlayers = new ArrayList<>();
         for(int i = 0; i < players.size(); i++){
             if(players.get(i).getPlayerUUID().equals(player.getPlayerUUID())){
-                players.set(i, player);
+                updatesPlayers.add(i, player);
+            } else{
+                updatesPlayers.add(i, players.get(i));
+            }
+            if(updatesPlayers.get(i).getPlayerUUID().equals(lobby.getCurrentPlayer().getPlayerUUID())){
+                lobby.setCurrentPlayer(updatesPlayers.get(i));
             }
         }
-        lobby.setPlayers(players);
+        lobby.setPlayers(updatesPlayers);
     }
 
     private void careerOrCollegeChoice(Player player, boolean chooseLeft){
@@ -191,6 +194,9 @@ public class GameService {
                 break;
             }
         }
+        player.setCurrentCellPosition(currentCell.getNumber());
+        playerRepository.save(player);
+        lobbyRepository.save(lobby);
         handleCell(lobby, player, currentCell);
     }
 
@@ -245,7 +251,6 @@ public class GameService {
                 break;
             case RETIREMENT:
                 retire(player, lobby);
-                lobby.nextPlayer();
                 break;
             case NOTHING:
                 lobby.nextPlayer();
@@ -253,6 +258,8 @@ public class GameService {
             default:
                 lobby.nextPlayer();
         }
+        playerRepository.save(player);
+        lobbyRepository.save(lobby);
     }
 
     private void retire(Player player, Lobby lobby){
