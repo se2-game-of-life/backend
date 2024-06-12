@@ -59,6 +59,7 @@ public class GameService {
         lobby.setSpunNumber(spinWheel());
 
         lobby.setCards(new ArrayList<>());
+        lobby.setHasDecision(false);
         makeMove(lobby, player);
 
         lobbyRepository.save(lobby);
@@ -103,8 +104,9 @@ public class GameService {
                     break;
                 case NOTHING:
                     lobby.nextPlayer();
+                    break;
                 default:
-                    throw new IllegalStateException("Unknown cell type.");
+                    throw new IllegalStateException("Unknown cell type." + cell.getType());
             }
         }
 
@@ -138,7 +140,7 @@ public class GameService {
                 player.setCurrentCellPosition(1);
             } else {
                 player.setCurrentCellPosition(14);
-                player.setCareerCard(new CareerCard("Vet", 100,100, false));
+                player.setCareerCard(careerCardRepository.findCareerCardNoDiploma());
             }
             player.setCollegeDegree(chooseLeft);
     }
@@ -224,10 +226,12 @@ public class GameService {
             case HOUSE:
                 List<Card> houseCards = houseCardRepository.searchAffordableHousesForPlayer(player.getMoney());
                 if(houseCards.size() != 2) {
+                    lobby.setHasDecision(false);
                     break;
+                } else{
+                    lobby.setCards(houseCards);
+                    lobby.setHasDecision(true);
                 }
-                lobby.setCards(houseCards);
-                lobby.setHasDecision(true);
                 break;
             case CAREER:
                 List<Card> careerCards = new ArrayList<>();
