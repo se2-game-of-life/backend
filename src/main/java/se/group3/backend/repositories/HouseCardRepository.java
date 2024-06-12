@@ -19,7 +19,7 @@ public interface HouseCardRepository extends MongoRepository<HouseCard, String> 
         List<HouseCard> houses = findAll();
 
         for(HouseCard house : houses){
-            if(house.getPurchasePrice() <= availableMoney && affordableHouses.size() <= 2){
+            if(house.getPurchasePrice() <= availableMoney && affordableHouses.size() < 2){
                 affordableHouses.add(house);
             }
         }
