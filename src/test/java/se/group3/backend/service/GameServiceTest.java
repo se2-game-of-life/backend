@@ -169,7 +169,7 @@ class GameServiceTest {
     @Test
     void testMakeChoice_Houses_true(){
 
-        lobby.setCards(List.of(houseCard1, houseCard2));
+        lobby.setHouseCards(List.of(houseCard1, houseCard2));
         Cell startCell = mock(Cell.class);
 
         when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
@@ -185,7 +185,7 @@ class GameServiceTest {
 
     @Test
     void testMakeChoice_Houses_false(){
-        lobby.setCards(List.of(houseCard1, houseCard2));
+        lobby.setHouseCards(List.of(houseCard1, houseCard2));
         Cell startCell = mock(Cell.class);
 
 
@@ -204,7 +204,7 @@ class GameServiceTest {
     @MethodSource("testMakeChoiceCAREER_Input")
     void testMakeChoice_Career(boolean chooseLeft, CareerCard card){
 
-        lobby.setCards(List.of(careerCard1, careerCard2));
+        lobby.setCareerCards(List.of(careerCard1, careerCard2));
         Cell startCell = mock(Cell.class);
 
 
@@ -289,12 +289,11 @@ class GameServiceTest {
         when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
 
-        ActionCard actionCard = mock(ActionCard.class);
-        when(actionCardRepository.findRandomActionCard()).thenReturn(actionCard);
+//        ActionCard actionCard = mock(ActionCard.class);
+//        when(actionCardRepository.findRandomActionCard()).thenReturn(actionCard);
 
         gameService.handleTurn(player.getPlayerUUID());
 
-       // verify(actionCard).performAction(player);
         verify(lobbyMock).nextPlayer();
     }
 
@@ -344,7 +343,7 @@ class GameServiceTest {
 
         gameService.handleTurn(player.getPlayerUUID());
 
-        verify(lobbyMock).setCards(List.of(houseCard1, houseCard2));
+        verify(lobbyMock).setHouseCards(List.of(houseCard1, houseCard2));
         verify(lobbyMock).setHasDecision(true);
     }
 
@@ -371,7 +370,7 @@ class GameServiceTest {
 
         gameService.handleTurn(player.getPlayerUUID());
 
-        verify(lobbyMock).setCards(List.of(careerCard1, careerCard1));
+        verify(lobbyMock).setCareerCards(List.of(careerCard1, careerCard1));
         verify(lobbyMock).setHasDecision(true);
     }
 
@@ -399,7 +398,7 @@ class GameServiceTest {
 
         gameService.handleTurn(player.getPlayerUUID());
 
-        verify(lobbyMock).setCards(List.of(careerCard1, careerCard1));
+        verify(lobbyMock).setCareerCards(List.of(careerCard1, careerCard1));
         verify(lobbyMock).setHasDecision(true);
         verify(careerCard1, times(2)).needsDiploma();
     }

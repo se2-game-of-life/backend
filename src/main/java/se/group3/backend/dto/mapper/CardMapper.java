@@ -57,6 +57,14 @@ public class CardMapper {
         return dto;
     }
 
+    public static List<ActionCardDTO> toActionCardDTOList(List<ActionCard> list){
+        List<ActionCardDTO> actionCardDTOS = new ArrayList<>();
+        for(ActionCard actionCard : list){
+            actionCardDTOS.add(toActionCardDTO(actionCard));
+        }
+        return actionCardDTOS;
+    }
+
     public static ActionCard toActionCard(ActionCardDTO actionCardDTO) {
         if(actionCardDTO == null) return null;
         return new ActionCard(
@@ -70,6 +78,14 @@ public class CardMapper {
         );
     }
 
+    public static List<ActionCard> toActionCardList(List<ActionCardDTO> list){
+        List<ActionCard> actionCards = new ArrayList<>();
+        for(ActionCardDTO dto : list){
+            actionCards.add(toActionCard(dto));
+        }
+        return actionCards;
+    }
+
     public static HouseCardDTO toHouseCardDTO(HouseCard houseCard) {
         if(houseCard == null) return null;
         HouseCardDTO dto =  new HouseCardDTO(
@@ -80,6 +96,38 @@ public class CardMapper {
         );
         dto.setId(houseCard.getId());
         return dto;
+    }
+
+    public static List<HouseCardDTO> toHouseCardDTOList(List<HouseCard> cards){
+        ArrayList<HouseCardDTO> houseCardDTOS = new ArrayList<>();
+        for(HouseCard houseCard : cards){
+            houseCardDTOS.add((toHouseCardDTO(houseCard)));
+        }
+        return houseCardDTOS;
+    }
+
+    public static List<HouseCard> toHouseCardList(List<HouseCardDTO> cards){
+        ArrayList<HouseCard> houseCards = new ArrayList<>();
+        for(HouseCardDTO dto : cards){
+            houseCards.add((toHouseCard(dto)));
+        }
+        return houseCards;
+    }
+
+    public static List<CareerCardDTO> toCareerCardDTOList (List<CareerCard> cards){
+        ArrayList<CareerCardDTO> careerCardDTOS = new ArrayList<>();
+        for(CareerCard careerCard : cards){
+            careerCardDTOS.add((toCareerCardDTO(careerCard)));
+        }
+        return careerCardDTOS;
+    }
+
+    public static List<CareerCard> toCareerCardList (List<CareerCardDTO> cards){
+        ArrayList<CareerCard> careerCards = new ArrayList<>();
+        for(CareerCardDTO dto : cards){
+            careerCards.add((toCareerCard(dto)));
+        }
+        return careerCards;
     }
 
     public static HouseCard toHouseCard(HouseCardDTO houseCardDTO) {

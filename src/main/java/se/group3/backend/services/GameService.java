@@ -58,7 +58,9 @@ public class GameService {
         if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), playerUUID)) throw new IllegalArgumentException("It's not the player's turn!");
         lobby.setSpunNumber(spinWheel());
 
-        lobby.setCards(new ArrayList<>());
+        lobby.setHouseCards(new ArrayList<>());
+        lobby.setCareerCards(new ArrayList<>());
+        lobby.setActionCards(new ArrayList<>());
         lobby.setHasDecision(false);
         makeMove(lobby, player);
 
@@ -156,12 +158,12 @@ public class GameService {
     }
 
     private void houseChoice(Player player, Lobby lobby, boolean chooseLeft){
-        List<Card> houseCardList = lobby.getCards();
+        List<HouseCard> houseCardList = lobby.getHouseCards();
         HouseCard houseCard;
         if(chooseLeft){
-            houseCard = (HouseCard) houseCardList.get(0);
+            houseCard = houseCardList.get(0);
         } else{
-            houseCard = (HouseCard) houseCardList.get(1);
+            houseCard = houseCardList.get(1);
         }
         player.setMoney(player.getMoney()-houseCard.getPurchasePrice());
         if(player.getHouses() != null){
@@ -174,12 +176,12 @@ public class GameService {
     }
 
     private void careerChoice(Player player, Lobby lobby, boolean chooseLeft){
-        List<Card> careerCardList = lobby.getCards();
+        List<CareerCard> careerCardList = lobby.getCareerCards();
         CareerCard careerCard;
         if(chooseLeft){
-            careerCard = (CareerCard) careerCardList.get(0);
+            careerCard = careerCardList.get(0);
         } else{
-            careerCard = (CareerCard) careerCardList.get(1);
+            careerCard = careerCardList.get(1);
         }
         player.setCareerCard(careerCard);
     }
@@ -220,11 +222,12 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             case ACTION:
-                ActionCard randomActionCard = actionCardRepository.findRandomActionCard();
-                doAction(player, randomActionCard);
-                List<Card> cardList = lobby.getCards();
-                cardList.add(randomActionCard);
-                lobby.setCards(cardList);
+                //todo: Florian bitte anpassen
+//                ActionCard randomActionCard = actionCardRepository.findRandomActionCard();
+//                doAction(player, randomActionCard);
+//                List<Card> cardList = lobby.getCards();
+//                cardList.add(randomActionCard);
+//                lobby.setCards(cardList);
                 lobby.nextPlayer();
                 break;
             case FAMILY:
@@ -232,17 +235,17 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             case HOUSE:
-                List<Card> houseCards = houseCardRepository.searchAffordableHousesForPlayer(player.getMoney());
+                List<HouseCard> houseCards = houseCardRepository.searchAffordableHousesForPlayer(player.getMoney());
                 if(houseCards.size() != 2) {
                     lobby.setHasDecision(false);
                     break;
                 } else{
-                    lobby.setCards(houseCards);
+                    lobby.setHouseCards(houseCards);
                     lobby.setHasDecision(true);
                 }
                 break;
             case CAREER:
-                List<Card> careerCards = new ArrayList<>();
+                List<CareerCard> careerCards = new ArrayList<>();
                 if(player.isCollegeDegree()){
                     careerCards.add(careerCardRepository.findRandomCareerCard());
                     careerCards.add(careerCardRepository.findRandomCareerCard());
@@ -254,7 +257,7 @@ public class GameService {
                         }
                     }
                 }
-                lobby.setCards(careerCards);
+                lobby.setCareerCards(careerCards);
                 lobby.setHasDecision(true);
                 break;
             case MID_LIFE:

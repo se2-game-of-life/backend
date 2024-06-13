@@ -14,8 +14,8 @@ public interface HouseCardRepository extends MongoRepository<HouseCard, String> 
     @Aggregation(pipeline = { "{$sample: {size: 1}}" })
     HouseCard findRandomHouseCard();
 
-    default List<Card> searchAffordableHousesForPlayer(int availableMoney){
-        List<Card> affordableHouses= new ArrayList<>();
+    default List<HouseCard> searchAffordableHousesForPlayer(int availableMoney){
+        List<HouseCard> affordableHouses= new ArrayList<>();
         List<HouseCard> houses = findAll();
 
         for(HouseCard house : houses){
