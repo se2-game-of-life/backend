@@ -4,9 +4,11 @@ package se.group3.backend.mapper;
 
 import org.junit.jupiter.api.Test;
 import se.group3.backend.domain.cards.ActionCard;
+import se.group3.backend.domain.cards.Card;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cards.HouseCard;
 import se.group3.backend.dto.ActionCardDTO;
+import se.group3.backend.dto.CardDTO;
 import se.group3.backend.dto.CareerCardDTO;
 import se.group3.backend.dto.HouseCardDTO;
 import se.group3.backend.dto.mapper.CardMapper;
@@ -141,7 +143,31 @@ public class CardMapperTest {
         assertEquals(dto.get(1).getBonus(), careerCards.get(1).getBonus());
     }
 
+    @Test
+    void testToCardDTO(){
+        List<Card> cards = List.of(careerCard1, actioncard1, houseCard1);
+        List<CardDTO> dto = CardMapper.toCardDTO(cards);
+        CareerCard card = (CareerCard) cards.get(0);
+        CareerCardDTO careerCardDTO = (CareerCardDTO) dto.get(0);
+        HouseCard houseCard = (HouseCard) cards.get(2);
+        HouseCardDTO houseCardDTO = (HouseCardDTO) dto.get(2);
 
+        assertEquals(card.getBonus(), careerCardDTO.getBonus());
+        assertEquals(houseCard.getPurchasePrice(), houseCardDTO.getPurchasePrice());
+    }
+
+    @Test
+    void testToCard(){
+        List<CardDTO> dtos = List.of(careerCardDTO1, actioncardDTO1, houseCardDTO1);
+        List<Card> cards = CardMapper.toCard(dtos);
+        CareerCard card = (CareerCard) cards.get(0);
+        CareerCardDTO careerCardDTO = (CareerCardDTO) dtos.get(0);
+        HouseCard houseCard = (HouseCard) cards.get(2);
+        HouseCardDTO houseCardDTO = (HouseCardDTO) dtos.get(2);
+
+        assertEquals(careerCardDTO.getBonus(), card.getBonus());
+        assertEquals(houseCardDTO.getPurchasePrice(), houseCard.getPurchasePrice());
+    }
 
 
 }
