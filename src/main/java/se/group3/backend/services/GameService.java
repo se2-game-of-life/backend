@@ -8,7 +8,6 @@ import se.group3.backend.domain.CellType;
 import se.group3.backend.domain.Lobby;
 import se.group3.backend.domain.Player;
 import se.group3.backend.domain.cards.ActionCard;
-import se.group3.backend.domain.cards.Card;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cards.HouseCard;
 import se.group3.backend.dto.LobbyDTO;
@@ -222,12 +221,11 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             case ACTION:
-                //todo: Florian bitte anpassen
-//                ActionCard randomActionCard = actionCardRepository.findRandomActionCard();
-//                doAction(player, randomActionCard);
-//                List<Card> cardList = lobby.getCards();
-//                cardList.add(randomActionCard);
-//                lobby.setCards(cardList);
+                ActionCard randomActionCard = actionCardRepository.findRandomActionCard();
+                doAction(player, randomActionCard);
+                List<ActionCard> cardList = lobby.getActionCards();
+                cardList.add(randomActionCard);
+                lobby.setActionCards(cardList);
                 lobby.nextPlayer();
                 break;
             case FAMILY:
