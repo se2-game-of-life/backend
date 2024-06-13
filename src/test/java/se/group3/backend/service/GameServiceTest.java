@@ -289,8 +289,8 @@ class GameServiceTest {
         when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
 
-//        ActionCard actionCard = mock(ActionCard.class);
-//        when(actionCardRepository.findRandomActionCard()).thenReturn(actionCard);
+        ActionCard actionCard = mock(ActionCard.class);
+        when(actionCardRepository.findRandomActionCard()).thenReturn(actionCard);
 
         gameService.handleTurn(player.getPlayerUUID());
 
