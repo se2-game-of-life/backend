@@ -107,6 +107,7 @@ public class GameService {
                         int newPosition = player.getCurrentCellPosition() + 2;
                         player.setCurrentCellPosition(newPosition);
                     }
+                    lobby.nextPlayer();
                     break;
                 default:
                     throw new IllegalStateException("Unknown cell type.");
