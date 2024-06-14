@@ -1,7 +1,6 @@
 package se.group3.backend.domain.cards;
 
 import org.springframework.data.annotation.Id;
-import se.group3.backend.domain.Player;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "ActionCards")
@@ -61,16 +60,4 @@ public class ActionCard implements Card {
         this.name = name;
     }
 
-    /*   @Override
-    public void performAction(Player player) {
-        // Implement action specific to action cards
-    }*/
-
-/*    @Override
-    public String toString() {
-        return "ActionCard{" +
-                "id='" + getId() + '\'' +
-                "name='" + getName() + '\'' +
-                '}';
-    }*/
 }
