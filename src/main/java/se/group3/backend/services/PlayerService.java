@@ -18,14 +18,12 @@ public class PlayerService {
     private CareerCardRepository careerCardRepository;
     private CellRepository cellRepository;
     private HouseCardRepository houseCardRepository;
-    private ActionCardRepository actionCardRepository;
 
 
-    public PlayerService(CareerCardRepository careerCardRepository, CellRepository cellRepository, HouseCardRepository houseCardRepository, ActionCardRepository actionCardRepository) {
+    public PlayerService(CareerCardRepository careerCardRepository, CellRepository cellRepository, HouseCardRepository houseCardRepository) {
         this.careerCardRepository = careerCardRepository;
         this.cellRepository = cellRepository;
         this.houseCardRepository = houseCardRepository;
-        this.actionCardRepository = actionCardRepository;
     }
 
     public void midLife(Player player, Cell cell, Lobby lobby, int randomNumber){

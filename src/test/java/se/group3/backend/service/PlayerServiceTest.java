@@ -23,17 +23,15 @@ import static org.mockito.Mockito.*;
 class PlayerServiceTest {
     private PlayerService playerService;
     private CareerCardRepository careerCardRepository;
-    private ActionCardRepository actionCardRepository;
     private HouseCardRepository houseCardRepository;
     private CellRepository cellRepository;
 
     @BeforeEach
     public void setUp(){
         this.careerCardRepository = mock(CareerCardRepository.class);
-        this.actionCardRepository = mock(ActionCardRepository.class);
         this.houseCardRepository = mock(HouseCardRepository.class);
         this.cellRepository = mock(CellRepository.class);
-        this.playerService = new PlayerService(careerCardRepository, cellRepository, houseCardRepository, actionCardRepository);
+        this.playerService = new PlayerService(careerCardRepository, cellRepository, houseCardRepository);
     }
 
 
@@ -270,7 +268,6 @@ class PlayerServiceTest {
     @AfterEach
     public void breakDown(){
         this.careerCardRepository = null;
-        this.actionCardRepository = null;
         this.houseCardRepository = null;
         this.cellRepository = null;
         this.playerService = null;

@@ -37,7 +37,7 @@ public class GameService {
         this.cellRepository = cellRepository;
         this.playerRepository = playerRepository;
         this.lobbyRepository = lobbyRepository;
-        this.playerService = new PlayerService(careerCardRepository, cellRepository, houseCardRepository, actionCardRepository);
+        this.playerService = new PlayerService(careerCardRepository, cellRepository, houseCardRepository);
     }
 
     public LobbyDTO handleTurn(String playerUUID) throws IllegalArgumentException {
