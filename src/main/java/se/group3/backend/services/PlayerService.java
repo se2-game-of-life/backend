@@ -30,7 +30,7 @@ public class PlayerService {
         this.actionCardRepository = actionCardRepository;
     }
 
-    protected void midLife(Player player, Cell cell, Lobby lobby, int randomNumber){
+    public void midLife(Player player, Cell cell, Lobby lobby, int randomNumber){
         if(randomNumber > 2) {
             player.setCurrentCellPosition(cell.getNextCells().get(0));
         } else {
@@ -39,7 +39,7 @@ public class PlayerService {
         lobby.nextPlayer();
     }
 
-    protected void getCareerCards(Player player, Lobby lobby){
+    public void getCareerCards(Player player, Lobby lobby){
         List<CareerCard> careerCards = new ArrayList<>();
         if(player.isCollegeDegree()){
             careerCards.add(careerCardRepository.findRandomCareerCard());
@@ -57,7 +57,7 @@ public class PlayerService {
     }
 
 
-    protected void getHouseCards(Player player, Lobby lobby){
+    public void getHouseCards(Player player, Lobby lobby){
         List<HouseCard> houseCards = houseCardRepository.searchAffordableHousesForPlayer(player.getMoney());
         if(houseCards.size() != 2) {
             lobby.setHasDecision(false);
@@ -67,7 +67,7 @@ public class PlayerService {
         }
     }
 
-    protected void retire(Player player, Lobby lobby, int spunNumber){
+    public void retire(Player player, Lobby lobby, int spunNumber){
         List<Player> players = lobby.getPlayers();
         int counter = 0;
         for(Player p : players){
@@ -121,7 +121,7 @@ public class PlayerService {
     }
 
 
-    protected void updatePlayerInLobby(Lobby lobby, Player player){
+    public void updatePlayerInLobby(Lobby lobby, Player player){
         List<Player> players = lobby.getPlayers();
         List<Player> updatesPlayers = new ArrayList<>();
         for(int i = 0; i < players.size(); i++){
@@ -137,7 +137,7 @@ public class PlayerService {
         lobby.setPlayers(updatesPlayers);
     }
 
-    protected void careerOrCollegeChoice(Player player, boolean chooseLeft){
+    public void careerOrCollegeChoice(Player player, boolean chooseLeft){
         if(chooseLeft) {
             player.setMoney(player.getMoney() - INVESTMENT_COLLEGE);
             player.setCurrentCellPosition(1);
@@ -148,7 +148,7 @@ public class PlayerService {
         player.setCollegeDegree(chooseLeft);
     }
 
-    protected void marryAndFamilyPathChoice(Player player, boolean chooseLeft, Cell cell){
+    public void marryAndFamilyPathChoice(Player player, boolean chooseLeft, Cell cell){
         if(chooseLeft){
             player.setMoney(player.getMoney()- INVESTMENT_MARRY_OR_FAMILY);
             player.setNumberOfPegs(player.getNumberOfPegs() + 1);
@@ -158,7 +158,7 @@ public class PlayerService {
         }
     }
 
-    protected void houseChoice(Player player, Lobby lobby, boolean chooseLeft){
+    public void houseChoice(Player player, Lobby lobby, boolean chooseLeft){
         List<HouseCard> houseCardList = lobby.getHouseCards();
         HouseCard houseCard;
         if(chooseLeft){
@@ -176,7 +176,7 @@ public class PlayerService {
         }
     }
 
-    protected void careerChoice(Player player, Lobby lobby, boolean chooseLeft){
+    public void careerChoice(Player player, Lobby lobby, boolean chooseLeft){
         List<CareerCard> careerCardList = lobby.getCareerCards();
         CareerCard careerCard;
         if(chooseLeft){
