@@ -82,6 +82,8 @@ public class GameService {
         Cell cell = cellRepository.findByNumber(player.getCurrentCellPosition());
         if(cell == null){
             playerService.careerOrCollegeChoice(player, chooseLeft);
+            lobby.updatePlayerInLobby(player);
+            lobby.nextPlayer();
         } else{
             if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), uuid)) throw new IllegalArgumentException("It's not the player's turn!");
             switch(cell.getType()){
