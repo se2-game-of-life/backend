@@ -26,10 +26,4 @@ public interface HouseCardRepository extends MongoRepository<HouseCard, String> 
         return affordableHouses;
     }
 
-    /*
-    private final HouseCardRepository houseCardRepository;
-
-    To add to repo: houseCardRepository.save(houseCard);
-    To delete from repo: houseCardRepository.deleteById("houseCardId");
-    */
 }
