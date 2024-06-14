@@ -7,7 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import se.group3.backend.domain.cards.ActionCard;
 import se.group3.backend.domain.cards.Card;
+import se.group3.backend.domain.cards.CareerCard;
+import se.group3.backend.domain.cards.HouseCard;
 
 import java.util.*;
 
@@ -23,10 +26,11 @@ public class Lobby {
     private List<Player> players;
     private Player currentPlayer;
     private boolean hasDecision;
-    private List<Card> cards;
+    private List<ActionCard> actionCards;
+    private List<CareerCard> careerCards;
+    private List<HouseCard> houseCards;
     private int spunNumber;
     private boolean hasStarted;
-    private int playersTurnCounter;
 
     private ArrayList<Player> queue;
 
@@ -35,11 +39,12 @@ public class Lobby {
         this.currentPlayer = currentPlayer;
         players = new ArrayList<>(MAXIMUM_PLAYER_COUNT);
         queue = new ArrayList<>(MAXIMUM_PLAYER_COUNT);
-        cards = new ArrayList<>(2);
+        actionCards = new ArrayList<>(2);
+        careerCards = new ArrayList<>(2);
+        houseCards = new ArrayList<>(2);
         hasStarted = false;
         hasDecision = false;
         spunNumber = 0;
-        playersTurnCounter = 0;
         addPlayer(currentPlayer);
     }
 
@@ -54,8 +59,7 @@ public class Lobby {
 
     public void nextPlayer() {
         queue.remove(0);
-        updateCounter();
-        queue.add(players.get(playersTurnCounter));
+        queue.add(currentPlayer);
         currentPlayer = queue.get(0);
     }
 
@@ -63,12 +67,4 @@ public class Lobby {
         return players.size() >= MAXIMUM_PLAYER_COUNT;
     }
 
-    private void updateCounter(){
-        if(playersTurnCounter < players.size()-1){
-            playersTurnCounter++;
-        } else{
-            playersTurnCounter = 0;
-        }
-
-    }
 }

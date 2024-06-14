@@ -3,8 +3,6 @@ package se.group3.backend.dto.mapper;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.domain.Lobby;
 
-import java.util.Collections;
-import java.util.stream.Collectors;
 
 public class LobbyMapper {
 
@@ -18,7 +16,9 @@ public class LobbyMapper {
                 newLobby.getPlayers().stream().map(PlayerMapper::mapPlayerToDTO).toList(),
                 PlayerMapper.mapPlayerToDTO(newLobby.getCurrentPlayer()),
                 newLobby.isHasDecision(),
-                newLobby.getCards(),
+                CardMapper.toActionCardDTOList(newLobby.getActionCards()),
+                CardMapper.toCareerCardDTOList(newLobby.getCareerCards()),
+                CardMapper.toHouseCardDTOList(newLobby.getHouseCards()),
                 newLobby.getSpunNumber(),
                 newLobby.isHasStarted()
         );

@@ -7,7 +7,7 @@ import se.group3.backend.domain.Cell;
 import se.group3.backend.domain.CellType;
 import se.group3.backend.domain.Lobby;
 import se.group3.backend.domain.Player;
-import se.group3.backend.domain.cards.Card;
+import se.group3.backend.domain.cards.ActionCard;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cards.HouseCard;
 import se.group3.backend.dto.LobbyDTO;
@@ -57,7 +57,10 @@ public class GameService {
         if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), playerUUID)) throw new IllegalArgumentException("It's not the player's turn!");
         lobby.setSpunNumber(spinWheel());
 
-        lobby.setCards(new ArrayList<>());
+        lobby.setHouseCards(new ArrayList<>());
+        lobby.setCareerCards(new ArrayList<>());
+        lobby.setActionCards(new ArrayList<>());
+        lobby.setHasDecision(false);
         makeMove(lobby, player);
 
         lobbyRepository.save(lobby);
@@ -100,8 +103,11 @@ public class GameService {
                 case CAREER:
                     careerChoice(player, lobby, chooseLeft);
                     break;
+                case NOTHING:
+                    lobby.nextPlayer();
+                    break;
                 default:
-                    throw new IllegalStateException("Unknown cell type.");
+                    throw new IllegalStateException("Unknown cell type." + cell.getType());
             }
         }
 
@@ -135,6 +141,7 @@ public class GameService {
                 player.setCurrentCellPosition(1);
             } else {
                 player.setCurrentCellPosition(14);
+                player.setCareerCard(careerCardRepository.findCareerCardNoDiploma());
             }
             player.setCollegeDegree(chooseLeft);
     }
@@ -144,17 +151,18 @@ public class GameService {
             player.setMoney(player.getMoney()- INVESTMENT_MARRY_OR_FAMILY);
             player.setNumberOfPegs(player.getNumberOfPegs() + 1);
             player.setCurrentCellPosition(cell.getNextCells().get(0));
+        } else{
+            player.setCurrentCellPosition(cell.getNextCells().get(1));
         }
-        player.setCurrentCellPosition(cell.getNextCells().get(1));
     }
 
     private void houseChoice(Player player, Lobby lobby, boolean chooseLeft){
-        List<Card> houseCardList = lobby.getCards();
+        List<HouseCard> houseCardList = lobby.getHouseCards();
         HouseCard houseCard;
         if(chooseLeft){
-            houseCard = (HouseCard) houseCardList.get(0);
+            houseCard = houseCardList.get(0);
         } else{
-            houseCard = (HouseCard) houseCardList.get(1);
+            houseCard = houseCardList.get(1);
         }
         player.setMoney(player.getMoney()-houseCard.getPurchasePrice());
         if(player.getHouses() != null){
@@ -167,12 +175,12 @@ public class GameService {
     }
 
     private void careerChoice(Player player, Lobby lobby, boolean chooseLeft){
-        List<Card> careerCardList = lobby.getCards();
+        List<CareerCard> careerCardList = lobby.getCareerCards();
         CareerCard careerCard;
         if(chooseLeft){
-            careerCard = (CareerCard) careerCardList.get(0);
+            careerCard = careerCardList.get(0);
         } else{
-            careerCard = (CareerCard) careerCardList.get(1);
+            careerCard = careerCardList.get(1);
         }
         player.setCareerCard(careerCard);
     }
@@ -190,7 +198,13 @@ public class GameService {
             if(currentCell.getType() == CellType.CASH) {
                 player.setMoney(player.getMoney() + player.getCareerCard().getSalary());
             } else if(currentCell.getType() == CellType.GRADUATE) {
-                if (spinWheel() <= 2) player.setCollegeDegree(false);
+                if (spinWheel() <= 2) {
+                    player.setCollegeDegree(false);
+                    player.setCareerCard(careerCardRepository.findCareerCardNoDiploma());
+                } else{
+                    player.setCollegeDegree(true);
+                    player.setCareerCard(careerCardRepository.findCareerCardDiploma());
+                }
                 break;
             }
         }
@@ -207,7 +221,11 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             case ACTION:
-                actionCardRepository.findRandomActionCard().performAction(player);
+                ActionCard randomActionCard = actionCardRepository.findRandomActionCard();
+                doAction(player, randomActionCard);
+                List<ActionCard> cardList = lobby.getActionCards();
+                cardList.add(randomActionCard);
+                lobby.setActionCards(cardList);
                 lobby.nextPlayer();
                 break;
             case FAMILY:
@@ -215,15 +233,17 @@ public class GameService {
                 lobby.nextPlayer();
                 break;
             case HOUSE:
-                List<Card> houseCards = houseCardRepository.searchAffordableHousesForPlayer(player.getMoney());
+                List<HouseCard> houseCards = houseCardRepository.searchAffordableHousesForPlayer(player.getMoney());
                 if(houseCards.size() != 2) {
+                    lobby.setHasDecision(false);
                     break;
+                } else{
+                    lobby.setHouseCards(houseCards);
+                    lobby.setHasDecision(true);
                 }
-                lobby.setCards(houseCards);
-                lobby.setHasDecision(true);
                 break;
             case CAREER:
-                List<Card> careerCards = new ArrayList<>();
+                List<CareerCard> careerCards = new ArrayList<>();
                 if(player.isCollegeDegree()){
                     careerCards.add(careerCardRepository.findRandomCareerCard());
                     careerCards.add(careerCardRepository.findRandomCareerCard());
@@ -235,7 +255,7 @@ public class GameService {
                         }
                     }
                 }
-                lobby.setCards(careerCards);
+                lobby.setCareerCards(careerCards);
                 lobby.setHasDecision(true);
                 break;
             case MID_LIFE:
@@ -312,6 +332,18 @@ public class GameService {
         //todo before queue is empty --> last player has to end the game
     }
 
+    private void doAction(Player player, ActionCard actionCard) {
+        if(actionCard.isAffectOnePlayer()) {
+            player.setMoney(player.getMoney() + actionCard.getMoneyAmount());
+        } else if(actionCard.isAffectAllPlayers()) {
+            List<Player> players = playerRepository.findAll();
+            for(Player p : players) {
+                p.setMoney(p.getMoney() + actionCard.getMoneyAmount());
+            }
+        } else if(actionCard.isAffectBank()) {
+            player.setMoney(player.getMoney() + actionCard.getMoneyAmount());
+        }
+    }
 
     private int spinWheel() {
         return RANDOM.nextInt(10) + 1;

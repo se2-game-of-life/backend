@@ -3,10 +3,9 @@ package se.group3.backend.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import se.group3.backend.domain.Player;
-import se.group3.backend.domain.cards.Card;
+import se.group3.backend.domain.cards.HouseCard;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 @Getter
@@ -16,7 +15,9 @@ public class LobbyDTO {
     private final List<PlayerDTO> players;
     private final PlayerDTO currentPlayer;
     private final boolean hasDecision;
-    private final List<Card> cards;
+    private final List<ActionCardDTO> actionCards;
+    private final List<CareerCardDTO> careerCards;
+    private final List<HouseCardDTO> houseCards;
     private final int spunNumber;
     private final boolean hasStarted;
 
@@ -25,7 +26,9 @@ public class LobbyDTO {
                     @JsonProperty("players") List<PlayerDTO> players,
                     @JsonProperty("currentPlayer") PlayerDTO currentPlayer,
                     @JsonProperty("hasDecision") boolean hasDecision,
-                    @JsonProperty("cards") List<Card> cards,
+                    @JsonProperty("actionCards") List<ActionCardDTO> actionCards,
+                    @JsonProperty("careerCards") List<CareerCardDTO> careerCards,
+                    @JsonProperty("houseCards") List<HouseCardDTO> houseCards,
                     @JsonProperty("spunNumber") int spunNumber,
                     @JsonProperty("hasStarted") boolean hasStarted
     ) {
@@ -33,7 +36,9 @@ public class LobbyDTO {
         this.players = players;
         this.currentPlayer = currentPlayer;
         this.hasDecision = hasDecision;
-        this.cards = cards;
+        this.actionCards = actionCards;
+        this.careerCards = careerCards;
+        this.houseCards = houseCards;
         this.spunNumber = spunNumber;
         this.hasStarted = hasStarted;
     }

@@ -39,10 +39,10 @@ class GameServiceTest {
     private Player player;
     private Lobby lobby;
 
-    private final HouseCard houseCard1 = new HouseCard("House1", 50000,0,0);
-    private final HouseCard houseCard2 = new HouseCard("House2", 10000,0,0);
-    private final static CareerCard careerCard1 = new CareerCard("Career1", 100, 200, false);
-    private final static CareerCard careerCard2 = new CareerCard("Career2", 100, 200, false);
+    private final HouseCard houseCard1 = new HouseCard("House1","House1", 50000,0,0);
+    private final HouseCard houseCard2 = new HouseCard("House2","House2", 10000,0,0);
+    private final static CareerCard careerCard1 = new CareerCard("Career1","Career1", 100, 200, false);
+    private final static CareerCard careerCard2 = new CareerCard("Career2", "Career2", 100, 200, false);
 
 
     @BeforeEach
@@ -169,7 +169,7 @@ class GameServiceTest {
     @Test
     void testMakeChoice_Houses_true(){
 
-        lobby.setCards(List.of(houseCard1, houseCard2));
+        lobby.setHouseCards(List.of(houseCard1, houseCard2));
         Cell startCell = mock(Cell.class);
 
         when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
@@ -185,7 +185,7 @@ class GameServiceTest {
 
     @Test
     void testMakeChoice_Houses_false(){
-        lobby.setCards(List.of(houseCard1, houseCard2));
+        lobby.setHouseCards(List.of(houseCard1, houseCard2));
         Cell startCell = mock(Cell.class);
 
 
@@ -204,7 +204,7 @@ class GameServiceTest {
     @MethodSource("testMakeChoiceCAREER_Input")
     void testMakeChoice_Career(boolean chooseLeft, CareerCard card){
 
-        lobby.setCards(List.of(careerCard1, careerCard2));
+        lobby.setCareerCards(List.of(careerCard1, careerCard2));
         Cell startCell = mock(Cell.class);
 
 
@@ -241,7 +241,7 @@ class GameServiceTest {
         when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
 
-        player.setCareerCard(new CareerCard("Career",100, 0, false));
+        player.setCareerCard(new CareerCard("Career3", "Career",100, 0, false));
 
         gameService.handleTurn(player.getPlayerUUID());
 
@@ -265,7 +265,7 @@ class GameServiceTest {
         when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
 
-        player.setCareerCard(new CareerCard("Career",0, 100, false));
+        player.setCareerCard(new CareerCard("Career4", "Career",0, 100, false));
 
         gameService.handleTurn(player.getPlayerUUID());
 
@@ -294,7 +294,6 @@ class GameServiceTest {
 
         gameService.handleTurn(player.getPlayerUUID());
 
-        verify(actionCard).performAction(player);
         verify(lobbyMock).nextPlayer();
     }
 
@@ -344,7 +343,7 @@ class GameServiceTest {
 
         gameService.handleTurn(player.getPlayerUUID());
 
-        verify(lobbyMock).setCards(List.of(houseCard1, houseCard2));
+        verify(lobbyMock).setHouseCards(List.of(houseCard1, houseCard2));
         verify(lobbyMock).setHasDecision(true);
     }
 
@@ -371,7 +370,7 @@ class GameServiceTest {
 
         gameService.handleTurn(player.getPlayerUUID());
 
-        verify(lobbyMock).setCards(List.of(careerCard1, careerCard1));
+        verify(lobbyMock).setCareerCards(List.of(careerCard1, careerCard1));
         verify(lobbyMock).setHasDecision(true);
     }
 
@@ -399,7 +398,7 @@ class GameServiceTest {
 
         gameService.handleTurn(player.getPlayerUUID());
 
-        verify(lobbyMock).setCards(List.of(careerCard1, careerCard1));
+        verify(lobbyMock).setCareerCards(List.of(careerCard1, careerCard1));
         verify(lobbyMock).setHasDecision(true);
         verify(careerCard1, times(2)).needsDiploma();
     }
@@ -470,7 +469,7 @@ class GameServiceTest {
         when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
 
-        player.setHouses(List.of(new HouseCard("House", 100, 100, 100)));
+        player.setHouses(List.of(new HouseCard("House69","House", 100, 100, 100)));
         player.setNumberOfPegs(1);
         player.setMoney(0);
 

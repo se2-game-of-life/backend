@@ -99,7 +99,9 @@ public class LobbyService {
         Lobby lobby = lobbyOptional.get();
         lobby.setHasStarted(true);
         lobby.setHasDecision(false);
-        lobby.setCards(null);
+        lobby.setCareerCards(null);
+        lobby.setHouseCards(null);
+        lobby.setCareerCards(null);
 
         lobbyRepository.save(lobby);
         return LobbyMapper.toLobbyDTO(lobby);

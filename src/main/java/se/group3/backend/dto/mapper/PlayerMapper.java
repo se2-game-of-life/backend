@@ -1,7 +1,12 @@
 package se.group3.backend.dto.mapper;
 
+import se.group3.backend.domain.cards.HouseCard;
+import se.group3.backend.dto.HouseCardDTO;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.domain.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerMapper {
 
@@ -9,24 +14,34 @@ public class PlayerMapper {
         Player player = new Player(dto.getPlayerUUID(), dto.getPlayerName());
         player.setCurrentCellPosition(dto.getCurrentCellPosition());
         player.setMoney(dto.getMoney());
-        player.setCareerCard(dto.getCareerCard());
+        player.setCareerCard(CardMapper.toCareerCard(dto.getCareerCard()));
         player.setNumberOfPegs(dto.getNumberOfPegs());
 
         return player;
     }
 
     public static PlayerDTO mapPlayerToDTO(Player player) {
-        return new PlayerDTO(
+        PlayerDTO dto = new PlayerDTO(
                 player.getPlayerUUID(),
                 player.getPlayerName(),
                 player.getLobbyID(),
                 player.getCurrentCellPosition(),
                 player.getMoney(),
-                player.getCareerCard(),
+                CardMapper.toCareerCardDTO(player.getCareerCard()),
                 player.getNumberOfPegs(),
-                player.getHouses(),
+                null, //will set below int the forEach loop
                 player.isCollegeDegree()
         );
+        List<HouseCardDTO> houses = new ArrayList<>();
+        if (player.getHouses() == null) {
+            dto.setHouses(houses);
+        } else {
+            for (HouseCard house : player.getHouses()) {
+                houses.add(CardMapper.toHouseCardDTO(house));
+            }
+        }
+        dto.setHouses(houses);
+        return dto;
     }
 
 }
