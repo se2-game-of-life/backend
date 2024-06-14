@@ -49,17 +49,4 @@ public class HouseCard implements Card {
         this.name = name;
     }
 
-
-    /*    @Override
-    public void performAction(Player player) {
-        // Implement action specific to house cards
-    }
-
-    @Override
-    public String toString() {
-        return "HouseCard{" +
-                "id='" + getId() + '\'' +
-                "name='" + getName() + '\'' +
-                '}';
-    }*/
 }

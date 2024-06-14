@@ -49,22 +49,6 @@ public class CareerCard implements Card {
         this.name = name;
     }
 
-    /*    @Override
-    public void performAction(Player player) {
-        // Implement action specific to career cards
-    }
-
-    // Override the toString() method to print the contents of the CareerCard
-    @Override
-    public String toString() {
-        return "CareerCard{" +
-                "id='" + getId() + '\'' +
-                "name='" + getName() + '\'' +
-                ", salary=" + salary +
-                ", bonus=" + bonus +
-                ", needsDiploma=" + needsDiploma +
-                '}';
-    }*/
 
 }
 
