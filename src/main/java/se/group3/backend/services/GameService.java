@@ -70,27 +70,27 @@ public class GameService {
 
     public LobbyDTO makeChoice(boolean chooseLeft, String uuid) {
         Optional<Player> playerOptional = playerRepository.findById(uuid);
-        if(playerOptional.isEmpty()) throw new IllegalArgumentException("Player not found!");
+        if (playerOptional.isEmpty()) throw new IllegalArgumentException("Player not found!");
         Player player = playerOptional.get();
 
         Long lobbyID = player.getLobbyID();
-        if(lobbyID == null) throw new IllegalArgumentException("Player not in lobby!");
+        if (lobbyID == null) throw new IllegalArgumentException("Player not in lobby!");
 
         Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
-        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
+        if (lobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
         Lobby lobby = lobbyOptional.get();
 
         Cell cell = cellRepository.findByNumber(player.getCurrentCellPosition());
-        if(cell == null){
+        if (cell == null) {
             careerOrCollegeChoice(player, chooseLeft);
-        } else{
-            if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), uuid)) throw new IllegalArgumentException("It's not the player's turn!");
-            switch(cell.getType()){
+        } else {
+            if (!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), uuid)) throw new IllegalArgumentException("It's not the player's turn!");
+            switch (cell.getType()) {
                 case MARRY, GROW_FAMILY:
                     marryAndFamilyPathChoice(player, chooseLeft, cell);
                     break;
                 case RETIRE_EARLY:
-                    if(chooseLeft) {
+                    if (chooseLeft) {
                         player.setCurrentCellPosition(cell.getNextCells().get(0));
                     } else {
                         player.setCurrentCellPosition(cell.getNextCells().get(1));
@@ -113,7 +113,7 @@ public class GameService {
                     lobby.nextPlayer();
                     break;
                 default:
-                    throw new IllegalStateException("Unknown cell type.");
+                    throw new IllegalStateException("Unknown cell type: " + cell.getType());
             }
         }
 
@@ -124,6 +124,7 @@ public class GameService {
         playerRepository.save(player);
         return LobbyMapper.toLobbyDTO(lobby);
     }
+
 
     private void updatePlayerInLobby(Lobby lobby, Player player){
         List<Player> players = lobby.getPlayers();
