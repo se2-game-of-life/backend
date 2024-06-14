@@ -340,13 +340,13 @@ class GameServiceTest {
         when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
 
-        HouseCard houseCard1 = mock(HouseCard.class);
-        HouseCard houseCard2 = mock(HouseCard.class);
-        when(houseCardRepository.searchAffordableHousesForPlayer(player.getMoney())).thenReturn(List.of(houseCard1, houseCard2));
+        HouseCard houseCard1mock = mock(HouseCard.class);
+        HouseCard houseCard2mock = mock(HouseCard.class);
+        when(houseCardRepository.searchAffordableHousesForPlayer(player.getMoney())).thenReturn(List.of(houseCard1mock, houseCard2mock));
 
         gameService.handleTurn(player.getPlayerUUID());
 
-        verify(lobbyMock).setHouseCards(List.of(houseCard1, houseCard2));
+        verify(lobbyMock).setHouseCards(List.of(houseCard1mock, houseCard2mock));
         verify(lobbyMock).setHasDecision(true);
     }
 
@@ -368,12 +368,12 @@ class GameServiceTest {
         when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
 
-        CareerCard careerCard1 = mock(CareerCard.class);
-        when(careerCardRepository.findRandomCareerCard()).thenReturn(careerCard1);
+        CareerCard careerCard1mock = mock(CareerCard.class);
+        when(careerCardRepository.findRandomCareerCard()).thenReturn(careerCard1mock);
 
         gameService.handleTurn(player.getPlayerUUID());
 
-        verify(lobbyMock).setCareerCards(List.of(careerCard1, careerCard1));
+        verify(lobbyMock).setCareerCards(List.of(careerCard1mock, careerCard1mock));
         verify(lobbyMock).setHasDecision(true);
     }
 
@@ -395,15 +395,15 @@ class GameServiceTest {
         when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
 
-        CareerCard careerCard1 = mock(CareerCard.class);
-        when(careerCardRepository.findRandomCareerCard()).thenReturn(careerCard1);
-        when(careerCard1.needsDiploma()).thenReturn(false);
+        CareerCard careerCard1mock = mock(CareerCard.class);
+        when(careerCardRepository.findRandomCareerCard()).thenReturn(careerCard1mock);
+        when(careerCard1mock.needsDiploma()).thenReturn(false);
 
         gameService.handleTurn(player.getPlayerUUID());
 
-        verify(lobbyMock).setCareerCards(List.of(careerCard1, careerCard1));
+        verify(lobbyMock).setCareerCards(List.of(careerCard1mock, careerCard1mock));
         verify(lobbyMock).setHasDecision(true);
-        verify(careerCard1, times(2)).needsDiploma();
+        verify(careerCard1mock, times(2)).needsDiploma();
     }
 
     @Test
