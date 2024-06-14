@@ -213,6 +213,20 @@ class GameServiceTest {
         assertEquals(player.getCurrentCellPosition(), teleportCell.getNextCells().get(0) + 2);
     }
 
+    @Test
+    void testMakeChoice_Teleport_false() {
+        Cell teleportCell = mock(Cell.class);
+
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
+        when(teleportCell.getType()).thenReturn(CellType.TELEPORT);
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(teleportCell);
+
+        gameService.makeChoice(false, "UUID");
+        // Assuming the player stays in the same place
+        assertEquals(player.getCurrentCellPosition(), teleportCell.getNextCells().get(0));
+    }
+
     @ParameterizedTest
     @MethodSource("testMakeChoiceCAREER_Input")
     void testMakeChoice_Career(boolean chooseLeft, CareerCard card){
