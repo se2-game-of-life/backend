@@ -102,6 +102,9 @@ public class GameService {
                 case CAREER:
                     careerChoice(player, lobby, chooseLeft);
                     break;
+                case NOTHING:
+                    lobby.nextPlayer();
+                    break;
                 case TELEPORT:
                     if (chooseLeft) {
                         int newPosition = player.getCurrentCellPosition() + 2;
