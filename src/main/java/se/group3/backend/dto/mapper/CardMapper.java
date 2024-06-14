@@ -14,6 +14,10 @@ import java.util.List;
 
 public class CardMapper {
 
+    private CardMapper() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static List<CardDTO> toCardDTO(List<Card> cards) {
         List<CardDTO> dtoList = new ArrayList<>();
         for(Card card : cards) {
