@@ -10,6 +10,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class BackendApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(BackendApplication.class, args);
+        SpringApplication.run(BackendApplication.class, args);
     }
 }
