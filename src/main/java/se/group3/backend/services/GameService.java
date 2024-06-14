@@ -106,6 +106,13 @@ public class GameService {
                 case NOTHING:
                     lobby.nextPlayer();
                     break;
+                case TELEPORT:
+                    if (chooseLeft) {
+                        int newPosition = player.getCurrentCellPosition() + 2;
+                        player.setCurrentCellPosition(newPosition);
+                    }
+                    lobby.nextPlayer();
+                    break;
                 default:
                     throw new IllegalStateException("Unknown cell type." + cell.getType());
             }
