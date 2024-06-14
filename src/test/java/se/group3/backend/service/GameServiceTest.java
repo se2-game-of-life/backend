@@ -452,7 +452,7 @@ class GameServiceTest {
     }
 
     @Test
-    void testHandleTurn_RETIREMENT(){
+    void testHandleTurn_RETIREMENT_two_players_retired(){
         Cell cell = mock(Cell.class);
         when(cellRepository.findByNumber(anyInt())).thenReturn(cell);
         when(cell.getNextCells()).thenReturn(List.of(1));
@@ -477,7 +477,40 @@ class GameServiceTest {
         gameService.handleTurn(player.getPlayerUUID());
 
         assertEquals(100 + 50000 + 100000, player.getMoney());
+        verify(lobbyMock).setHasStarted(false);
     }
+
+    @Test
+    void testHandleTurn_RETIREMENT_four_players_retired(){
+        Cell cell = mock(Cell.class);
+        when(cellRepository.findByNumber(anyInt())).thenReturn(cell);
+        when(cell.getNextCells()).thenReturn(List.of(1));
+        when(cell.getType()).thenReturn(CellType.RETIREMENT);
+        Player player2 = new Player("uuid2", "player2");
+        Player player3 = new Player("uuid3", "player3");
+        Player player4 = new Player("uuid4", "player3");
+
+        player.setLobbyID(2L);
+
+        Lobby lobbyMock = mock(Lobby.class);
+        when(lobbyMock.getLobbyID()).thenReturn(2L);
+        when(lobbyMock.getCurrentPlayer()).thenReturn(player);
+        when(lobbyMock.getSpunNumber()).thenReturn(2);
+        when(lobbyMock.getPlayers()).thenReturn(List.of(player, player2, player3, player4));
+        when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
+        when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
+
+        player.setHouses(List.of(new HouseCard("House69","House", 100, 100, 100)));
+        player.setNumberOfPegs(1);
+        player.setMoney(0);
+
+
+        gameService.handleTurn(player.getPlayerUUID());
+
+        assertEquals(100 + 50000 + 10000, player.getMoney());
+        verify(lobbyMock).setHasStarted(false);
+    }
+
 
 
     @AfterEach
