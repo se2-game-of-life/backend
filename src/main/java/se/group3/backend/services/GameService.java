@@ -257,6 +257,9 @@ public class GameService {
             case NOTHING:
                 lobby.nextPlayer();
                 break;
+            case TELEPORT:
+                lobby.setHasDecision(true);
+                break;
             default:
                 lobby.nextPlayer();
         }
