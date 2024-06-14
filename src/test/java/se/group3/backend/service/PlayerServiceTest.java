@@ -20,7 +20,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class PlayerServiceTest {
+class PlayerServiceTest {
     private PlayerService playerService;
     private CareerCardRepository careerCardRepository;
     private ActionCardRepository actionCardRepository;
