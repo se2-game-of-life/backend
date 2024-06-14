@@ -31,7 +31,6 @@ public class PlayerService {
         } else {
             player.setCurrentCellPosition(cell.getNextCells().get(1));
         }
-        lobby.nextPlayer();
     }
 
     public void getCareerCards(Player player, Lobby lobby){

@@ -63,6 +63,22 @@ public class Lobby {
         currentPlayer = queue.get(0);
     }
 
+    public void updatePlayerInLobby(Player player){
+        List<Player> players = getPlayers();
+        List<Player> updatesPlayers = new ArrayList<>();
+        for(int i = 0; i < players.size(); i++){
+            if(players.get(i).getPlayerUUID().equals(player.getPlayerUUID())){
+                updatesPlayers.add(i, player);
+            } else{
+                updatesPlayers.add(i, players.get(i));
+            }
+            if(updatesPlayers.get(i).getPlayerUUID().equals(getCurrentPlayer().getPlayerUUID())){
+                setCurrentPlayer(updatesPlayers.get(i));
+            }
+        }
+       setPlayers(updatesPlayers);
+    }
+
     public boolean isFull() {
         return players.size() >= MAXIMUM_PLAYER_COUNT;
     }

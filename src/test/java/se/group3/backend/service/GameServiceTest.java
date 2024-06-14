@@ -347,7 +347,7 @@ class GameServiceTest {
         gameService.handleTurn(player.getPlayerUUID());
 
         verify(lobbyMock).setHouseCards(List.of(houseCard1mock, houseCard2mock));
-        verify(lobbyMock).setHasDecision(true);
+        verify(lobbyMock,(times(2))).setHasDecision(true);
     }
 
     @Test
@@ -374,7 +374,7 @@ class GameServiceTest {
         gameService.handleTurn(player.getPlayerUUID());
 
         verify(lobbyMock).setCareerCards(List.of(careerCard1mock, careerCard1mock));
-        verify(lobbyMock).setHasDecision(true);
+        verify(lobbyMock,(times(2))).setHasDecision(true);
     }
 
     @Test
@@ -402,7 +402,7 @@ class GameServiceTest {
         gameService.handleTurn(player.getPlayerUUID());
 
         verify(lobbyMock).setCareerCards(List.of(careerCard1mock, careerCard1mock));
-        verify(lobbyMock).setHasDecision(true);
+        verify(lobbyMock,(times(2))).setHasDecision(true);
         verify(careerCard1mock, times(2)).needsDiploma();
     }
 

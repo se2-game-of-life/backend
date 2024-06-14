@@ -63,24 +63,8 @@ public class GameService {
 
         lobbyRepository.save(lobby);
         playerRepository.save(player);
-        updatePlayerInLobby(lobby, player);
+        lobby.updatePlayerInLobby(player);
         return LobbyMapper.toLobbyDTO(lobby);
-    }
-
-    public void updatePlayerInLobby(Lobby lobby, Player player){
-        List<Player> players = lobby.getPlayers();
-        List<Player> updatesPlayers = new ArrayList<>();
-        for(int i = 0; i < players.size(); i++){
-            if(players.get(i).getPlayerUUID().equals(player.getPlayerUUID())){
-                updatesPlayers.add(i, player);
-            } else{
-                updatesPlayers.add(i, players.get(i));
-            }
-            if(updatesPlayers.get(i).getPlayerUUID().equals(lobby.getCurrentPlayer().getPlayerUUID())){
-                lobby.setCurrentPlayer(updatesPlayers.get(i));
-            }
-        }
-        lobby.setPlayers(updatesPlayers);
     }
 
     public LobbyDTO makeChoice(boolean chooseLeft, String uuid) {
@@ -103,6 +87,8 @@ public class GameService {
             switch(cell.getType()){
                 case MARRY, GROW_FAMILY:
                     playerService.marryAndFamilyPathChoice(player, chooseLeft, cell);
+                    lobby.updatePlayerInLobby(player);
+                    lobby.nextPlayer();
                     break;
                 case RETIRE_EARLY:
                     if(chooseLeft) {
@@ -110,24 +96,28 @@ public class GameService {
                     } else {
                         player.setCurrentCellPosition(cell.getNextCells().get(1));
                     }
+                    lobby.updatePlayerInLobby(player);
+                    lobby.nextPlayer();
                     break;
                 case HOUSE:
                     playerService.houseChoice(player, lobby, chooseLeft);
+                    lobby.updatePlayerInLobby(player);
+                    lobby.nextPlayer();
                     break;
                 case CAREER:
                     playerService.careerChoice(player, lobby, chooseLeft);
+                    lobby.updatePlayerInLobby(player);
+                    lobby.nextPlayer();
                     break;
                 case NOTHING:
+                    lobby.updatePlayerInLobby(player);
                     lobby.nextPlayer();
                     break;
                 default:
                     throw new IllegalStateException("Unknown cell type." + cell.getType());
             }
         }
-
-        lobby.nextPlayer();
         lobby.setHasDecision(false);
-        updatePlayerInLobby(lobby, player);
         lobbyRepository.save(lobby);
         playerRepository.save(player);
         return LobbyMapper.toLobbyDTO(lobby);
@@ -165,6 +155,7 @@ public class GameService {
         switch(cell.getType()) {
             case CASH:
                 player.setMoney(player.getMoney() + player.getCareerCard().getBonus());
+                lobby.updatePlayerInLobby(player);
                 lobby.nextPlayer();
                 break;
             case ACTION:
@@ -173,31 +164,47 @@ public class GameService {
                 List<ActionCard> cardList = lobby.getActionCards();
                 cardList.add(randomActionCard);
                 lobby.setActionCards(cardList);
+                lobby.updatePlayerInLobby(player);
                 lobby.nextPlayer();
                 break;
             case FAMILY:
                 player.setNumberOfPegs(player.getNumberOfPegs()+1);
+                lobby.updatePlayerInLobby(player);
                 lobby.nextPlayer();
                 break;
             case HOUSE:
                 playerService.getHouseCards(player, lobby);
+                lobby.setHasDecision(true);
+                lobby.updatePlayerInLobby(player);
                 break;
             case CAREER:
                 playerService.getCareerCards(player, lobby);
+                lobby.setHasDecision(true);
+                lobby.updatePlayerInLobby(player);
                 break;
             case MID_LIFE:
                 playerService.midLife(player, cell, lobby, spinWheel());
+                lobby.setHasDecision(false);
+                lobby.updatePlayerInLobby(player);
+                lobby.nextPlayer();
                 break;
             case MARRY, GROW_FAMILY, RETIRE_EARLY:
                 lobby.setHasDecision(true);
+                lobby.updatePlayerInLobby(player);
                 break;
             case RETIREMENT:
                 playerService.retire(player, lobby, spinWheel());
+                lobby.updatePlayerInLobby(player);
+                if(lobby.isHasStarted()){
+                    lobby.nextPlayer();
+                }
                 break;
             case NOTHING:
+                lobby.updatePlayerInLobby(player);
                 lobby.nextPlayer();
                 break;
             default:
+                lobby.updatePlayerInLobby(player);
                 lobby.nextPlayer();
         }
         playerRepository.save(player);

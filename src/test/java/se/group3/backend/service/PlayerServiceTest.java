@@ -71,7 +71,6 @@ class PlayerServiceTest {
 
         playerService.midLife(player, cell, lobby, 3);
         assertEquals(1, player.getCurrentCellPosition());
-        verify(lobby).nextPlayer();
     }
 
     @Test
@@ -83,7 +82,6 @@ class PlayerServiceTest {
 
         playerService.midLife(player, cell, lobby, 1);
         assertEquals(2, player.getCurrentCellPosition());
-        verify(lobby).nextPlayer();
     }
 
     @Test
