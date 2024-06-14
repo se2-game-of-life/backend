@@ -199,6 +199,19 @@ class GameServiceTest {
         assertEquals(240000, player.getMoney());
         assertEquals(List.of(houseCard2), player.getHouses());
     }
+    @Test
+    void testMakeChoice_Teleport_true() {
+        Cell teleportCell = mock(Cell.class);
+
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
+        when(teleportCell.getType()).thenReturn(CellType.TELEPORT);
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(teleportCell);
+
+        gameService.makeChoice(true, "UUID");
+        // Assuming the player moves 2 cells forward
+        assertEquals(player.getCurrentCellPosition(), teleportCell.getNextCells().get(0) + 2);
+    }
 
     @ParameterizedTest
     @MethodSource("testMakeChoiceCAREER_Input")
