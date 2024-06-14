@@ -19,8 +19,6 @@ public class PlayerService {
     private CellRepository cellRepository;
     private HouseCardRepository houseCardRepository;
     private ActionCardRepository actionCardRepository;
-    private final int INVESTMENT_MARRY_OR_FAMILY = 50000;
-    private final int INVESTMENT_COLLEGE = 100000;
 
 
     public PlayerService(CareerCardRepository careerCardRepository, CellRepository cellRepository, HouseCardRepository houseCardRepository, ActionCardRepository actionCardRepository) {
@@ -124,7 +122,7 @@ public class PlayerService {
 
     public void careerOrCollegeChoice(Player player, boolean chooseLeft){
         if(chooseLeft) {
-            player.setMoney(player.getMoney() - INVESTMENT_COLLEGE);
+            player.setMoney(player.getMoney() - 100000);
             player.setCurrentCellPosition(1);
         } else {
             player.setCurrentCellPosition(14);
@@ -135,7 +133,7 @@ public class PlayerService {
 
     public void marryAndFamilyPathChoice(Player player, boolean chooseLeft, Cell cell){
         if(chooseLeft){
-            player.setMoney(player.getMoney()- INVESTMENT_MARRY_OR_FAMILY);
+            player.setMoney(player.getMoney()- 50000);
             player.setNumberOfPegs(player.getNumberOfPegs() + 1);
             player.setCurrentCellPosition(cell.getNextCells().get(0));
         } else{
