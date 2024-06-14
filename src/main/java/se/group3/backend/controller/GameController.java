@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import se.group3.backend.dto.BoardDTO;
 import se.group3.backend.dto.JoinLobbyRequest;
 import se.group3.backend.dto.LobbyDTO;
+import se.group3.backend.exceptions.NoUUIDException;
 import se.group3.backend.services.BoardService;
 import se.group3.backend.services.GameService;
 import se.group3.backend.services.LobbyService;
@@ -47,11 +48,11 @@ public class GameController {
     }
 
     @MessageMapping("/lobby/create")
-    public void createLobby(@Payload String playerName, SimpMessageHeaderAccessor headerAccessor) {
+    public void createLobby(@Payload String playerName, SimpMessageHeaderAccessor headerAccessor) throws NoUUIDException {
         try {
             LobbyDTO lobby = lobbyService.createLobby(getUUID(headerAccessor), playerName);
             messagingTemplate.convertAndSend(LOBBIES_PATH + getUUID(headerAccessor), serializationService.jsonStringFromClass(lobby));
-        } catch (IllegalStateException | JsonProcessingException | ClassCastException e) {
+        } catch (IllegalStateException | JsonProcessingException | ClassCastException | NoUUIDException e) {
             messagingTemplate.convertAndSend(ERROR_PATH + getUUID(headerAccessor), e.getMessage());
         }
     }
@@ -62,7 +63,7 @@ public class GameController {
             JoinLobbyRequest request = (JoinLobbyRequest) serializationService.toObject(joinLobbyRequest, JoinLobbyRequest.class);
             LobbyDTO lobby = lobbyService.joinLobby(request.getLobbyID(), getUUID(headerAccessor), request.getPlayerName());
             messagingTemplate.convertAndSend(LOBBIES_PATH + lobby.getLobbyID(), serializationService.jsonStringFromClass(lobby));
-        } catch (JsonProcessingException | ClassCastException | IllegalStateException e) {
+        } catch (JsonProcessingException | ClassCastException | NoUUIDException | IllegalStateException e) {
             log.error(e.getMessage());
         }
     }
@@ -72,7 +73,7 @@ public class GameController {
         try {
             LobbyDTO lobby = lobbyService.leaveLobby(getUUID(headerAccessor));
             messagingTemplate.convertAndSend(LOBBIES_PATH + lobby.getLobbyID(), serializationService.jsonStringFromClass(lobby));
-        } catch (JsonProcessingException | IllegalStateException e) {
+        } catch (JsonProcessingException | NoUUIDException | IllegalStateException e) {
             log.error(e.getMessage());
         }
     }
@@ -132,7 +133,7 @@ public class GameController {
         try {
             LobbyDTO lobbyDTO = cheatingService.cheat(getUUID(headerAccessor));
             messagingTemplate.convertAndSend(LOBBIES_PATH + lobbyDTO.getLobbyID() + "/vibrate", serializationService.jsonStringFromClass(lobbyDTO));
-        } catch (IllegalStateException | JsonProcessingException e) {
+        } catch (IllegalStateException | JsonProcessingException | NoUUIDException e) {
             log.error(e.getMessage());
         }
     }
@@ -142,16 +143,16 @@ public class GameController {
         try {
             LobbyDTO lobbyDTO = cheatingService.report(getUUID(headerAccessor), reportPlayerUUID.substring(1, reportPlayerUUID.length() - 1));
             messagingTemplate.convertAndSend(LOBBIES_PATH + lobbyDTO.getLobbyID(), serializationService.jsonStringFromClass(lobbyDTO));
-        } catch (IllegalStateException | JsonProcessingException e) {
+        } catch (IllegalStateException | JsonProcessingException | NoUUIDException e) {
             log.error(e.getMessage());
         }
     }
 
-    private String getUUID(SimpMessageHeaderAccessor headerAccessor) {
+    private String getUUID(SimpMessageHeaderAccessor headerAccessor) throws NoUUIDException {
         try {
             return sessionService.getUUID(headerAccessor);
         } catch (SessionOperationException e) {
-            throw new RuntimeException(e);
+            throw new NoUUIDException(e);
         }
     }
 }
