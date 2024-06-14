@@ -8,8 +8,6 @@ import se.group3.backend.domain.CellType;
 import se.group3.backend.domain.Lobby;
 import se.group3.backend.domain.Player;
 import se.group3.backend.domain.cards.ActionCard;
-import se.group3.backend.domain.cards.CareerCard;
-import se.group3.backend.domain.cards.HouseCard;
 import se.group3.backend.dto.LobbyDTO;
 import se.group3.backend.dto.mapper.LobbyMapper;
 import se.group3.backend.repositories.*;
@@ -65,8 +63,24 @@ public class GameService {
 
         lobbyRepository.save(lobby);
         playerRepository.save(player);
-        playerService.updatePlayerInLobby(lobby, player);
+        updatePlayerInLobby(lobby, player);
         return LobbyMapper.toLobbyDTO(lobby);
+    }
+
+    public void updatePlayerInLobby(Lobby lobby, Player player){
+        List<Player> players = lobby.getPlayers();
+        List<Player> updatesPlayers = new ArrayList<>();
+        for(int i = 0; i < players.size(); i++){
+            if(players.get(i).getPlayerUUID().equals(player.getPlayerUUID())){
+                updatesPlayers.add(i, player);
+            } else{
+                updatesPlayers.add(i, players.get(i));
+            }
+            if(updatesPlayers.get(i).getPlayerUUID().equals(lobby.getCurrentPlayer().getPlayerUUID())){
+                lobby.setCurrentPlayer(updatesPlayers.get(i));
+            }
+        }
+        lobby.setPlayers(updatesPlayers);
     }
 
     public LobbyDTO makeChoice(boolean chooseLeft, String uuid) {
@@ -113,7 +127,7 @@ public class GameService {
 
         lobby.nextPlayer();
         lobby.setHasDecision(false);
-        playerService.updatePlayerInLobby(lobby, player);
+        updatePlayerInLobby(lobby, player);
         lobbyRepository.save(lobby);
         playerRepository.save(player);
         return LobbyMapper.toLobbyDTO(lobby);
