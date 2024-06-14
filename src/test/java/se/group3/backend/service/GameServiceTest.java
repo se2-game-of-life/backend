@@ -66,9 +66,10 @@ class GameServiceTest {
 
     @Test
     void testMakeChoice_PlayerNotFound_Exception(){
+        String uuid = player.getPlayerUUID();
 
         Exception e = assertThrows(IllegalArgumentException.class, () ->
-                gameService.makeChoice(true, player.getPlayerUUID()));
+                gameService.makeChoice(true, uuid));
 
         assertEquals("Player not found!", e.getMessage());
     }
@@ -78,9 +79,10 @@ class GameServiceTest {
 
         when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
         player.setLobbyID(null);
+        String uuid = player.getPlayerUUID();
 
         Exception e = assertThrows(IllegalArgumentException.class, () ->
-                gameService.makeChoice(true, player.getPlayerUUID()));
+                gameService.makeChoice(true, uuid));
 
         assertEquals("Player not in lobby!", e.getMessage());
     }
@@ -89,9 +91,10 @@ class GameServiceTest {
     void testMakeChoice_LobbyNotFound_Exception(){
 
         when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        String uuid = player.getPlayerUUID();
 
         Exception e = assertThrows(IllegalArgumentException.class, () ->
-                gameService.makeChoice(true, player.getPlayerUUID()));
+                gameService.makeChoice(true, uuid));
 
         assertEquals("Lobby not found!", e.getMessage());
     }
