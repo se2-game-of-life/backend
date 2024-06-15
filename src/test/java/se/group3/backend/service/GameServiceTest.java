@@ -67,13 +67,17 @@ class GameServiceTest {
 
 
     @Test
-    void testMakeChoice_PlayerNotFound_Exception(){
+    void testMakeChoice_PlayerNotFound_Exception() {
+        // Arrange
+        when(playerRepository.findById("UUID")).thenReturn(Optional.empty()); // Simulate player not found
 
+        // Act and Assert
         Exception e = assertThrows(IllegalArgumentException.class, () ->
-                gameService.makeChoice(true, player.getPlayerUUID()));
+                gameService.makeChoice(true, "UUID"));
 
         assertEquals("Player not found!", e.getMessage());
     }
+
 
     @Test
     void testMakeChoice_PlayerNotInLobby_Exception(){
@@ -372,6 +376,7 @@ class GameServiceTest {
         assertEquals(2, player.getCurrentCellPosition());
         verify(lobby).nextPlayer();
     }
+
 
     @Test
     void testHandleTurn_CAREER_College(){
