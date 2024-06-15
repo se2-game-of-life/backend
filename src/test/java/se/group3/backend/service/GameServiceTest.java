@@ -79,6 +79,7 @@ class GameServiceTest {
     }
 
 
+
     @Test
     void testMakeChoice_PlayerNotInLobby_Exception(){
 
