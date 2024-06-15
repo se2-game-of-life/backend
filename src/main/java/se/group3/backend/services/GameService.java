@@ -105,11 +105,13 @@ public class GameService {
                     playerService.houseChoice(player, lobby, chooseLeft);
                     lobby.updatePlayerInLobby(player);
                     lobby.nextPlayer();
+                    lobby.setHouseCards(new ArrayList<>());
                     break;
                 case CAREER:
                     playerService.careerChoice(player, lobby, chooseLeft);
                     lobby.updatePlayerInLobby(player);
                     lobby.nextPlayer();
+                    lobby.setCareerCards(new ArrayList<>());
                     break;
                 case NOTHING:
                     lobby.updatePlayerInLobby(player);
