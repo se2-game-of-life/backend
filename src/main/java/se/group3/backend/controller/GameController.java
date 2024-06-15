@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import se.group3.backend.dto.BoardDTO;
 import se.group3.backend.dto.JoinLobbyRequest;
 import se.group3.backend.dto.LobbyDTO;
+import se.group3.backend.repositories.PlayerRepository;
 import se.group3.backend.services.BoardService;
 import se.group3.backend.services.GameService;
 import se.group3.backend.services.LobbyService;
@@ -34,9 +35,10 @@ public class GameController {
     private static final String ERROR_PATH = "/topic/errors/";
     private static final String LOBBIES_PATH = "/topic/lobbies/";
     private static final String BOARD_PATH = "/topic/board/";
+    private final PlayerRepository playerRepository;
 
     @Autowired
-    public GameController(SimpMessagingTemplate template, LobbyService lobbyService, BoardService boardService, GameService gameService, SessionService sessionService, SerializationService serializationService, CheatingService cheatingService) {
+    public GameController(SimpMessagingTemplate template, LobbyService lobbyService, BoardService boardService, GameService gameService, SessionService sessionService, SerializationService serializationService, CheatingService cheatingService, PlayerRepository playerRepository) {
         this.lobbyService = lobbyService;
         this.gameService = gameService;
         this.boardService = boardService;
@@ -44,6 +46,7 @@ public class GameController {
         this.sessionService = sessionService;
         this.serializationService = serializationService;
         this.cheatingService = cheatingService;
+        this.playerRepository = playerRepository;
     }
 
     @MessageMapping("/lobby/create")
@@ -112,7 +115,7 @@ public class GameController {
         try {
             BoardDTO boardDTO = boardService.fetchBoardData();
             String jsonBoardDTO = serializationService.jsonStringFromClass(boardDTO);
-            messagingTemplate.convertAndSend(BOARD_PATH + getUUID(headerAccessor), jsonBoardDTO);
+            messagingTemplate.convertAndSend(BOARD_PATH + playerRepository.findById(getUUID(headerAccessor)).get().getLobbyID(), jsonBoardDTO);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -131,7 +134,8 @@ public class GameController {
     public void cheat(SimpMessageHeaderAccessor headerAccessor) {
         try {
             LobbyDTO lobbyDTO = cheatingService.cheat(getUUID(headerAccessor));
-            messagingTemplate.convertAndSend(LOBBIES_PATH + lobbyDTO.getLobbyID() + "/vibrate", serializationService.jsonStringFromClass(lobbyDTO));
+            messagingTemplate.convertAndSend(LOBBIES_PATH + lobbyDTO.getLobbyID(), serializationService.jsonStringFromClass(lobbyDTO));
+            messagingTemplate.convertAndSend(LOBBIES_PATH + lobbyDTO.getLobbyID() + "/vibrate", "");
         } catch (IllegalStateException | JsonProcessingException e) {
             log.error(e.getMessage());
         }
