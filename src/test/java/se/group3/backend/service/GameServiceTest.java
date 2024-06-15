@@ -379,26 +379,32 @@ class GameServiceTest {
 
     @Test
     void handleTurn_TELEPORT_Cell() {
+        // Mock necessary objects
         Cell startCell = mock(Cell.class);
         Cell teleportCell = mock(Cell.class);
         Cell targetCell = mock(Cell.class);
 
+        // Set up player's initial state
         player.setCurrentCellPosition(0);
+        player.setLobbyID(1L);
 
+        // Mock repository calls
         when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
         when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
         when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
-        when(startCell.getNextCells()).thenReturn(List.of(1));
-        when(cellRepository.findByNumber(1)).thenReturn(teleportCell);
+        when(startCell.getNextCells()).thenReturn(List.of(1)); // Assuming next cell after start is 1
+        when(cellRepository.findByNumber(1)).thenReturn(teleportCell); // Teleport cell is at index 1
         when(teleportCell.getType()).thenReturn(CellType.TELEPORT);
-        when(cellRepository.findByNumber(2)).thenReturn(targetCell);
+        when(cellRepository.findByNumber(2)).thenReturn(targetCell); // Target cell is at index 2
 
         // Call the method with only the UUID
         gameService.handleTurn("UUID");
 
-        assertEquals(2, player.getCurrentCellPosition());
-        verify(lobby).nextPlayer();
+        // Assertions
+        assertEquals(2, player.getCurrentCellPosition()); // Player should move to target cell (index 2)
+        verify(lobby).nextPlayer(); // Verify that lobby.nextPlayer() was called
     }
+
 
     @Test
     void testHandleTurn_CAREER_noCollege(){
