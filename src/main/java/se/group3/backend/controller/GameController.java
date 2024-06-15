@@ -137,7 +137,7 @@ public class GameController {
             LobbyDTO lobbyDTO = cheatingService.cheat(getUUID(headerAccessor));
             messagingTemplate.convertAndSend(LOBBIES_PATH + lobbyDTO.getLobbyID(), serializationService.jsonStringFromClass(lobbyDTO));
             messagingTemplate.convertAndSend(LOBBIES_PATH + lobbyDTO.getLobbyID() + "/vibrate", "");
-        } catch (IllegalStateException | JsonProcessingException e) {
+        } catch (IllegalStateException | JsonProcessingException  | NoUUIDException e) {
             log.error(e.getMessage());
         }
     }
