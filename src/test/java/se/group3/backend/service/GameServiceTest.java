@@ -18,8 +18,6 @@ import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cards.HouseCard;
 
 import se.group3.backend.repositories.*;
-import java.util.Collections;
-
 import se.group3.backend.services.GameService;
 
 import java.util.List;
@@ -68,23 +66,23 @@ class GameServiceTest {
 
     @Test
     void testMakeChoice_PlayerNotFound_Exception(){
+        String uuid = player.getPlayerUUID();
 
         Exception e = assertThrows(IllegalArgumentException.class, () ->
-                gameService.makeChoice(true, player.getPlayerUUID()));
+                gameService.makeChoice(true, uuid));
 
         assertEquals("Player not found!", e.getMessage());
     }
-
-
 
     @Test
     void testMakeChoice_PlayerNotInLobby_Exception(){
 
         when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
         player.setLobbyID(null);
+        String uuid = player.getPlayerUUID();
 
         Exception e = assertThrows(IllegalArgumentException.class, () ->
-                gameService.makeChoice(true, player.getPlayerUUID()));
+                gameService.makeChoice(true, uuid));
 
         assertEquals("Player not in lobby!", e.getMessage());
     }
@@ -93,9 +91,10 @@ class GameServiceTest {
     void testMakeChoice_LobbyNotFound_Exception(){
 
         when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        String uuid = player.getPlayerUUID();
 
         Exception e = assertThrows(IllegalArgumentException.class, () ->
-                gameService.makeChoice(true, player.getPlayerUUID()));
+                gameService.makeChoice(true, uuid));
 
         assertEquals("Lobby not found!", e.getMessage());
     }
@@ -203,8 +202,6 @@ class GameServiceTest {
         assertEquals(240000, player.getMoney());
         assertEquals(List.of(houseCard2), player.getHouses());
     }
-
-
 
     @ParameterizedTest
     @MethodSource("testMakeChoiceCAREER_Input")
@@ -343,16 +340,15 @@ class GameServiceTest {
         when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
 
-        HouseCard houseCard1 = mock(HouseCard.class);
-        HouseCard houseCard2 = mock(HouseCard.class);
-        when(houseCardRepository.searchAffordableHousesForPlayer(player.getMoney())).thenReturn(List.of(houseCard1, houseCard2));
+        HouseCard houseCard1mock = mock(HouseCard.class);
+        HouseCard houseCard2mock = mock(HouseCard.class);
+        when(houseCardRepository.searchAffordableHousesForPlayer(player.getMoney())).thenReturn(List.of(houseCard1mock, houseCard2mock));
 
         gameService.handleTurn(player.getPlayerUUID());
 
-        verify(lobbyMock).setHouseCards(List.of(houseCard1, houseCard2));
-        verify(lobbyMock).setHasDecision(true);
+        verify(lobbyMock).setHouseCards(List.of(houseCard1mock, houseCard2mock));
+        verify(lobbyMock,(times(2))).setHasDecision(true);
     }
-
 
     @Test
     void testHandleTurn_CAREER_College(){
@@ -372,13 +368,13 @@ class GameServiceTest {
         when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
 
-        CareerCard careerCard1 = mock(CareerCard.class);
-        when(careerCardRepository.findRandomCareerCard()).thenReturn(careerCard1);
+        CareerCard careerCard1mock = mock(CareerCard.class);
+        when(careerCardRepository.findRandomCareerCard()).thenReturn(careerCard1mock);
 
         gameService.handleTurn(player.getPlayerUUID());
 
-        verify(lobbyMock).setCareerCards(List.of(careerCard1, careerCard1));
-        verify(lobbyMock).setHasDecision(true);
+        verify(lobbyMock).setCareerCards(List.of(careerCard1mock, careerCard1mock));
+        verify(lobbyMock,(times(2))).setHasDecision(true);
     }
 
     @Test
@@ -399,15 +395,15 @@ class GameServiceTest {
         when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
 
-        CareerCard careerCard1 = mock(CareerCard.class);
-        when(careerCardRepository.findRandomCareerCard()).thenReturn(careerCard1);
-        when(careerCard1.needsDiploma()).thenReturn(false);
+        CareerCard careerCard1mock = mock(CareerCard.class);
+        when(careerCardRepository.findRandomCareerCard()).thenReturn(careerCard1mock);
+        when(careerCard1mock.needsDiploma()).thenReturn(false);
 
         gameService.handleTurn(player.getPlayerUUID());
 
-        verify(lobbyMock).setCareerCards(List.of(careerCard1, careerCard1));
-        verify(lobbyMock).setHasDecision(true);
-        verify(careerCard1, times(2)).needsDiploma();
+        verify(lobbyMock).setCareerCards(List.of(careerCard1mock, careerCard1mock));
+        verify(lobbyMock,(times(2))).setHasDecision(true);
+        verify(careerCard1mock, times(2)).needsDiploma();
     }
 
     @Test
@@ -459,7 +455,7 @@ class GameServiceTest {
     }
 
     @Test
-    void testHandleTurn_RETIREMENT(){
+    void testHandleTurn_RETIREMENT_two_players_retired(){
         Cell cell = mock(Cell.class);
         when(cellRepository.findByNumber(anyInt())).thenReturn(cell);
         when(cell.getNextCells()).thenReturn(List.of(1));
@@ -484,7 +480,40 @@ class GameServiceTest {
         gameService.handleTurn(player.getPlayerUUID());
 
         assertEquals(100 + 50000 + 100000, player.getMoney());
+        verify(lobbyMock).setHasStarted(false);
     }
+
+    @Test
+    void testHandleTurn_RETIREMENT_four_players_retired(){
+        Cell cell = mock(Cell.class);
+        when(cellRepository.findByNumber(anyInt())).thenReturn(cell);
+        when(cell.getNextCells()).thenReturn(List.of(1));
+        when(cell.getType()).thenReturn(CellType.RETIREMENT);
+        Player player2 = new Player("uuid2", "player2");
+        Player player3 = new Player("uuid3", "player3");
+        Player player4 = new Player("uuid4", "player3");
+
+        player.setLobbyID(2L);
+
+        Lobby lobbyMock = mock(Lobby.class);
+        when(lobbyMock.getLobbyID()).thenReturn(2L);
+        when(lobbyMock.getCurrentPlayer()).thenReturn(player);
+        when(lobbyMock.getSpunNumber()).thenReturn(2);
+        when(lobbyMock.getPlayers()).thenReturn(List.of(player, player2, player3, player4));
+        when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
+        when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
+
+        player.setHouses(List.of(new HouseCard("House69","House", 100, 100, 100)));
+        player.setNumberOfPegs(1);
+        player.setMoney(0);
+
+
+        gameService.handleTurn(player.getPlayerUUID());
+
+        assertEquals(100 + 50000 + 10000, player.getMoney());
+        verify(lobbyMock).setHasStarted(false);
+    }
+
 
 
     @AfterEach
