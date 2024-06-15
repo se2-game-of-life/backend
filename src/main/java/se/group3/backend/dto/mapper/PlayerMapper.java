@@ -10,6 +10,10 @@ import java.util.List;
 
 public class PlayerMapper {
 
+    private PlayerMapper() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static Player mapDTOToPlayer(PlayerDTO dto) {
         Player player = new Player(dto.getPlayerUUID(), dto.getPlayerName());
         player.setCurrentCellPosition(dto.getCurrentCellPosition());
