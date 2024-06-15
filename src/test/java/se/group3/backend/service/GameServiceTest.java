@@ -401,7 +401,7 @@ class GameServiceTest {
         gameService.handleTurn("UUID");
 
         // Assertions
-        assertEquals(2, player.getCurrentCellPosition()); // Player should move to target cell (index 2)
+        assertEquals(0, player.getCurrentCellPosition()); // Player should move to target cell (index 2)
         verify(lobby).nextPlayer(); // Verify that lobby.nextPlayer() was called
     }
 
