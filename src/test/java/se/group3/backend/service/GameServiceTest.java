@@ -67,13 +67,10 @@ class GameServiceTest {
 
 
     @Test
-    void testMakeChoice_PlayerNotFound_Exception() {
-        // Arrange
-        when(playerRepository.findById("UUID")).thenReturn(Optional.empty()); // Simulate player not found
+    void testMakeChoice_PlayerNotFound_Exception(){
 
-        // Act and Assert
         Exception e = assertThrows(IllegalArgumentException.class, () ->
-                gameService.makeChoice(true, "UUID"));
+                gameService.makeChoice(true, player.getPlayerUUID()));
 
         assertEquals("Player not found!", e.getMessage());
     }
