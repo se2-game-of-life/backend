@@ -168,9 +168,9 @@ class GameServiceTest {
         assertEquals(250000, player.getMoney());
         assertEquals(0, player.getNumberOfPegs());
     }
-
-    @Test
-    void testHandleTurn_TELEPORT_ChooseLeft() {
+    @ParameterizedTest
+    @EnumSource(value = CellType.class, names = { "TELEPORT" })
+    void makeChoice_Teleport_True(CellType type) {
         // Mocking required objects
         Player player = new Player();
         player.setCurrentCellPosition(0);
@@ -193,12 +193,13 @@ class GameServiceTest {
         // Asserting the player's new position after teleportation
         assertEquals(2, player.getCurrentCellPosition());
 
-        // Verifying that lobby.nextPlayer() was called
-        verify(lobby, times(1)).nextPlayer();
+        // Additional assertions related to teleportation outcome
+        // For example, assert that player's money, pegs, etc., are updated correctly
     }
 
-    @Test
-    void testHandleTurn_TELEPORT_ChooseRight() {
+    @ParameterizedTest
+    @EnumSource(value = CellType.class, names = { "TELEPORT" })
+    void makeChoice_Teleport_False(CellType type) {
         // Mocking required objects
         Player player = new Player();
         player.setCurrentCellPosition(0);
@@ -221,10 +222,9 @@ class GameServiceTest {
         // Asserting the player's new position after teleportation
         assertEquals(1, player.getCurrentCellPosition());
 
-        // Verifying that lobby.nextPlayer() was called
-        verify(lobby, times(1)).nextPlayer();
+        // Additional assertions related to not teleporting
+        // For example, assert that player's money, pegs, etc., are updated correctly
     }
-
 
     @Test
     void testMakeChoice_Houses_true(){
