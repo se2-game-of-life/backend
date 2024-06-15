@@ -350,6 +350,28 @@ class GameServiceTest {
         verify(lobbyMock).setHouseCards(List.of(houseCard1, houseCard2));
         verify(lobbyMock).setHasDecision(true);
     }
+    @Test
+    void handleTurn_TELEPORT_Cell() {
+        Cell startCell = mock(Cell.class);
+        Cell teleportCell = mock(Cell.class);
+        Cell targetCell = mock(Cell.class);
+
+        player.setCurrentCellPosition(0);
+
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+        when(startCell.getNextCells()).thenReturn(List.of(1));
+        when(cellRepository.findByNumber(1)).thenReturn(teleportCell);
+        when(teleportCell.getType()).thenReturn(CellType.TELEPORT);
+        when(cellRepository.findByNumber(2)).thenReturn(targetCell);
+
+        // Call the method with only the UUID
+        gameService.handleTurn("UUID");
+
+        assertEquals(2, player.getCurrentCellPosition());
+        verify(lobby).nextPlayer();
+    }
 
     @Test
     void testHandleTurn_CAREER_College(){
