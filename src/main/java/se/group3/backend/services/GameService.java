@@ -214,6 +214,9 @@ public class GameService {
                 lobby.updatePlayerInLobby(player);
                 lobby.nextPlayer();
                 break;
+            case TELEPORT:
+                lobby.setHasDecision(true);
+                break;
             default:
                 lobby.updatePlayerInLobby(player);
                 lobby.nextPlayer();
