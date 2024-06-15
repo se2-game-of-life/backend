@@ -170,6 +170,63 @@ class GameServiceTest {
     }
 
     @Test
+    void testHandleTurn_TELEPORT_ChooseLeft() {
+        // Mocking required objects
+        Player player = new Player();
+        player.setCurrentCellPosition(0);
+        player.setPlayerUUID("UUID");
+
+        Lobby lobby = new Lobby(1L, player);
+        lobby.setCurrentPlayer(player);
+
+        Cell startCell = mock(Cell.class);
+        when(startCell.getType()).thenReturn(CellType.TELEPORT);
+        when(startCell.getNextCells()).thenReturn(List.of(1, 2)); // Assuming next positions
+
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+
+        // Executing the teleport action
+        gameService.makeChoice(true, "UUID");
+
+        // Asserting the player's new position after teleportation
+        assertEquals(2, player.getCurrentCellPosition());
+
+        // Verifying that lobby.nextPlayer() was called
+        verify(lobby, times(1)).nextPlayer();
+    }
+
+    @Test
+    void testHandleTurn_TELEPORT_ChooseRight() {
+        // Mocking required objects
+        Player player = new Player();
+        player.setCurrentCellPosition(0);
+        player.setPlayerUUID("UUID");
+
+        Lobby lobby = new Lobby(1L, player);
+        lobby.setCurrentPlayer(player);
+
+        Cell startCell = mock(Cell.class);
+        when(startCell.getType()).thenReturn(CellType.TELEPORT);
+        when(startCell.getNextCells()).thenReturn(List.of(1, 2)); // Assuming next positions
+
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+
+        // Executing the teleport action
+        gameService.makeChoice(false, "UUID");
+
+        // Asserting the player's new position after teleportation
+        assertEquals(1, player.getCurrentCellPosition());
+
+        // Verifying that lobby.nextPlayer() was called
+        verify(lobby, times(1)).nextPlayer();
+    }
+
+
+    @Test
     void testMakeChoice_Houses_true(){
 
         lobby.setHouseCards(List.of(houseCard1, houseCard2));
@@ -274,29 +331,6 @@ class GameServiceTest {
 
         assertEquals(250000+100, player.getMoney());
         verify(lobbyMock).nextPlayer();
-    }
-
-    @Test
-    void handleTurn_TELEPORT_Cell() {
-        Cell startCell = mock(Cell.class);
-        Cell teleportCell = mock(Cell.class);
-        Cell targetCell = mock(Cell.class);
-
-        player.setCurrentCellPosition(0);
-
-        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
-        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
-        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
-        when(startCell.getNextCells()).thenReturn(List.of(1));
-        when(cellRepository.findByNumber(1)).thenReturn(teleportCell);
-        when(teleportCell.getType()).thenReturn(CellType.TELEPORT);
-        when(cellRepository.findByNumber(2)).thenReturn(targetCell);
-
-        // Call the method with only the UUID
-        gameService.handleTurn("UUID");
-
-        assertEquals(2, player.getCurrentCellPosition());
-        verify(lobby).nextPlayer();
     }
 
     @Test
