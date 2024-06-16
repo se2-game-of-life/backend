@@ -137,7 +137,7 @@ public class GameService {
 
     private void makeMove(Lobby lobby, Player player) {
         Cell currentCell = cellRepository.findByNumber(player.getCurrentCellPosition());
-        for(int i = 0; i < lobby.getSpunNumber() - 1; i++) {
+        for(int i = 0; i < lobby.getSpunNumber(); i++) {
             List<Integer> nextCellNumbers = currentCell.getNextCells();
             if(nextCellNumbers.size() != 1) {
                 break;
