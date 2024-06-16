@@ -19,12 +19,12 @@ import java.util.*;
 @Service
 public class GameService {
 
-    private CareerCardRepository careerCardRepository;
-    private ActionCardRepository actionCardRepository;
-    private HouseCardRepository houseCardRepository;
-    private CellRepository cellRepository;
-    private PlayerRepository playerRepository;
-    private LobbyRepository lobbyRepository;
+    private final CareerCardRepository careerCardRepository;
+    private final ActionCardRepository actionCardRepository;
+    private final HouseCardRepository houseCardRepository;
+    private final CellRepository cellRepository;
+    private final PlayerRepository playerRepository;
+    private final LobbyRepository lobbyRepository;
     private final PlayerService playerService;
 
     private static final Random RANDOM = new Random();
