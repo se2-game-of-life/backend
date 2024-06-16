@@ -63,6 +63,18 @@ public class Lobby {
         currentPlayer = queue.get(0);
     }
 
+
+    public void nextPlayerRetired() {
+        if (!queue.isEmpty()) {
+            queue.remove(0);
+            if (!queue.isEmpty()) {
+                currentPlayer = queue.get(0);
+            } else {
+                hasStarted = false;
+            }
+        }
+    }
+
     public void updatePlayerInLobby(Player player){
         List<Player> players = getPlayers();
         List<Player> updatesPlayers = new ArrayList<>();
