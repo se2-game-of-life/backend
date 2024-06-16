@@ -66,10 +66,9 @@ class PlayerServiceTest {
     void testMidLife_true(){
         Player player = new Player("123", "player1");
         Cell cell = mock(Cell.class);
-        Lobby lobby = mock(Lobby.class);
         when(cell.getNextCells()).thenReturn(List.of(1,2));
 
-        playerService.midLife(player, cell, lobby, 3);
+        playerService.midLife(player, cell, 3);
         assertEquals(1, player.getCurrentCellPosition());
     }
 
@@ -77,10 +76,9 @@ class PlayerServiceTest {
     void testMidLife_false(){
         Player player = new Player("123", "player1");
         Cell cell = mock(Cell.class);
-        Lobby lobby = mock(Lobby.class);
         when(cell.getNextCells()).thenReturn(List.of(1,2));
 
-        playerService.midLife(player, cell, lobby, 1);
+        playerService.midLife(player, cell, 1);
         assertEquals(2, player.getCurrentCellPosition());
     }
 
