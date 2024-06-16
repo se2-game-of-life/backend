@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import se.group3.backend.domain.cards.HouseCard;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public interface HouseCardRepository extends MongoRepository<HouseCard, String> {
@@ -11,6 +12,8 @@ public interface HouseCardRepository extends MongoRepository<HouseCard, String> 
     default List<HouseCard> searchAffordableHousesForPlayer(int availableMoney){
         List<HouseCard> affordableHouses= new ArrayList<>();
         List<HouseCard> houses = findAll();
+
+        Collections.shuffle(houses);
 
         for(HouseCard house : houses){
             if(house.getPurchasePrice() <= availableMoney && affordableHouses.size() < 2){
