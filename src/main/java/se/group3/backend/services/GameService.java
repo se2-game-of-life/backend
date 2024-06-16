@@ -196,7 +196,7 @@ public class GameService {
                 lobby.updatePlayerInLobby(player);
                 break;
             case MID_LIFE:
-                playerService.midLife(player, cell, lobby, spinWheel());
+                playerService.midLife(player, cell, spinWheel());
                 lobby.setHasDecision(false);
                 lobby.updatePlayerInLobby(player);
                 lobby.nextPlayer();
