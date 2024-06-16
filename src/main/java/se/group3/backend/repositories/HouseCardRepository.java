@@ -8,12 +8,13 @@ import java.util.List;
 import java.util.Random;
 
 public interface HouseCardRepository extends MongoRepository<HouseCard, String> {
+    Random random = new Random();
 
     default List<HouseCard> searchAffordableHousesForPlayer(int availableMoney) {
         List<HouseCard> affordableHouses = new ArrayList<>();
         List<HouseCard> houses = findAll();
 
-        Random random = new Random();
+
         int attempts = 0;
         int maxAttempts = houses.size() * 2;
 
