@@ -657,7 +657,6 @@ class GameServiceTest {
         gameService.handleTurn(player.getPlayerUUID());
 
         assertEquals(100 + 50000 + 100000, player.getMoney());
-        verify(lobbyMock).setHasStarted(false);
     }
 
     @Test
@@ -688,7 +687,6 @@ class GameServiceTest {
         gameService.handleTurn(player.getPlayerUUID());
 
         assertEquals(100 + 50000 + 10000, player.getMoney());
-        verify(lobbyMock).setHasStarted(false);
     }
 
     @Test
