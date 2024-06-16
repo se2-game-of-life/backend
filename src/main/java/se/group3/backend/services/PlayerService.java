@@ -99,19 +99,6 @@ public class PlayerService {
 
         player.setMoney(player.getMoney()+(player.getNumberOfPegs()*50000));
 
-        List<Player> queue = lobby.getQueue();
-        ArrayList<Player> newQueue = new ArrayList<>();
-        for(Player p: queue){
-            Cell currentCell = cellRepository.findByNumber(p.getCurrentCellPosition());
-            if(currentCell.getType() != CellType.RETIREMENT){
-                newQueue.add(p);
-            }
-        }
-        lobby.setQueue(newQueue);
-
-        if (lobby.getQueue().isEmpty()){
-            lobby.setHasStarted(false);
-        }
     }
 
 

@@ -154,6 +154,8 @@ public class GameService {
                     player.setCareerCard(careerCardRepository.findCareerCardDiploma());
                 }
                 break;
+            } else if(currentCell.getType() == CellType.RETIREMENT){
+                break;
             }
         }
         player.setCurrentCellPosition(currentCell.getNumber());
@@ -206,8 +208,9 @@ public class GameService {
             case RETIREMENT:
                 playerService.retire(player, lobby, spinWheel());
                 lobby.updatePlayerInLobby(player);
-                if(lobby.isHasStarted()){
-                    lobby.nextPlayer();
+                lobby.nextPlayerRetired();
+                if (!lobby.isHasStarted()){
+                    //todo end game
                 }
                 break;
             case NOTHING:
