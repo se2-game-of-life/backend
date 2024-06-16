@@ -4,22 +4,28 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import se.group3.backend.domain.cards.HouseCard;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public interface HouseCardRepository extends MongoRepository<HouseCard, String> {
 
-    default List<HouseCard> searchAffordableHousesForPlayer(int availableMoney){
-        List<HouseCard> affordableHouses= new ArrayList<>();
+    default List<HouseCard> searchAffordableHousesForPlayer(int availableMoney) {
+        List<HouseCard> affordableHouses = new ArrayList<>();
         List<HouseCard> houses = findAll();
 
-        Collections.shuffle(houses);
+        Random random = new Random();
+        int attempts = 0;
+        int maxAttempts = houses.size() * 2;
 
-        for(HouseCard house : houses){
-            if(house.getPurchasePrice() <= availableMoney && affordableHouses.size() < 2){
+        while (affordableHouses.size() < 2 && attempts < maxAttempts) {
+            int randomIndex = random.nextInt(houses.size());
+            HouseCard house = houses.get(randomIndex);
+            if (house.getPurchasePrice() <= availableMoney) {
                 affordableHouses.add(house);
             }
+            attempts++;
         }
+
         return affordableHouses;
     }
 
