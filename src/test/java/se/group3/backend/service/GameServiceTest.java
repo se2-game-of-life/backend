@@ -691,6 +691,42 @@ class GameServiceTest {
         verify(lobbyMock).setHasStarted(false);
     }
 
+    @Test
+    void testDoAction_AffectOnePlayer() {
+        ActionCard actionCard = mock(ActionCard.class);
+        when(actionCard.isAffectOnePlayer()).thenReturn(true);
+        when(actionCard.getMoneyAmount()).thenReturn(100);
+
+        gameService.doAction(player, actionCard);
+
+        assertEquals(250100, player.getMoney());
+    }
+
+    @Test
+    void testDoAction_AffectAllPlayers() {
+        List<Player> players = List.of(player, new Player("UUID2", "player2"), new Player("UUID3", "player3"));
+        ActionCard actionCard = mock(ActionCard.class);
+        when(actionCard.isAffectAllPlayers()).thenReturn(true);
+        when(actionCard.getMoneyAmount()).thenReturn(100);
+        when(playerRepository.findAll()).thenReturn(players);
+
+        gameService.doAction(player, actionCard);
+
+        players.forEach(p -> assertEquals(250100, p.getMoney()));
+    }
+
+    @Test
+    void testDoAction_AffectBank() {
+        ActionCard actionCard = mock(ActionCard.class);
+        when(actionCard.isAffectBank()).thenReturn(true);
+        when(actionCard.getMoneyAmount()).thenReturn(100);
+
+        gameService.doAction(player, actionCard);
+
+        assertEquals(250100, player.getMoney());
+    }
+
+
 
 
     @AfterEach
