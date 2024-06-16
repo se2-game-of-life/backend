@@ -413,7 +413,7 @@ class GameServiceTest {
         Lobby lobbyMock = mock(Lobby.class);
         when(lobbyMock.getLobbyID()).thenReturn(2L);
         when(lobbyMock.getCurrentPlayer()).thenReturn(player);
-        when(lobbyMock.getSpunNumber()).thenReturn(2);
+        when(lobbyMock.getSpunNumber()).thenReturn(1);
         when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
 
