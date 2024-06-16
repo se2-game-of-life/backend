@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerService {
-    private CareerCardRepository careerCardRepository;
-    private CellRepository cellRepository;
-    private HouseCardRepository houseCardRepository;
+    private final CareerCardRepository careerCardRepository;
+    private final  CellRepository cellRepository;
+    private final HouseCardRepository houseCardRepository;
 
 
     public PlayerService(CareerCardRepository careerCardRepository, CellRepository cellRepository, HouseCardRepository houseCardRepository) {
