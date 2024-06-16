@@ -226,7 +226,7 @@ public class GameService {
     }
 
 
-    private void doAction(Player player, ActionCard actionCard) {
+    public void doAction(Player player, ActionCard actionCard) {
         if(actionCard.isAffectOnePlayer()) {
             player.setMoney(player.getMoney() + actionCard.getMoneyAmount());
         } else if(actionCard.isAffectAllPlayers()) {
