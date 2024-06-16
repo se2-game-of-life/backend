@@ -203,6 +203,47 @@ class GameServiceTest {
         assertEquals(List.of(houseCard2), player.getHouses());
     }
 
+    @Test
+    void testMakeChoice_TeleportCell_true() {
+        // Arrange
+        Cell startCell = mock(Cell.class);
+        player.setCurrentCellPosition(10);  // Set an initial position
+
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
+        when(startCell.getType()).thenReturn(CellType.TELEPORT);
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+
+        // Act
+        gameService.makeChoice(true, "UUID");
+
+        // Assert
+        assertEquals(12, player.getCurrentCellPosition());  // Player position should be increased by 2
+        verify(lobbyRepository).save(lobby);
+        verify(playerRepository).save(player);
+    }
+
+    @Test
+    void testMakeChoice_TeleportCell_false() {
+        // Arrange
+        Cell startCell = mock(Cell.class);
+        player.setCurrentCellPosition(10);  // Set an initial position
+
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
+        when(startCell.getType()).thenReturn(CellType.TELEPORT);
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+
+        // Act
+        gameService.makeChoice(false, "UUID");
+
+        // Assert
+        assertEquals(10, player.getCurrentCellPosition());  // Player position should not change
+        verify(lobbyRepository).save(lobby);
+        verify(playerRepository).save(player);
+    }
+
+
     @ParameterizedTest
     @MethodSource("testMakeChoiceCAREER_Input")
     void testMakeChoice_Career(boolean chooseLeft, CareerCard card){
