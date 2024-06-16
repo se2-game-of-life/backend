@@ -25,7 +25,7 @@ public class PlayerService {
         this.houseCardRepository = houseCardRepository;
     }
 
-    public void midLife(Player player, Cell cell, Lobby lobby, int randomNumber){
+    public void midLife(Player player, Cell cell, int randomNumber){
         if(randomNumber > 2) {
             player.setCurrentCellPosition(cell.getNextCells().get(0));
         } else {
