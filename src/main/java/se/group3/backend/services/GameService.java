@@ -93,11 +93,7 @@ public class GameService {
                     lobby.nextPlayer();
                     break;
                 case RETIRE_EARLY:
-                    if(chooseLeft) {
-                        player.setCurrentCellPosition(cell.getNextCells().get(0));
-                    } else {
-                        player.setCurrentCellPosition(cell.getNextCells().get(1));
-                    }
+                    playerService.retireEarly(player, cell, chooseLeft);
                     lobby.updatePlayerInLobby(player);
                     lobby.nextPlayer();
                     break;

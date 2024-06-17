@@ -101,6 +101,14 @@ public class PlayerService {
 
     }
 
+    public void retireEarly(Player player, Cell cell, boolean chooseLeft){
+        if(chooseLeft) {
+            player.setCurrentCellPosition(cell.getNextCells().get(0));
+        } else {
+            player.setCurrentCellPosition(cell.getNextCells().get(1));
+        }
+    }
+
 
 
     public void careerOrCollegeChoice(Player player, boolean chooseLeft){
