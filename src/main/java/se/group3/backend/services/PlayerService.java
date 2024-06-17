@@ -95,7 +95,6 @@ public class PlayerService {
                 player.setMoney(player.getMoney()+h.getRedSellPrice());
             }
         }
-        player.setHouses(new ArrayList<>());
 
         player.setMoney(player.getMoney()+(player.getNumberOfPegs()*50000));
 
