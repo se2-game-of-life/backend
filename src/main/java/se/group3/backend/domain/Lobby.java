@@ -73,7 +73,6 @@ public class Lobby {
     }
 
     public void updatePlayerInLobby(Player player){
-        List<Player> players = getPlayers();
         List<Player> updatesPlayers = new ArrayList<>();
         for(int i = 0; i < players.size(); i++){
             if(players.get(i).getPlayerUUID().equals(player.getPlayerUUID())){
