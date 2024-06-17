@@ -21,7 +21,6 @@ public class GameService {
 
     private final CareerCardRepository careerCardRepository;
     private final ActionCardRepository actionCardRepository;
-    private final HouseCardRepository houseCardRepository;
     private final CellRepository cellRepository;
     private final PlayerRepository playerRepository;
     private final LobbyRepository lobbyRepository;
@@ -33,7 +32,6 @@ public class GameService {
     public GameService(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellRepository cellRepository, PlayerRepository playerRepository, LobbyRepository lobbyRepository){
         this.careerCardRepository = careerCardRepository;
         this.actionCardRepository = actionCardRepository;
-        this.houseCardRepository = houseCardRepository;
         this.cellRepository = cellRepository;
         this.playerRepository = playerRepository;
         this.lobbyRepository = lobbyRepository;
