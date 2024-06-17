@@ -23,10 +23,10 @@ public class CheatingService {
     private final LobbyRepository lobbyRepository;
     private final PlayerRepository playerRepository;
 
-    private final int CHEATING_MONEY = 10000;
-    private final int FALSE_REPORT_PENALTY = 5000;
-    private final int CHEATING_COUGHT_PENALTY = 15000;
-    private final int MAX_REPORT_TIME = 15;
+    private static final int CHEATING_MONEY = 10000;
+    private static final int FALSE_REPORT_PENALTY = 5000;
+    private static final int CHEATING_CAUGHT_PENALTY = 15000;
+    private static final int MAX_REPORT_TIME = 15;
     private final Set<String> cheatingQueue;
     private final ScheduledExecutorService scheduler;
 
@@ -52,9 +52,7 @@ public class CheatingService {
         }
 
         cheatingQueue.add(playerUUID);
-        scheduler.schedule(() -> {
-            cheatingQueue.remove(playerUUID);
-        }, MAX_REPORT_TIME, TimeUnit.SECONDS);
+        scheduler.schedule(() -> cheatingQueue.remove(playerUUID), MAX_REPORT_TIME, TimeUnit.SECONDS);
 
         lobbyRepository.save(lobby);
         return LobbyMapper.toLobbyDTO(lobby);
@@ -70,7 +68,7 @@ public class CheatingService {
         if(cheatingQueue.contains(reportedPlayer.getPlayerUUID())) {
             for(Player playerInLobby : lobby.getPlayers()) {
                 if(playerInLobby.getPlayerUUID().equals(reportedPlayer.getPlayerUUID())) {
-                    playerInLobby.setMoney(playerInLobby.getMoney() - CHEATING_COUGHT_PENALTY);
+                    playerInLobby.setMoney(playerInLobby.getMoney() - CHEATING_CAUGHT_PENALTY);
                     break;
                 }
             }
