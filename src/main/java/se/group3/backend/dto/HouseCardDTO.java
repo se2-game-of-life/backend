@@ -38,31 +38,19 @@ public class HouseCardDTO implements CardDTO {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public int getPurchasePrice() {
         return purchasePrice;
     }
 
-    public void setPurchasePrice(int purchasePrice) {
-        this.purchasePrice = purchasePrice;
-    }
 
     public int getRedSellPrice() {
         return redSellPrice;
     }
 
-    public void setRedSellPrice(int redSellPrice) {
-        this.redSellPrice = redSellPrice;
-    }
 
     public int getBlackSellPrice() {
         return blackSellPrice;
     }
 
-    public void setBlackSellPrice(int blackSellPrice) {
-        this.blackSellPrice = blackSellPrice;
-    }
 }

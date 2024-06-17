@@ -1,14 +1,11 @@
 package se.group3.backend.domain;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 import se.group3.backend.domain.cards.ActionCard;
-import se.group3.backend.domain.cards.Card;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cards.HouseCard;
 
@@ -61,6 +58,18 @@ public class Lobby {
         queue.remove(0);
         queue.add(currentPlayer);
         currentPlayer = queue.get(0);
+    }
+
+
+    public void nextPlayerRetired() {
+        if (!queue.isEmpty()) {
+            queue.remove(0);
+            if (!queue.isEmpty()) {
+                currentPlayer = queue.get(0);
+            } else {
+                hasStarted = false;
+            }
+        }
     }
 
     public void updatePlayerInLobby(Player player){

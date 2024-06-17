@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import se.group3.backend.exceptions.SessionOperationException;
 import se.group3.backend.services.SessionService;
 
 import java.util.HashMap;

@@ -19,12 +19,11 @@ import java.util.*;
 @Service
 public class GameService {
 
-    private CareerCardRepository careerCardRepository;
-    private ActionCardRepository actionCardRepository;
-    private HouseCardRepository houseCardRepository;
-    private CellRepository cellRepository;
-    private PlayerRepository playerRepository;
-    private LobbyRepository lobbyRepository;
+    private final CareerCardRepository careerCardRepository;
+    private final ActionCardRepository actionCardRepository;
+    private final CellRepository cellRepository;
+    private final PlayerRepository playerRepository;
+    private final LobbyRepository lobbyRepository;
     private final PlayerService playerService;
 
     private static final Random RANDOM = new Random();
@@ -33,7 +32,6 @@ public class GameService {
     public GameService(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellRepository cellRepository, PlayerRepository playerRepository, LobbyRepository lobbyRepository){
         this.careerCardRepository = careerCardRepository;
         this.actionCardRepository = actionCardRepository;
-        this.houseCardRepository = houseCardRepository;
         this.cellRepository = cellRepository;
         this.playerRepository = playerRepository;
         this.lobbyRepository = lobbyRepository;
@@ -93,11 +91,7 @@ public class GameService {
                     lobby.nextPlayer();
                     break;
                 case RETIRE_EARLY:
-                    if(chooseLeft) {
-                        player.setCurrentCellPosition(cell.getNextCells().get(0));
-                    } else {
-                        player.setCurrentCellPosition(cell.getNextCells().get(1));
-                    }
+                    playerService.retireEarly(player, cell, chooseLeft);
                     lobby.updatePlayerInLobby(player);
                     lobby.nextPlayer();
                     break;
@@ -122,6 +116,7 @@ public class GameService {
                         int newPosition = player.getCurrentCellPosition() + 2;
                         player.setCurrentCellPosition(newPosition);
                     }
+                    lobby.updatePlayerInLobby(player);
                     lobby.nextPlayer();
                     break;
                 default:
@@ -137,7 +132,7 @@ public class GameService {
 
     private void makeMove(Lobby lobby, Player player) {
         Cell currentCell = cellRepository.findByNumber(player.getCurrentCellPosition());
-        for(int i = 0; i < lobby.getSpunNumber() - 1; i++) {
+        for(int i = 0; i < lobby.getSpunNumber(); i++) {
             List<Integer> nextCellNumbers = currentCell.getNextCells();
             if(nextCellNumbers.size() != 1) {
                 break;
@@ -153,6 +148,8 @@ public class GameService {
                     player.setCollegeDegree(true);
                     player.setCareerCard(careerCardRepository.findCareerCardDiploma());
                 }
+                break;
+            } else if(currentCell.getType() == CellType.RETIREMENT){
                 break;
             }
         }
@@ -194,7 +191,7 @@ public class GameService {
                 lobby.updatePlayerInLobby(player);
                 break;
             case MID_LIFE:
-                playerService.midLife(player, cell, lobby, spinWheel());
+                playerService.midLife(player, cell, spinWheel());
                 lobby.setHasDecision(false);
                 lobby.updatePlayerInLobby(player);
                 lobby.nextPlayer();
@@ -206,8 +203,9 @@ public class GameService {
             case RETIREMENT:
                 playerService.retire(player, lobby, spinWheel());
                 lobby.updatePlayerInLobby(player);
-                if(lobby.isHasStarted()){
-                    lobby.nextPlayer();
+                lobby.nextPlayerRetired();
+                if (!lobby.isHasStarted()){
+                    //todo end game
                 }
                 break;
             case NOTHING:
@@ -226,7 +224,7 @@ public class GameService {
     }
 
 
-    private void doAction(Player player, ActionCard actionCard) {
+    public void doAction(Player player, ActionCard actionCard) {
         if(actionCard.isAffectOnePlayer()) {
             player.setMoney(player.getMoney() + actionCard.getMoneyAmount());
         } else if(actionCard.isAffectAllPlayers()) {

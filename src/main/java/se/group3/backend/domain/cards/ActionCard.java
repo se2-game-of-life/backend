@@ -8,11 +8,11 @@ public class ActionCard implements Card {
     @Id
     private String id;
     private String name;
-    private String description;
-    private boolean affectOnePlayer;
-    private boolean affectAllPlayers;
-    private boolean affectBank;
-    private int moneyAmount;
+    private final String description;
+    private final boolean affectOnePlayer;
+    private final boolean affectAllPlayers;
+    private final boolean affectBank;
+    private final int moneyAmount;
 
     public ActionCard(String id, String name, String description, boolean affectOnePlayer, boolean affectAllPlayers, boolean affectBank, int moneyAmount) {
         this.id = id;
@@ -56,8 +56,5 @@ public class ActionCard implements Card {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
 }

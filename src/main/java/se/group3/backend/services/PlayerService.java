@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerService {
-    private CareerCardRepository careerCardRepository;
-    private CellRepository cellRepository;
-    private HouseCardRepository houseCardRepository;
+    private final CareerCardRepository careerCardRepository;
+    private final  CellRepository cellRepository;
+    private final HouseCardRepository houseCardRepository;
 
 
     public PlayerService(CareerCardRepository careerCardRepository, CellRepository cellRepository, HouseCardRepository houseCardRepository) {
@@ -25,7 +25,7 @@ public class PlayerService {
         this.houseCardRepository = houseCardRepository;
     }
 
-    public void midLife(Player player, Cell cell, Lobby lobby, int randomNumber){
+    public void midLife(Player player, Cell cell, int randomNumber){
         if(randomNumber > 2) {
             player.setCurrentCellPosition(cell.getNextCells().get(0));
         } else {
@@ -95,22 +95,16 @@ public class PlayerService {
                 player.setMoney(player.getMoney()+h.getRedSellPrice());
             }
         }
-        player.setHouses(new ArrayList<>());
 
         player.setMoney(player.getMoney()+(player.getNumberOfPegs()*50000));
 
-        List<Player> queue = lobby.getQueue();
-        ArrayList<Player> newQueue = new ArrayList<>();
-        for(Player p: queue){
-            Cell currentCell = cellRepository.findByNumber(p.getCurrentCellPosition());
-            if(currentCell.getType() != CellType.RETIREMENT){
-                newQueue.add(p);
-            }
-        }
-        lobby.setQueue(newQueue);
+    }
 
-        if (lobby.getQueue().isEmpty()){
-            lobby.setHasStarted(false);
+    public void retireEarly(Player player, Cell cell, boolean chooseLeft){
+        if(chooseLeft) {
+            player.setCurrentCellPosition(cell.getNextCells().get(0));
+        } else {
+            player.setCurrentCellPosition(cell.getNextCells().get(1));
         }
     }
 

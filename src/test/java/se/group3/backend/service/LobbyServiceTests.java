@@ -7,22 +7,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import se.group3.backend.domain.Lobby;
 import se.group3.backend.domain.Player;
 import se.group3.backend.dto.LobbyDTO;
-import se.group3.backend.dto.PlayerDTO;
-import se.group3.backend.dto.mapper.LobbyMapper;
-import se.group3.backend.exceptions.SessionOperationException;
 import se.group3.backend.repositories.LobbyRepository;
 import se.group3.backend.repositories.PlayerRepository;
 import se.group3.backend.services.LobbyService;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class LobbyServiceTests {
@@ -91,16 +84,12 @@ class LobbyServiceTests {
         lobby.addPlayer(new Player("Test UUID4", "Player 4"));
         Mockito.when(lobbyRepository.findById(1L)).thenReturn(Optional.of(lobby));
 
-        Assertions.assertThrows(IllegalStateException.class, () -> {
-            lobbyService.joinLobby(lobby.getLobbyID(), "Test UUID5", "Player 5");
-        });
+        Assertions.assertThrows(IllegalStateException.class, () -> lobbyService.joinLobby(lobby.getLobbyID(), "Test UUID5", "Player 5"));
     }
 
     @Test
     void joinLobbyNotFound() {
-        Assertions.assertThrows(IllegalStateException.class, () -> {
-            lobbyService.joinLobby(1L, "Test UUID5", "Player 5");
-        });
+        Assertions.assertThrows(IllegalStateException.class, () -> lobbyService.joinLobby(1L, "Test UUID5", "Player 5"));
     }
 
     @Test
@@ -110,9 +99,7 @@ class LobbyServiceTests {
         Lobby lobby = new Lobby(1L, player);
         Mockito.when(lobbyRepository.findById(1L)).thenReturn(Optional.of(lobby));
         Mockito.when(playerRepository.findById("Test UUID1")).thenReturn(Optional.of(player));
-        Assertions.assertThrows(IllegalStateException.class, () -> {
-            lobbyService.joinLobby(lobby.getLobbyID(), "Test UUID1", "Player 1");
-        });
+        Assertions.assertThrows(IllegalStateException.class, () -> lobbyService.joinLobby(lobby.getLobbyID(), "Test UUID1", "Player 1"));
     }
 
     @Test

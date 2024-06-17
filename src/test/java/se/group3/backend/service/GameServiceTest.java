@@ -67,6 +67,7 @@ class GameServiceTest {
     @Test
     void testMakeChoice_PlayerNotFound_Exception(){
         String uuid = player.getPlayerUUID();
+        when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.empty());
 
         Exception e = assertThrows(IllegalArgumentException.class, () ->
                 gameService.makeChoice(true, uuid));
@@ -75,8 +76,19 @@ class GameServiceTest {
     }
 
     @Test
-    void testMakeChoice_PlayerNotInLobby_Exception(){
+    void testHandleTurn_PlayerNotFound_Exception(){
+        String uuid = player.getPlayerUUID();
+        when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.empty());
 
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.handleTurn(uuid));
+
+        assertEquals("Player not found!", e.getMessage());
+    }
+
+
+    @Test
+    void testMakeChoice_PlayerNotInLobby_Exception(){
         when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
         player.setLobbyID(null);
         String uuid = player.getPlayerUUID();
@@ -88,8 +100,19 @@ class GameServiceTest {
     }
 
     @Test
-    void testMakeChoice_LobbyNotFound_Exception(){
+    void testHandleTurn_PlayerNotInLobby_Exception(){
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        player.setLobbyID(null);
+        String uuid = player.getPlayerUUID();
 
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.handleTurn(uuid));
+
+        assertEquals("Player not in lobby!", e.getMessage());
+    }
+
+    @Test
+    void testMakeChoice_LobbyNotFound_Exception(){
         when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
         String uuid = player.getPlayerUUID();
 
@@ -97,6 +120,34 @@ class GameServiceTest {
                 gameService.makeChoice(true, uuid));
 
         assertEquals("Lobby not found!", e.getMessage());
+    }
+
+    @Test
+    void testHandleTurn_LobbyNotFound_Exception(){
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        String uuid = player.getPlayerUUID();
+
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.handleTurn(uuid));
+
+        assertEquals("Lobby not found!", e.getMessage());
+    }
+
+    @Test
+    void testException_MakeChoice_NotThePlayersTurn(){
+        Cell cell = mock(Cell.class);
+        Player currentPlayer = new Player("123", "CurrentPlayer");
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(cell);
+
+        lobby.setCurrentPlayer(currentPlayer);
+        String uuid = player.getPlayerUUID();
+
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.makeChoice(true, uuid));
+
+        assertEquals("It's not the player's turn!", e.getMessage());
     }
 
     @Test
@@ -170,8 +221,130 @@ class GameServiceTest {
     }
 
     @Test
-    void testMakeChoice_Houses_true(){
+    void testMakeChoice_Retire_Early_true(){
+        Cell startCell = mock(Cell.class);
+        Lobby lobbyMock = mock(Lobby.class);
+        when(lobbyMock.getLobbyID()).thenReturn(2L);
+        when(lobbyMock.getCurrentPlayer()).thenReturn(player);
+        when(lobbyMock.getSpunNumber()).thenReturn(2);
+        when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
+        player.setLobbyID(2L);
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(startCell.getType()).thenReturn(CellType.RETIRE_EARLY);
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+        List<Integer> nextCells = List.of(1, 2);
+        when(startCell.getNextCells()).thenReturn(nextCells);
 
+
+        gameService.makeChoice(true, "UUID");
+        assertEquals(1, player.getCurrentCellPosition());
+        verify(lobbyMock).updatePlayerInLobby(player);
+        verify(lobbyMock).nextPlayer();
+    }
+
+    @Test
+    void testMakeChoice_Retire_Early_false(){
+        Cell startCell = mock(Cell.class);
+        Lobby lobbyMock = mock(Lobby.class);
+        when(lobbyMock.getLobbyID()).thenReturn(2L);
+        when(lobbyMock.getCurrentPlayer()).thenReturn(player);
+        when(lobbyMock.getSpunNumber()).thenReturn(2);
+        when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
+        player.setLobbyID(2L);
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(startCell.getType()).thenReturn(CellType.RETIRE_EARLY);
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+        List<Integer> nextCells = List.of(1, 2);
+        when(startCell.getNextCells()).thenReturn(nextCells);
+
+
+        gameService.makeChoice(false, "UUID");
+        assertEquals(2, player.getCurrentCellPosition());
+        verify(lobbyMock).updatePlayerInLobby(player);
+        verify(lobbyMock).nextPlayer();
+    }
+
+    @Test
+    void testMakeChoice_NOTHING(){
+        Cell startCell = mock(Cell.class);
+        Lobby lobbyMock = mock(Lobby.class);
+        when(lobbyMock.getLobbyID()).thenReturn(2L);
+        when(lobbyMock.getCurrentPlayer()).thenReturn(player);
+        when(lobbyMock.getSpunNumber()).thenReturn(2);
+        when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
+        player.setLobbyID(2L);
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(startCell.getType()).thenReturn(CellType.NOTHING);
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+
+        gameService.makeChoice(false, "UUID");
+        verify(lobbyMock).updatePlayerInLobby(player);
+        verify(lobbyMock).nextPlayer();
+    }
+
+    @Test
+    void testHandleCell_NOTHING(){
+        Cell startCell = mock(Cell.class);
+        Lobby lobbyMock = mock(Lobby.class);
+        when(lobbyMock.getLobbyID()).thenReturn(2L);
+        when(lobbyMock.getCurrentPlayer()).thenReturn(player);
+        when(lobbyMock.getSpunNumber()).thenReturn(2);
+        when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
+        player.setLobbyID(2L);
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(startCell.getType()).thenReturn(CellType.NOTHING);
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+
+        gameService.handleTurn("UUID");
+        verify(lobbyMock, times(2)).updatePlayerInLobby(player);
+        verify(lobbyMock).nextPlayer();
+    }
+
+    @Test
+    void testMakeChoice_Default(){
+        Cell startCell = mock(Cell.class);
+        CellType type = mock(CellType.class);
+        when(type.toString()).thenReturn("Something");
+
+
+        when(lobbyRepository.findById(1L)).thenReturn(Optional.of(lobby));
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        when(startCell.getType()).thenReturn(type);
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(startCell);
+
+        String uuid = player.getPlayerUUID();
+
+        Exception e = assertThrows(IllegalStateException.class, () ->
+                gameService.makeChoice(true, uuid));
+
+        assertEquals("Unknown cell type."+"Something", e.getMessage());
+    }
+
+    @Test
+    void testHandleTurn_Default(){
+        Cell startCell = mock(Cell.class);
+        CellType type = mock(CellType.class);
+        Lobby lobbyMock = mock(Lobby.class);
+
+        player.setLobbyID(2L);
+        player.setCareerCard(careerCard1);
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+
+        when(lobbyMock.getLobbyID()).thenReturn(2L);
+        when(lobbyMock.getCurrentPlayer()).thenReturn(player);
+        when(lobbyMock.getSpunNumber()).thenReturn(2);
+        when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
+        when(startCell.getType()).thenReturn(type);
+        when(cellRepository.findByNumber(anyInt())).thenReturn(startCell);
+
+        gameService.handleTurn("UUID");
+
+        verify(lobbyMock, times(2)).updatePlayerInLobby(player);
+        verify(lobbyMock).nextPlayer();
+    }
+
+    @Test
+    void testMakeChoice_Houses_true(){
         lobby.setHouseCards(List.of(houseCard1, houseCard2));
         Cell startCell = mock(Cell.class);
 
@@ -281,7 +454,7 @@ class GameServiceTest {
         Lobby lobbyMock = mock(Lobby.class);
         when(lobbyMock.getLobbyID()).thenReturn(2L);
         when(lobbyMock.getCurrentPlayer()).thenReturn(player);
-        when(lobbyMock.getSpunNumber()).thenReturn(2);
+        when(lobbyMock.getSpunNumber()).thenReturn(1);
         when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
 
@@ -437,8 +610,12 @@ class GameServiceTest {
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
 
         CareerCard careerCard1mock = mock(CareerCard.class);
-        when(careerCardRepository.findRandomCareerCard()).thenReturn(careerCard1mock);
         when(careerCard1mock.needsDiploma()).thenReturn(false);
+
+        CareerCard careerCard2mock = mock(CareerCard.class);
+        when(careerCard2mock.needsDiploma()).thenReturn(true);
+
+        when(careerCardRepository.findRandomCareerCard()).thenReturn(careerCard1mock, careerCard2mock, careerCard1mock);
 
         gameService.handleTurn(player.getPlayerUUID());
 
@@ -521,7 +698,6 @@ class GameServiceTest {
         gameService.handleTurn(player.getPlayerUUID());
 
         assertEquals(100 + 50000 + 100000, player.getMoney());
-        verify(lobbyMock).setHasStarted(false);
     }
 
     @Test
@@ -552,8 +728,45 @@ class GameServiceTest {
         gameService.handleTurn(player.getPlayerUUID());
 
         assertEquals(100 + 50000 + 10000, player.getMoney());
-        verify(lobbyMock).setHasStarted(false);
     }
+
+    @Test
+    void testDoAction_AffectOnePlayer() {
+        ActionCard actionCard = mock(ActionCard.class);
+        when(actionCard.isAffectOnePlayer()).thenReturn(true);
+        when(actionCard.getMoneyAmount()).thenReturn(100);
+
+        gameService.doAction(player, actionCard);
+
+        assertEquals(250100, player.getMoney());
+    }
+
+    @Test
+    void testDoAction_AffectAllPlayers() {
+        List<Player> players = List.of(player, new Player("UUID2", "player2"), new Player("UUID3", "player3"));
+        ActionCard actionCard = mock(ActionCard.class);
+        when(actionCard.isAffectAllPlayers()).thenReturn(true);
+        when(actionCard.getMoneyAmount()).thenReturn(100);
+        when(playerRepository.findAll()).thenReturn(players);
+
+        gameService.doAction(player, actionCard);
+
+        players.forEach(p -> assertEquals(250100, p.getMoney()));
+    }
+
+    @Test
+    void testDoAction_AffectBank() {
+        ActionCard actionCard = mock(ActionCard.class);
+        when(actionCard.isAffectBank()).thenReturn(true);
+        when(actionCard.getMoneyAmount()).thenReturn(100);
+
+        gameService.doAction(player, actionCard);
+
+        assertEquals(250100, player.getMoney());
+    }
+
+
+
 
 
 

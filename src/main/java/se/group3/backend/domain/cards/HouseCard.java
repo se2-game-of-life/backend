@@ -1,16 +1,15 @@
 package se.group3.backend.domain.cards;
 
-import se.group3.backend.domain.Player;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "HouseCards")
 public class HouseCard implements Card {
 
     private String id;
-    private String name;
-    private int purchasePrice;
-    private int redSellPrice;
-    private int blackSellPrice;
+    private final String name;
+    private final int purchasePrice;
+    private final int redSellPrice;
+    private final int blackSellPrice;
 
 
     public HouseCard(String id, String name, int purchasePrice, int redSellPrice, int blackSellPrice) {
@@ -45,8 +44,5 @@ public class HouseCard implements Card {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
 }
