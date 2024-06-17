@@ -7,7 +7,7 @@ import se.group3.backend.domain.Player;
 import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.dto.mapper.PlayerMapper;
 
-public class PlayerMapperTest {
+class PlayerMapperTest {
 
     @Test
     void toPlayerModel() {

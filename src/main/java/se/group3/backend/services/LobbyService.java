@@ -94,8 +94,6 @@ public class LobbyService {
         Optional<Lobby> lobbyOptional = lobbyRepository.findById(playerOptional.get().getLobbyID());
         if(lobbyOptional.isEmpty()) throw new IllegalStateException("The lobby doesn't exist!");
 
-        //todo: add check for < 2 player
-
         Lobby lobby = lobbyOptional.get();
         lobby.setHasStarted(true);
         lobby.setHasDecision(false);

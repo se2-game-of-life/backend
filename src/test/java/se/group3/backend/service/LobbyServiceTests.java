@@ -84,7 +84,9 @@ class LobbyServiceTests {
         lobby.addPlayer(new Player("Test UUID4", "Player 4"));
         Mockito.when(lobbyRepository.findById(1L)).thenReturn(Optional.of(lobby));
 
-        Assertions.assertThrows(IllegalStateException.class, () -> lobbyService.joinLobby(lobby.getLobbyID(), "Test UUID5", "Player 5"));
+        Assertions.assertNotNull(lobby);
+        long lobbyID = lobby.getLobbyID();
+        Assertions.assertThrows(IllegalStateException.class, () -> lobbyService.joinLobby(lobbyID, "Test UUID5", "Player 5"));
     }
 
     @Test
@@ -99,7 +101,9 @@ class LobbyServiceTests {
         Lobby lobby = new Lobby(1L, player);
         Mockito.when(lobbyRepository.findById(1L)).thenReturn(Optional.of(lobby));
         Mockito.when(playerRepository.findById("Test UUID1")).thenReturn(Optional.of(player));
-        Assertions.assertThrows(IllegalStateException.class, () -> lobbyService.joinLobby(lobby.getLobbyID(), "Test UUID1", "Player 1"));
+        Assertions.assertNotNull(lobby);
+        long lobbyID = lobby.getLobbyID();
+        Assertions.assertThrows(IllegalStateException.class, () -> lobbyService.joinLobby(lobbyID, "Test UUID1", "Player 1"));
     }
 
     @Test
