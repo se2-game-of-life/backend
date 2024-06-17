@@ -3,7 +3,6 @@ package se.group3.backend.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import se.group3.backend.domain.cards.HouseCard;
 
 
 import java.util.List;

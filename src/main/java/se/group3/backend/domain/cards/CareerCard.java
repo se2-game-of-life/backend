@@ -1,15 +1,15 @@
 package se.group3.backend.domain.cards;
 
-import se.group3.backend.domain.Player;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "CareerCards")
 public class CareerCard implements Card {
     private String id;
-    private String name;
-    private int salary;
-    private int bonus;
-    private boolean needsDiploma;
+    private final String name;
+    private final int salary;
+    private final int bonus;
+    private final boolean needsDiploma;
 
     public CareerCard(String id, String name, int salary, int bonus, boolean needsDiploma) {
      this.id = id;
@@ -45,9 +45,6 @@ public class CareerCard implements Card {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
 
 }

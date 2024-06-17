@@ -7,8 +7,8 @@ import lombok.Getter;
 @Getter
 public class JoinLobbyRequest {
 
-    private long lobbyID;
-    private String playerName;
+    private final long lobbyID;
+    private final String playerName;
 
     @JsonCreator
     public JoinLobbyRequest(@JsonProperty("lobbyID") long lobbyID, @JsonProperty("playerName") String playerName) {
