@@ -18,7 +18,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class CardMapperTest {
+class CardMapperTest {
 
     private final ActionCard actioncard1 = new ActionCard("123", "actioncard", "describtion", true, false, false, 100);
     private final ActionCard actioncard2 = new ActionCard("123", "actioncard2", "describtion", true, false, false, 100);
