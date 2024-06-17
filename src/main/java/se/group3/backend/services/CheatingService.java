@@ -23,10 +23,10 @@ public class CheatingService {
     private final LobbyRepository lobbyRepository;
     private final PlayerRepository playerRepository;
 
-    private static final int cheatingMoney = 10000;
-    private static final int falseReportPenalty = 5000;
-    private static final int cheatingCaughtPenalty = 15000;
-    private static final int maxReportTime = 15;
+    private static final int CHEATING_MONEY = 10000;
+    private static final int FALSE_REPORT_PENALTY = 5000;
+    private static final int CHEATING_CAUGHT_PENALTY = 15000;
+    private static final int MAX_REPORT_TIME = 15;
     private final Set<String> cheatingQueue;
     private final ScheduledExecutorService scheduler;
 
@@ -46,13 +46,13 @@ public class CheatingService {
 
         for(Player playerInLobby : lobby.getPlayers()) {
             if(playerInLobby.getPlayerUUID().equals(playerUUID)) {
-                playerInLobby.setMoney(playerInLobby.getMoney() + cheatingMoney);
+                playerInLobby.setMoney(playerInLobby.getMoney() + CHEATING_MONEY);
                 break;
             }
         }
 
         cheatingQueue.add(playerUUID);
-        scheduler.schedule(() -> cheatingQueue.remove(playerUUID), maxReportTime, TimeUnit.SECONDS);
+        scheduler.schedule(() -> cheatingQueue.remove(playerUUID), MAX_REPORT_TIME, TimeUnit.SECONDS);
 
         lobbyRepository.save(lobby);
         return LobbyMapper.toLobbyDTO(lobby);
@@ -68,7 +68,7 @@ public class CheatingService {
         if(cheatingQueue.contains(reportedPlayer.getPlayerUUID())) {
             for(Player playerInLobby : lobby.getPlayers()) {
                 if(playerInLobby.getPlayerUUID().equals(reportedPlayer.getPlayerUUID())) {
-                    playerInLobby.setMoney(playerInLobby.getMoney() - cheatingCaughtPenalty);
+                    playerInLobby.setMoney(playerInLobby.getMoney() - CHEATING_CAUGHT_PENALTY);
                     break;
                 }
             }
@@ -76,7 +76,7 @@ public class CheatingService {
         } else {
             for(Player playerInLobby : lobby.getPlayers()) {
                 if(playerInLobby.getPlayerUUID().equals(player.getPlayerUUID())) {
-                    playerInLobby.setMoney(player.getMoney() + falseReportPenalty);
+                    playerInLobby.setMoney(player.getMoney() + FALSE_REPORT_PENALTY);
                     break;
                 }
             }

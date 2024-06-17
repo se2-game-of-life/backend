@@ -8,8 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.group3.backend.dto.CellDTO;
-import se.group3.backend.dto.LobbyDTO;
-import se.group3.backend.dto.PlayerDTO;
 import se.group3.backend.services.SerializationService;
 
 import java.util.Arrays;
