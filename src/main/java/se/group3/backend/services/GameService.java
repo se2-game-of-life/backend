@@ -116,6 +116,7 @@ public class GameService {
                         int newPosition = player.getCurrentCellPosition() + 2;
                         player.setCurrentCellPosition(newPosition);
                     }
+                    lobby.updatePlayerInLobby(player);
                     lobby.nextPlayer();
                     break;
                 default:
