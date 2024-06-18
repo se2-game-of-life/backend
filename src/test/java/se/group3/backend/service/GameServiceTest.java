@@ -89,6 +89,17 @@ class GameServiceTest {
         assertEquals("Player not found!", e.getMessage());
     }
 
+    @Test
+    void testEndGameEarlier_PlayerNotFound_Exception(){
+        String uuid = player.getPlayerUUID();
+        when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.empty());
+
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.endGameEarlier(uuid));
+
+        assertEquals("Player not found!", e.getMessage());
+    }
+
 
     @Test
     void testMakeChoice_PlayerNotInLobby_Exception(){
@@ -115,6 +126,18 @@ class GameServiceTest {
     }
 
     @Test
+    void testEndGameEarlier_PlayerNotInLobby_Exception(){
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        player.setLobbyID(null);
+        String uuid = player.getPlayerUUID();
+
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.endGameEarlier(uuid));
+
+        assertEquals("Player not in lobby!", e.getMessage());
+    }
+
+    @Test
     void testMakeChoice_LobbyNotFound_Exception(){
         when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
         String uuid = player.getPlayerUUID();
@@ -132,6 +155,17 @@ class GameServiceTest {
 
         Exception e = assertThrows(IllegalArgumentException.class, () ->
                 gameService.handleTurn(uuid));
+
+        assertEquals("Lobby not found!", e.getMessage());
+    }
+
+    @Test
+    void testEndGameEarlier_LobbyNotFound_Exception(){
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        String uuid = player.getPlayerUUID();
+
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.endGameEarlier(uuid));
 
         assertEquals("Lobby not found!", e.getMessage());
     }
@@ -769,34 +803,6 @@ class GameServiceTest {
     }
 
 
-    public LobbyDTO endGameEarlier(String playerUUID) throws IllegalArgumentException {
-        Optional<Player> playerOptional = playerRepository.findById(playerUUID);
-        if(playerOptional.isEmpty()) throw new IllegalArgumentException("Player not found!");
-        Player player = playerOptional.get();
-
-        Long lobbyID = player.getLobbyID();
-        if(lobbyID == null) throw new IllegalArgumentException("Player not in lobby!");
-
-        Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
-        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
-        Lobby lobby = lobbyOptional.get();
-
-        List<Player> players = lobby.getPlayers();
-
-        players.sort(Comparator.comparingDouble(Player::getCurrentCellPosition).reversed());
-
-        for (Player p : players){
-            //playerService.retire(p, lobby, spinWheel());
-            p.setCurrentCellPosition(123);
-            lobby.updatePlayerInLobby(p);
-        }
-
-        lobby.setHasStarted(false);
-        lobbyRepository.save(lobby);
-        playerRepository.save(player);
-        return LobbyMapper.toLobbyDTO(lobby);
-    }
-
     @Test
     void testEndGameEarlier_onePlayer(){
         Cell retirement = new Cell(123, CellType.RETIREMENT, null, 1, 2);
@@ -861,12 +867,6 @@ class GameServiceTest {
         assertEquals(100 + 50000 + 200000, player.getMoney());
         assertEquals(100 + 50000 + 100000, player2.getMoney());
     }
-
-
-
-
-
-
 
     @AfterEach
     void breakDown() {
