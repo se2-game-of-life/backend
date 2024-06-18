@@ -129,6 +129,36 @@ public class GameService {
         return LobbyMapper.toLobbyDTO(lobby);
     }
 
+    public LobbyDTO endGameEarlier(String playerUUID) throws IllegalArgumentException {
+        Optional<Player> playerOptional = playerRepository.findById(playerUUID);
+        if(playerOptional.isEmpty()) throw new IllegalArgumentException("Player not found!");
+        Player player = playerOptional.get();
+
+        Long lobbyID = player.getLobbyID();
+        if(lobbyID == null) throw new IllegalArgumentException("Player not in lobby!");
+
+        Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
+        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
+        Lobby lobby = lobbyOptional.get();
+
+        List<Player> players = new ArrayList<>(lobby.getPlayers());
+
+        if(players.size() > 1) {
+            players.sort(Comparator.comparingDouble(Player::getCurrentCellPosition).reversed());
+        }
+
+        for (Player p : players){
+            p.setCurrentCellPosition(123);
+            playerService.retire(p, lobby, lobby.getSpunNumber());
+            lobby.updatePlayerInLobby(p);
+        }
+
+        lobby.setHasStarted(false);
+        lobbyRepository.save(lobby);
+        playerRepository.save(player);
+        return LobbyMapper.toLobbyDTO(lobby);
+    }
+
 
     private void makeMove(Lobby lobby, Player player) {
         Cell currentCell = cellRepository.findByNumber(player.getCurrentCellPosition());

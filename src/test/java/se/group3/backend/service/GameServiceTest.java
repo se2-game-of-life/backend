@@ -17,9 +17,12 @@ import se.group3.backend.domain.cards.ActionCard;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cards.HouseCard;
 
+import se.group3.backend.dto.LobbyDTO;
+import se.group3.backend.dto.mapper.LobbyMapper;
 import se.group3.backend.repositories.*;
 import se.group3.backend.services.GameService;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -764,6 +767,101 @@ class GameServiceTest {
 
         assertEquals(250100, player.getMoney());
     }
+
+
+    public LobbyDTO endGameEarlier(String playerUUID) throws IllegalArgumentException {
+        Optional<Player> playerOptional = playerRepository.findById(playerUUID);
+        if(playerOptional.isEmpty()) throw new IllegalArgumentException("Player not found!");
+        Player player = playerOptional.get();
+
+        Long lobbyID = player.getLobbyID();
+        if(lobbyID == null) throw new IllegalArgumentException("Player not in lobby!");
+
+        Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
+        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
+        Lobby lobby = lobbyOptional.get();
+
+        List<Player> players = lobby.getPlayers();
+
+        players.sort(Comparator.comparingDouble(Player::getCurrentCellPosition).reversed());
+
+        for (Player p : players){
+            //playerService.retire(p, lobby, spinWheel());
+            p.setCurrentCellPosition(123);
+            lobby.updatePlayerInLobby(p);
+        }
+
+        lobby.setHasStarted(false);
+        lobbyRepository.save(lobby);
+        playerRepository.save(player);
+        return LobbyMapper.toLobbyDTO(lobby);
+    }
+
+    @Test
+    void testEndGameEarlier_onePlayer(){
+        Cell retirement = new Cell(123, CellType.RETIREMENT, null, 1, 2);
+
+        when(cellRepository.findByNumber(123)).thenReturn(retirement);
+
+        player.setLobbyID(2L);
+        player.setCurrentCellPosition(10);
+
+        Lobby lobbyMock = mock(Lobby.class);
+        when(lobbyMock.getLobbyID()).thenReturn(2L);
+        when(lobbyMock.getCurrentPlayer()).thenReturn(player);
+        when(lobbyMock.getSpunNumber()).thenReturn(2);
+        when(lobbyMock.getPlayers()).thenReturn(List.of(player));
+        when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
+        when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
+
+        player.setHouses(List.of(new HouseCard("House69","House", 100, 100, 100)));
+        player.setNumberOfPegs(1);
+        player.setMoney(0);
+
+
+        gameService.endGameEarlier(player.getPlayerUUID());
+
+        assertEquals(100 + 50000 + 200000, player.getMoney());
+        verify(lobbyMock).setHasStarted(false);
+    }
+
+
+    @Test
+    void testEndGameEarlier_twoPlayer(){
+        Cell retirement = new Cell(123, CellType.RETIREMENT, null, 1, 2);
+        Cell player1Cell = new Cell(10, CellType.NOTHING, null, 1, 2);
+
+
+        when(cellRepository.findByNumber(123)).thenReturn(retirement);
+        when(cellRepository.findByNumber(10)).thenReturn(player1Cell);
+
+        player.setCurrentCellPosition(20);
+
+
+        Player player2 = new Player("1234", "Player2");
+        player2.setLobbyID(1L);
+        player2.setCurrentCellPosition(10);
+
+
+        when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
+        when(lobbyRepository.findById(1L)).thenReturn(Optional.of(lobby));
+
+        lobby.setPlayers(List.of(player, player2));
+
+        player.setHouses(List.of(new HouseCard("House69", "House", 100, 100, 100)));
+        player.setNumberOfPegs(1);
+        player.setMoney(0);
+
+        player2.setHouses(List.of(new HouseCard("House69", "House", 100, 100, 100)));
+        player2.setNumberOfPegs(1);
+        player2.setMoney(0);
+
+        gameService.endGameEarlier(player.getPlayerUUID());
+
+        assertEquals(100 + 50000 + 200000, player.getMoney());
+        assertEquals(100 + 50000 + 100000, player2.getMoney());
+    }
+
 
 
 
