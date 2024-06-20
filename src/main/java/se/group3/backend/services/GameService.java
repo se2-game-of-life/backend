@@ -27,6 +27,9 @@ public class GameService {
     private final PlayerService playerService;
 
     private static final Random RANDOM = new Random();
+    private static final String PLAYER_NOT_FOUND = "Player not found!";
+    private static final String PLAYER_NOT_IN_LOBBY = "Player not in lobby!";
+    private static final String LOBBY_NOT_FOUND = "Lobby not found!";
 
     @Autowired
     public GameService(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellRepository cellRepository, PlayerRepository playerRepository, LobbyRepository lobbyRepository){
@@ -40,14 +43,14 @@ public class GameService {
 
     public LobbyDTO handleTurn(String playerUUID) throws IllegalArgumentException {
         Optional<Player> playerOptional = playerRepository.findById(playerUUID);
-        if(playerOptional.isEmpty()) throw new IllegalArgumentException("Player not found!");
+        if(playerOptional.isEmpty()) throw new IllegalArgumentException(PLAYER_NOT_FOUND);
         Player player = playerOptional.get();
 
         Long lobbyID = player.getLobbyID();
-        if(lobbyID == null) throw new IllegalArgumentException("Player not in lobby!");
+        if(lobbyID == null) throw new IllegalArgumentException(PLAYER_NOT_IN_LOBBY);
 
         Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
-        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
+        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException(LOBBY_NOT_FOUND);
         Lobby lobby = lobbyOptional.get();
 
         if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), playerUUID)) throw new IllegalArgumentException("It's not the player's turn!");
@@ -67,14 +70,14 @@ public class GameService {
 
     public LobbyDTO makeChoice(boolean chooseLeft, String uuid) {
         Optional<Player> playerOptional = playerRepository.findById(uuid);
-        if(playerOptional.isEmpty()) throw new IllegalArgumentException("Player not found!");
+        if(playerOptional.isEmpty()) throw new IllegalArgumentException(PLAYER_NOT_FOUND);
         Player player = playerOptional.get();
 
         Long lobbyID = player.getLobbyID();
-        if(lobbyID == null) throw new IllegalArgumentException("Player not in lobby!");
+        if(lobbyID == null) throw new IllegalArgumentException(PLAYER_NOT_IN_LOBBY);
 
         Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
-        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
+        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException(LOBBY_NOT_FOUND);
         Lobby lobby = lobbyOptional.get();
 
         Cell cell = cellRepository.findByNumber(player.getCurrentCellPosition());
@@ -131,14 +134,14 @@ public class GameService {
 
     public LobbyDTO endGameEarlier(String playerUUID) throws IllegalArgumentException {
         Optional<Player> playerOptional = playerRepository.findById(playerUUID);
-        if(playerOptional.isEmpty()) throw new IllegalArgumentException("Player not found!");
+        if(playerOptional.isEmpty()) throw new IllegalArgumentException(PLAYER_NOT_FOUND);
         Player player = playerOptional.get();
 
         Long lobbyID = player.getLobbyID();
-        if(lobbyID == null) throw new IllegalArgumentException("Player not in lobby!");
+        if(lobbyID == null) throw new IllegalArgumentException(PLAYER_NOT_IN_LOBBY);
 
         Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
-        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
+        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException(LOBBY_NOT_FOUND);
         Lobby lobby = lobbyOptional.get();
 
         List<Player> players = new ArrayList<>(lobby.getPlayers());

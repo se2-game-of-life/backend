@@ -17,12 +17,9 @@ import se.group3.backend.domain.cards.ActionCard;
 import se.group3.backend.domain.cards.CareerCard;
 import se.group3.backend.domain.cards.HouseCard;
 
-import se.group3.backend.dto.LobbyDTO;
-import se.group3.backend.dto.mapper.LobbyMapper;
 import se.group3.backend.repositories.*;
 import se.group3.backend.services.GameService;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
