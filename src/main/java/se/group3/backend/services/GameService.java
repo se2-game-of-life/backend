@@ -229,9 +229,6 @@ public class GameService {
                 playerService.retire(player, lobby, spinWheel());
                 lobby.updatePlayerInLobby(player);
                 lobby.nextPlayerRetired();
-                if (!lobby.isHasStarted()){
-                    //todo end game
-                }
                 break;
             case NOTHING:
                 lobby.updatePlayerInLobby(player);
