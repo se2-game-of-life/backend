@@ -86,6 +86,17 @@ class GameServiceTest {
         assertEquals("Player not found!", e.getMessage());
     }
 
+    @Test
+    void testEndGameEarlier_PlayerNotFound_Exception(){
+        String uuid = player.getPlayerUUID();
+        when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.empty());
+
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.endGameEarlier(uuid));
+
+        assertEquals("Player not found!", e.getMessage());
+    }
+
 
     @Test
     void testMakeChoice_PlayerNotInLobby_Exception(){
@@ -112,6 +123,18 @@ class GameServiceTest {
     }
 
     @Test
+    void testEndGameEarlier_PlayerNotInLobby_Exception(){
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        player.setLobbyID(null);
+        String uuid = player.getPlayerUUID();
+
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.endGameEarlier(uuid));
+
+        assertEquals("Player not in lobby!", e.getMessage());
+    }
+
+    @Test
     void testMakeChoice_LobbyNotFound_Exception(){
         when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
         String uuid = player.getPlayerUUID();
@@ -129,6 +152,17 @@ class GameServiceTest {
 
         Exception e = assertThrows(IllegalArgumentException.class, () ->
                 gameService.handleTurn(uuid));
+
+        assertEquals("Lobby not found!", e.getMessage());
+    }
+
+    @Test
+    void testEndGameEarlier_LobbyNotFound_Exception(){
+        when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
+        String uuid = player.getPlayerUUID();
+
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.endGameEarlier(uuid));
 
         assertEquals("Lobby not found!", e.getMessage());
     }
@@ -766,9 +800,70 @@ class GameServiceTest {
     }
 
 
+    @Test
+    void testEndGameEarlier_onePlayer(){
+        Cell retirement = new Cell(123, CellType.RETIREMENT, null, 1, 2);
+
+        when(cellRepository.findByNumber(123)).thenReturn(retirement);
+
+        player.setLobbyID(2L);
+        player.setCurrentCellPosition(10);
+
+        Lobby lobbyMock = mock(Lobby.class);
+        when(lobbyMock.getLobbyID()).thenReturn(2L);
+        when(lobbyMock.getCurrentPlayer()).thenReturn(player);
+        when(lobbyMock.getSpunNumber()).thenReturn(2);
+        when(lobbyMock.getPlayers()).thenReturn(List.of(player));
+        when(lobbyRepository.findById(2L)).thenReturn(Optional.of(lobbyMock));
+        when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
+
+        player.setHouses(List.of(new HouseCard("House69","House", 100, 100, 100)));
+        player.setNumberOfPegs(1);
+        player.setMoney(0);
 
 
+        gameService.endGameEarlier(player.getPlayerUUID());
 
+        assertEquals(100 + 50000 + 200000, player.getMoney());
+        verify(lobbyMock).setHasStarted(false);
+    }
+
+
+    @Test
+    void testEndGameEarlier_twoPlayer(){
+        Cell retirement = new Cell(123, CellType.RETIREMENT, null, 1, 2);
+        Cell player1Cell = new Cell(10, CellType.NOTHING, null, 1, 2);
+
+
+        when(cellRepository.findByNumber(123)).thenReturn(retirement);
+        when(cellRepository.findByNumber(10)).thenReturn(player1Cell);
+
+        player.setCurrentCellPosition(20);
+
+
+        Player player2 = new Player("1234", "Player2");
+        player2.setLobbyID(1L);
+        player2.setCurrentCellPosition(10);
+
+
+        when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
+        when(lobbyRepository.findById(1L)).thenReturn(Optional.of(lobby));
+
+        lobby.setPlayers(List.of(player, player2));
+
+        player.setHouses(List.of(new HouseCard("House69", "House", 100, 100, 100)));
+        player.setNumberOfPegs(1);
+        player.setMoney(0);
+
+        player2.setHouses(List.of(new HouseCard("House69", "House", 100, 100, 100)));
+        player2.setNumberOfPegs(1);
+        player2.setMoney(0);
+
+        gameService.endGameEarlier(player.getPlayerUUID());
+
+        assertEquals(100 + 50000 + 200000, player.getMoney());
+        assertEquals(100 + 50000 + 100000, player2.getMoney());
+    }
 
     @AfterEach
     void breakDown() {

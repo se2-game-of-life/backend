@@ -111,6 +111,16 @@ public class GameController {
         }
     }
 
+    @MessageMapping("/lobby/endGameSooner")
+    public void endGameSooner(SimpMessageHeaderAccessor headerAccessor) {
+        try {
+            LobbyDTO lobby = gameService.endGameEarlier(getUUID(headerAccessor));
+            messagingTemplate.convertAndSend(LOBBIES_PATH + lobby.getLobbyID(), serializationService.jsonStringFromClass(lobby));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+    }
+
     @MessageMapping("/fetch")
     public void fetchBoard(SimpMessageHeaderAccessor headerAccessor) {
         try {

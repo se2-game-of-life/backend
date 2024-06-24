@@ -27,6 +27,10 @@ public class GameService {
     private final PlayerService playerService;
 
     private static final Random RANDOM = new Random();
+    private static final String PLAYER_NOT_FOUND = "Player not found!";
+    private static final String PLAYER_NOT_IN_LOBBY = "Player not in lobby!";
+    private static final String LOBBY_NOT_FOUND = "Lobby not found!";
+    private static final String NOT_PLAYERS_TURN = "It's not the player's turn!";
 
     @Autowired
     public GameService(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellRepository cellRepository, PlayerRepository playerRepository, LobbyRepository lobbyRepository){
@@ -39,18 +43,14 @@ public class GameService {
     }
 
     public LobbyDTO handleTurn(String playerUUID) throws IllegalArgumentException {
-        Optional<Player> playerOptional = playerRepository.findById(playerUUID);
-        if(playerOptional.isEmpty()) throw new IllegalArgumentException("Player not found!");
-        Player player = playerOptional.get();
+        Player player = getPlayerFromDB(playerUUID);
 
         Long lobbyID = player.getLobbyID();
-        if(lobbyID == null) throw new IllegalArgumentException("Player not in lobby!");
+        if(lobbyID == null) throw new IllegalArgumentException(PLAYER_NOT_IN_LOBBY);
 
-        Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
-        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
-        Lobby lobby = lobbyOptional.get();
+        Lobby lobby = getLobbyFromDB(lobbyID);
 
-        if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), playerUUID)) throw new IllegalArgumentException("It's not the player's turn!");
+        if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), playerUUID)) throw new IllegalArgumentException(NOT_PLAYERS_TURN);
         lobby.setSpunNumber(spinWheel());
 
         lobby.setHouseCards(new ArrayList<>());
@@ -66,16 +66,12 @@ public class GameService {
     }
 
     public LobbyDTO makeChoice(boolean chooseLeft, String uuid) {
-        Optional<Player> playerOptional = playerRepository.findById(uuid);
-        if(playerOptional.isEmpty()) throw new IllegalArgumentException("Player not found!");
-        Player player = playerOptional.get();
+        Player player = getPlayerFromDB(uuid);
 
         Long lobbyID = player.getLobbyID();
-        if(lobbyID == null) throw new IllegalArgumentException("Player not in lobby!");
+        if(lobbyID == null) throw new IllegalArgumentException(PLAYER_NOT_IN_LOBBY);
 
-        Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
-        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException("Lobby not found!");
-        Lobby lobby = lobbyOptional.get();
+        Lobby lobby = getLobbyFromDB(lobbyID);
 
         Cell cell = cellRepository.findByNumber(player.getCurrentCellPosition());
         if(cell == null){
@@ -83,7 +79,7 @@ public class GameService {
             lobby.updatePlayerInLobby(player);
             lobby.nextPlayer();
         } else{
-            if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), uuid)) throw new IllegalArgumentException("It's not the player's turn!");
+            if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), uuid)) throw new IllegalArgumentException(NOT_PLAYERS_TURN);
             switch(cell.getType()){
                 case MARRY, GROW_FAMILY:
                     playerService.marryAndFamilyPathChoice(player, chooseLeft, cell);
@@ -124,6 +120,35 @@ public class GameService {
             }
         }
         lobby.setHasDecision(false);
+        lobbyRepository.save(lobby);
+        playerRepository.save(player);
+        return LobbyMapper.toLobbyDTO(lobby);
+    }
+
+    public LobbyDTO endGameEarlier(String playerUUID) throws IllegalArgumentException {
+        Player player = getPlayerFromDB(playerUUID);
+
+        Long lobbyID = player.getLobbyID();
+        if(lobbyID == null) throw new IllegalArgumentException(PLAYER_NOT_IN_LOBBY);
+
+        Lobby lobby = getLobbyFromDB(lobbyID);
+
+        if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), playerUUID)) throw new IllegalArgumentException(NOT_PLAYERS_TURN);
+        lobby.setSpunNumber(spinWheel());
+
+        List<Player> players = new ArrayList<>(lobby.getPlayers());
+
+        if(players.size() > 1) {
+            players.sort(Comparator.comparingDouble(Player::getCurrentCellPosition).reversed());
+        }
+
+        for (Player p : players){
+            p.setCurrentCellPosition(123);
+            playerService.retire(p, lobby, lobby.getSpunNumber());
+            lobby.updatePlayerInLobby(p);
+        }
+
+        lobby.setHasStarted(false);
         lobbyRepository.save(lobby);
         playerRepository.save(player);
         return LobbyMapper.toLobbyDTO(lobby);
@@ -240,4 +265,17 @@ public class GameService {
     private int spinWheel() {
         return RANDOM.nextInt(10) + 1;
     }
+
+    private Player getPlayerFromDB(String playerUUID){
+        Optional<Player> playerOptional = playerRepository.findById(playerUUID);
+        if(playerOptional.isEmpty()) throw new IllegalArgumentException(PLAYER_NOT_FOUND);
+        return playerOptional.get();
+    }
+
+    private Lobby getLobbyFromDB(Long lobbyID){
+        Optional<Lobby> lobbyOptional = lobbyRepository.findById(lobbyID);
+        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException(LOBBY_NOT_FOUND);
+        return lobbyOptional.get();
+    }
+
 }
