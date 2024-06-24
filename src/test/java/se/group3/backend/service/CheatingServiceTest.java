@@ -16,7 +16,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class CheatingServiceTest {
+class CheatingServiceTest {
     private PlayerRepository playerRepository;
     private LobbyRepository lobbyRepository;
     private CheatingService cheatingService;
@@ -47,8 +47,9 @@ public class CheatingServiceTest {
     void cheat_lobbyNotFound_test() {
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
         when(lobbyRepository.findById(lobby.getLobbyID())).thenReturn(Optional.empty());
+        String playerUUID = player.getPlayerUUID();
 
-        Exception e = assertThrows(IllegalStateException.class, () -> cheatingService.cheat(player.getPlayerUUID()));
+        Exception e = assertThrows(IllegalStateException.class, () -> cheatingService.cheat(playerUUID));
 
         assertEquals("Lobby not found in repository: " + lobby.getLobbyID(), e.getMessage());
     }
@@ -59,8 +60,9 @@ public class CheatingServiceTest {
         when(lobbyRepository.findById(lobby.getLobbyID())).thenReturn(Optional.of(lobby));
         player.setMoney(0);
         lobby.setPlayers(List.of(player));
+        String playerUUID = player.getPlayerUUID();
 
-        assertDoesNotThrow(() -> {cheatingService.cheat(player.getPlayerUUID());});
+        assertDoesNotThrow(() -> {cheatingService.cheat(playerUUID);});
 
         assertEquals(10000, player.getMoney());
         verify(lobbyRepository).save(lobby);
@@ -69,8 +71,9 @@ public class CheatingServiceTest {
     @Test
     void report_playerNotFound_test() {
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.empty());
+        String playerUUID = player.getPlayerUUID();
 
-        Exception e = assertThrows(IllegalStateException.class, () -> cheatingService.report(player.getPlayerUUID(), player.getPlayerUUID()));
+        Exception e = assertThrows(IllegalStateException.class, () -> cheatingService.report(playerUUID, playerUUID));
 
         assertEquals("One of the involved players was not found in the repository!", e.getMessage());
     }
@@ -79,8 +82,10 @@ public class CheatingServiceTest {
     void report_reportedPlayerNotFound_test() {
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
         when(playerRepository.findById(reportedPlayer.getPlayerUUID())).thenReturn(Optional.empty());
+        String playerUUID = player.getPlayerUUID();
+        String reportedPlayerUUID = reportedPlayer.getPlayerUUID();
 
-        Exception e = assertThrows(IllegalStateException.class, () -> cheatingService.report(player.getPlayerUUID(), reportedPlayer.getPlayerUUID()));
+        Exception e = assertThrows(IllegalStateException.class, () -> cheatingService.report(playerUUID, reportedPlayerUUID));
 
         assertEquals("One of the involved players was not found in the repository!", e.getMessage());
     }
@@ -90,8 +95,10 @@ public class CheatingServiceTest {
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.of(player));
         when(playerRepository.findById(reportedPlayer.getPlayerUUID())).thenReturn(Optional.of(reportedPlayer));
         when(lobbyRepository.findById(lobby.getLobbyID())).thenReturn(Optional.empty());
+        String playerUUID = player.getPlayerUUID();
+        String reportedPlayerUUID = reportedPlayer.getPlayerUUID();
 
-        Exception e = assertThrows(IllegalStateException.class, () -> cheatingService.report(player.getPlayerUUID(), reportedPlayer.getPlayerUUID()));
+        Exception e = assertThrows(IllegalStateException.class, () -> cheatingService.report(playerUUID, reportedPlayerUUID));
 
         assertEquals("Lobby not found in repository: " + lobby.getLobbyID(), e.getMessage());
     }
@@ -104,8 +111,10 @@ public class CheatingServiceTest {
         lobby.setPlayers(List.of(player, reportedPlayer));
         reportedPlayer.setMoney(15000);
         cheatingService.getCheatingQueue().add(reportedPlayer.getPlayerUUID());
+        String playerUUID = player.getPlayerUUID();
+        String reportedPlayerUUID = reportedPlayer.getPlayerUUID();
 
-        assertDoesNotThrow(() -> {cheatingService.report(player.getPlayerUUID(), reportedPlayer.getPlayerUUID());});
+        assertDoesNotThrow(() -> {cheatingService.report(playerUUID, reportedPlayerUUID);});
 
         assertEquals(0, reportedPlayer.getMoney());
         verify(lobbyRepository).save(lobby);
@@ -121,7 +130,10 @@ public class CheatingServiceTest {
         player.setMoney(10000);
         cheatingService.setCheatingQueue(new HashSet<>());
 
-        assertDoesNotThrow(() -> {cheatingService.report(player.getPlayerUUID(), reportedPlayer.getPlayerUUID());});
+        String playerUUID = player.getPlayerUUID();
+        String reportedPlayerUUID = reportedPlayer.getPlayerUUID();
+
+        assertDoesNotThrow(() -> {cheatingService.report(playerUUID, reportedPlayerUUID);});
 
         assertEquals(15000, reportedPlayer.getMoney());
         assertEquals(5000, player.getMoney());
