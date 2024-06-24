@@ -45,4 +45,21 @@ class SerializationServiceTest {
             Assertions.fail(e.getCause());
         }
     }
+    @Test
+    void toObject() {
+        String jsonString = "{\"id\":\"4\",\"number\":1,\"type\":\"test\",\"nextCells\":[2,3],\"row\":2,\"col\":2}";
+
+        try {
+            CellDTO cellDTO = (CellDTO) SerializationUtil.toObject(jsonString, CellDTO.class);
+            Assertions.assertNotNull(cellDTO);
+            Assertions.assertEquals("4", cellDTO.getId());
+            Assertions.assertEquals(1, cellDTO.getNumber());
+            Assertions.assertEquals("test", cellDTO.getType());
+            Assertions.assertEquals(Arrays.asList(2, 3), cellDTO.getNextCells());
+            Assertions.assertEquals(2, cellDTO.getRow());
+            Assertions.assertEquals(2, cellDTO.getCol());
+        } catch (JsonProcessingException e) {
+            Assertions.fail(e.getCause());
+        }
+    }
 }
