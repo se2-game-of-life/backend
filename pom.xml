@@ -26,7 +26,7 @@
             **se/group3/backend/configuration/**,
             **se/group3/backend/repositories/**,
             **se/group3/backend/exceptions/**,
-            **se/group3/backend/services/**,
+            **se/group3/backend/domain/**,
             **se/group3/backend/controller/**,
         </sonar.coverage.exclusions>
     </properties>
