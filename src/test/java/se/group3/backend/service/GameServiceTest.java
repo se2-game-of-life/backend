@@ -173,6 +173,7 @@ class GameServiceTest {
         Player currentPlayer = new Player("123", "CurrentPlayer");
         when(playerRepository.findById("UUID")).thenReturn(Optional.of(player));
         when(lobbyRepository.findById(player.getLobbyID())).thenReturn(Optional.of(lobby));
+        when(cellRepository.findByNumber(player.getCurrentCellPosition())).thenReturn(cell);
 
         lobby.setCurrentPlayer(currentPlayer);
         String uuid = player.getPlayerUUID();

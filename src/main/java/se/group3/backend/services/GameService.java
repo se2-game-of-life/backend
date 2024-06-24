@@ -30,6 +30,7 @@ public class GameService {
     private static final String PLAYER_NOT_FOUND = "Player not found!";
     private static final String PLAYER_NOT_IN_LOBBY = "Player not in lobby!";
     private static final String LOBBY_NOT_FOUND = "Lobby not found!";
+    private static final String NOT_PLAYERS_TURN = "It's not the player's turn!";
 
     @Autowired
     public GameService(CareerCardRepository careerCardRepository, ActionCardRepository actionCardRepository, HouseCardRepository houseCardRepository, CellRepository cellRepository, PlayerRepository playerRepository, LobbyRepository lobbyRepository){
@@ -49,7 +50,7 @@ public class GameService {
 
         Lobby lobby = getLobbyFromDB(lobbyID);
 
-        if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), playerUUID)) throw new IllegalArgumentException("It's not the player's turn!");
+        if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), playerUUID)) throw new IllegalArgumentException(NOT_PLAYERS_TURN);
         lobby.setSpunNumber(spinWheel());
 
         lobby.setHouseCards(new ArrayList<>());
@@ -72,16 +73,13 @@ public class GameService {
 
         Lobby lobby = getLobbyFromDB(lobbyID);
 
-        if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), uuid)) throw new IllegalArgumentException("It's not the player's turn!");
-        lobby.setSpunNumber(spinWheel());
-
         Cell cell = cellRepository.findByNumber(player.getCurrentCellPosition());
         if(cell == null){
             playerService.careerOrCollegeChoice(player, chooseLeft);
             lobby.updatePlayerInLobby(player);
             lobby.nextPlayer();
         } else{
-            if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), uuid)) throw new IllegalArgumentException("It's not the player's turn!");
+            if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), uuid)) throw new IllegalArgumentException(NOT_PLAYERS_TURN);
             switch(cell.getType()){
                 case MARRY, GROW_FAMILY:
                     playerService.marryAndFamilyPathChoice(player, chooseLeft, cell);
@@ -135,7 +133,7 @@ public class GameService {
 
         Lobby lobby = getLobbyFromDB(lobbyID);
 
-        if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), playerUUID)) throw new IllegalArgumentException("It's not the player's turn!");
+        if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), playerUUID)) throw new IllegalArgumentException(NOT_PLAYERS_TURN);
         lobby.setSpunNumber(spinWheel());
 
         List<Player> players = new ArrayList<>(lobby.getPlayers());
