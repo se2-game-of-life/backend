@@ -37,8 +37,9 @@ class CheatingServiceTest {
     @Test
     void cheat_playerNotFound_test() {
         when(playerRepository.findById(player.getPlayerUUID())).thenReturn(Optional.empty());
+        String playerUUID = player.getPlayerUUID();
 
-        Exception e = assertThrows(IllegalStateException.class, () -> cheatingService.cheat(player.getPlayerUUID()));
+        Exception e = assertThrows(IllegalStateException.class, () -> cheatingService.cheat(playerUUID));
 
         assertEquals("Player not found in repository: " + player.getPlayerUUID(), e.getMessage());
     }
