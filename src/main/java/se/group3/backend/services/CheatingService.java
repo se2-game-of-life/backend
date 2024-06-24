@@ -1,5 +1,7 @@
 package se.group3.backend.services;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Getter
+@Setter
 @Slf4j
 @Service
 public class CheatingService {
@@ -27,7 +31,7 @@ public class CheatingService {
     private static final int FALSE_REPORT_PENALTY = 5000;
     private static final int CHEATING_CAUGHT_PENALTY = 15000;
     private static final int MAX_REPORT_TIME = 15;
-    private final Set<String> cheatingQueue;
+    private Set<String> cheatingQueue;
     private final ScheduledExecutorService scheduler;
 
     @Autowired
@@ -76,7 +80,7 @@ public class CheatingService {
         } else {
             for(Player playerInLobby : lobby.getPlayers()) {
                 if(playerInLobby.getPlayerUUID().equals(player.getPlayerUUID())) {
-                    playerInLobby.setMoney(player.getMoney() + FALSE_REPORT_PENALTY);
+                    playerInLobby.setMoney(player.getMoney() - FALSE_REPORT_PENALTY);
                     break;
                 }
             }

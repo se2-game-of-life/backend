@@ -21,12 +21,12 @@ public class CardMapper {
     public static List<CardDTO> toCardDTO(List<Card> cards) {
         List<CardDTO> dtoList = new ArrayList<>();
         for(Card card : cards) {
-            if (card instanceof ActionCard) {
-                dtoList.add(toActionCardDTO((ActionCard) card));
-            } else if (card instanceof HouseCard) {
-                dtoList.add(toHouseCardDTO((HouseCard) card));
-            } else if (card instanceof CareerCard) {
-                dtoList.add(toCareerCardDTO((CareerCard) card));
+            if (card instanceof ActionCard actionCard) {
+                dtoList.add(toActionCardDTO(actionCard));
+            } else if (card instanceof HouseCard houseCard) {
+                dtoList.add(toHouseCardDTO(houseCard));
+            } else if (card instanceof CareerCard careerCard) {
+                dtoList.add(toCareerCardDTO(careerCard));
             }
 
         }
@@ -36,12 +36,12 @@ public class CardMapper {
     public static List<Card> toCard(List<CardDTO> cardDTOs) {
         List<Card> cardList = new ArrayList<>();
         for(CardDTO cardDTO : cardDTOs) {
-            if (cardDTO instanceof ActionCardDTO) {
-                cardList.add(toActionCard((ActionCardDTO) cardDTO));
-            } else if (cardDTO instanceof HouseCardDTO) {
-                cardList.add(toHouseCard((HouseCardDTO) cardDTO));
-            } else if (cardDTO instanceof CareerCardDTO) {
-                cardList.add(toCareerCard((CareerCardDTO) cardDTO));
+            if (cardDTO instanceof ActionCardDTO actionCardDTO) {
+                cardList.add(toActionCard(actionCardDTO));
+            } else if (cardDTO instanceof HouseCardDTO houseCardDTO) {
+                cardList.add(toHouseCard(houseCardDTO));
+            } else if (cardDTO instanceof CareerCardDTO careerCardDTO) {
+                cardList.add(toCareerCard(careerCardDTO));
             }
         }
         return cardList;
