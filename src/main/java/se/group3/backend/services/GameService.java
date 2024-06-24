@@ -42,16 +42,12 @@ public class GameService {
     }
 
     public LobbyDTO handleTurn(String playerUUID) throws IllegalArgumentException {
-        Optional<Player> playerOptional = playerRepository.findById(playerUUID);
-        if(playerOptional.isEmpty()) throw new IllegalArgumentException(PLAYER_NOT_FOUND);
-        Player player = playerOptional.get();
+        Player player = getPlayerFromDB(playerUUID);
 
         Long lobbyID = player.getLobbyID();
         if(lobbyID == null) throw new IllegalArgumentException(PLAYER_NOT_IN_LOBBY);
 
-        Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
-        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException(LOBBY_NOT_FOUND);
-        Lobby lobby = lobbyOptional.get();
+        Lobby lobby = getLobbyFromDB(lobbyID);
 
         if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), playerUUID)) throw new IllegalArgumentException("It's not the player's turn!");
         lobby.setSpunNumber(spinWheel());
@@ -69,16 +65,15 @@ public class GameService {
     }
 
     public LobbyDTO makeChoice(boolean chooseLeft, String uuid) {
-        Optional<Player> playerOptional = playerRepository.findById(uuid);
-        if(playerOptional.isEmpty()) throw new IllegalArgumentException(PLAYER_NOT_FOUND);
-        Player player = playerOptional.get();
+        Player player = getPlayerFromDB(uuid);
 
         Long lobbyID = player.getLobbyID();
         if(lobbyID == null) throw new IllegalArgumentException(PLAYER_NOT_IN_LOBBY);
 
-        Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
-        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException(LOBBY_NOT_FOUND);
-        Lobby lobby = lobbyOptional.get();
+        Lobby lobby = getLobbyFromDB(lobbyID);
+
+        if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), uuid)) throw new IllegalArgumentException("It's not the player's turn!");
+        lobby.setSpunNumber(spinWheel());
 
         Cell cell = cellRepository.findByNumber(player.getCurrentCellPosition());
         if(cell == null){
@@ -133,16 +128,15 @@ public class GameService {
     }
 
     public LobbyDTO endGameEarlier(String playerUUID) throws IllegalArgumentException {
-        Optional<Player> playerOptional = playerRepository.findById(playerUUID);
-        if(playerOptional.isEmpty()) throw new IllegalArgumentException(PLAYER_NOT_FOUND);
-        Player player = playerOptional.get();
+        Player player = getPlayerFromDB(playerUUID);
 
         Long lobbyID = player.getLobbyID();
         if(lobbyID == null) throw new IllegalArgumentException(PLAYER_NOT_IN_LOBBY);
 
-        Optional<Lobby> lobbyOptional = lobbyRepository.findById(player.getLobbyID());
-        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException(LOBBY_NOT_FOUND);
-        Lobby lobby = lobbyOptional.get();
+        Lobby lobby = getLobbyFromDB(lobbyID);
+
+        if(!Objects.equals(lobby.getCurrentPlayer().getPlayerUUID(), playerUUID)) throw new IllegalArgumentException("It's not the player's turn!");
+        lobby.setSpunNumber(spinWheel());
 
         List<Player> players = new ArrayList<>(lobby.getPlayers());
 
@@ -273,4 +267,17 @@ public class GameService {
     private int spinWheel() {
         return RANDOM.nextInt(10) + 1;
     }
+
+    private Player getPlayerFromDB(String playerUUID){
+        Optional<Player> playerOptional = playerRepository.findById(playerUUID);
+        if(playerOptional.isEmpty()) throw new IllegalArgumentException(PLAYER_NOT_FOUND);
+        return playerOptional.get();
+    }
+
+    private Lobby getLobbyFromDB(Long lobbyID){
+        Optional<Lobby> lobbyOptional = lobbyRepository.findById(lobbyID);
+        if(lobbyOptional.isEmpty()) throw new IllegalArgumentException(LOBBY_NOT_FOUND);
+        return lobbyOptional.get();
+    }
+
 }
